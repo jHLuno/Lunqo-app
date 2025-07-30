@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
             color: #ffffff;
             overflow-x: hidden;
             line-height: 1.6;
@@ -88,19 +88,13 @@
         }
 
         .cta-button {
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            color: white;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
             padding: 0.75rem 1.5rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Hero Section */
@@ -181,36 +175,23 @@
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            color: white;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
             padding: 1rem 2rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 50px rgba(0, 212, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .secondary-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
             padding: 1rem 2rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .hero-visual {
@@ -251,7 +232,7 @@
 
         .floating-card {
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1rem;
@@ -384,25 +365,100 @@
             line-height: 1.6;
         }
 
-        /* Stats Section */
-        .stats {
-            padding: 6rem 2rem;
+        /* Chart Section */
+        .chart-section {
+            padding: 8rem 2rem;
             background: rgba(255, 255, 255, 0.02);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .chart-container {
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-bar {
+            width: 60px;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .chart-label {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .stats-container {
+            animation: fadeInRight 1s ease-out 0.3s both;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            text-align: center;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
         .stat-item {
-            animation: fadeInUp 0.6s ease-out;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
         }
 
+        .stat-item:nth-child(1) { animation-delay: 0s; }
+        .stat-item:nth-child(2) { animation-delay: 1s; }
+        .stat-item:nth-child(3) { animation-delay: 2s; }
+        .stat-item:nth-child(4) { animation-delay: 3s; }
+
         .stat-number {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, #00d4ff, #7c3aed);
             -webkit-background-clip: text;
@@ -413,8 +469,241 @@
 
         .stat-label {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(124, 58, 237, 0.05));
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 8rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-title {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-item h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #ffffff;
+        }
+
+        .contact-item p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-logo {
+            height: 30px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 1rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
         }
 
         /* Animations */
@@ -433,6 +722,17 @@
             from {
                 opacity: 0;
                 transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
             }
             to {
                 opacity: 1;
@@ -486,8 +786,34 @@
                 grid-template-columns: 1fr;
             }
 
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -608,29 +934,183 @@
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
+    <!-- Chart Section -->
+    <section class="chart-section">
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Real-time Tracking</div>
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Campaign Performance</h3>
+                        <div class="chart">
+                            <div class="chart-bar" style="height: 80%; background: linear-gradient(180deg, #00d4ff, #7c3aed);">
+                                <div class="chart-value">2.4M</div>
+                            </div>
+                            <div class="chart-label">Impressions</div>
+                        </div>
+                        <div class="chart">
+                            <div class="chart-bar" style="height: 65%; background: linear-gradient(180deg, #7c3aed, #00d4ff);">
+                                <div class="chart-value">156K</div>
+                            </div>
+                            <div class="chart-label">Clicks</div>
+                        </div>
+                        <div class="chart">
+                            <div class="chart-bar" style="height: 45%; background: linear-gradient(180deg, #00d4ff, #7c3aed);">
+                                <div class="chart-value">12.3K</div>
+                            </div>
+                            <div class="chart-label">Conversions</div>
+                        </div>
+                        <div class="chart">
+                            <div class="chart-bar" style="height: 90%; background: linear-gradient(180deg, #7c3aed, #00d4ff);">
+                                <div class="chart-value">6.5%</div>
+                            </div>
+                            <div class="chart-label">CTR</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Campaign Monitoring</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">Scalable Solutions</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">🚀</div>
-                    <div class="stat-label">Future Ready</div>
+                <div class="stats-container">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Real-time Tracking</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Campaign Monitoring</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">∞</div>
+                            <div class="stat-label">Scalable Solutions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">🚀</div>
+                            <div class="stat-label">Future Ready</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your Taxi Advertising?</h2>
+                <p class="cta-subtitle">Join leading brands using Lunqo to reach millions of passengers daily</p>
+                <div class="cta-actions">
+                    <a href="/admin.html" class="primary-btn">Start Free Trial</a>
+                    <a href="#contact" class="secondary-btn">Schedule Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2 class="contact-title">Get in Touch</h2>
+                    <p class="contact-subtitle">Ready to revolutionize your taxi advertising? Let's discuss how Lunqo can help you reach your target audience.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>hello@lunqo.app</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🌍</div>
+                            <div>
+                                <h4>Location</h4>
+                                <p>Global Coverage</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">⚡</div>
+                            <div>
+                                <h4>Response Time</h4>
+                                <p>Within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form class="form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Company Name">
+                        </div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="">Select Inquiry Type</option>
+                                <option value="demo">Request Demo</option>
+                                <option value="pricing">Pricing Information</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="support">Technical Support</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Tell us about your project..." rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/Lunqo.svg" alt="Lunqo" class="footer-logo">
+                    <p>The AdTech engine behind SmartSeat Media. Transform your taxi advertising with real-time analytics and geotargeting.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="/admin.html">Dashboard</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#status">Status</a></li>
+                        <li><a href="#contact">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lunqo. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Scroll animations
@@ -672,6 +1152,35 @@
                         block: 'start'
                     });
                 }
+            });
+        });
+
+        // Form submission
+        document.querySelector('.form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Show success message
+            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+            
+            // Reset form
+            this.reset();
+            
+            // Track conversion (you can add analytics here)
+            console.log('Lead captured:', data);
+        });
+
+        // Add input event listeners for better UX
+        document.querySelectorAll('.form-group input, .form-group textarea, .form-group select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
             });
         });
     </script>
