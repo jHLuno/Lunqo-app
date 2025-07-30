@@ -33,7 +33,7 @@
   // Получаем плейлист с сервера
   async function fetchPlaylist() {
     try {
-      const res = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:4000' : 'https://lunqo.app'}/api/screens/${screenId}/playlist`);
+      const res = await fetch(`https://lunqo.app/api/screens/${screenId}/playlist`);
       const data = await res.json();
 
       if (data && data.videos && data.videos.length > 0) {
@@ -74,7 +74,7 @@
 
     console.log('📊 Отправляю статистику:', { screenId, campaignId, brandId, event: 'impression' });
 
-    fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:4000' : 'https://lunqo.app'}/api/stats`, {
+    fetch(`https://lunqo.app/api/stats`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

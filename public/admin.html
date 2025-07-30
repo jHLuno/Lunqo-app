@@ -550,10 +550,8 @@
 </div>
 
 <script>
-// Dynamic API URL - works for both localhost and production
-const API = window.location.hostname === 'localhost' 
-  ? 'http://localhost:4000/api/admin' 
-  : 'https://lunqo.app/api/admin';
+// API URL - always use production server since that's where the backend is running
+const API = 'https://lunqo.app/api/admin';
 
 // ===== UTILITY FUNCTIONS =====
 function authorizedFetch(url, options = {}) {
