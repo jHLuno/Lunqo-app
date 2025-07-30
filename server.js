@@ -10,10 +10,16 @@ dotenv.config({ silent: true, debug: false });
 
 const app = express();
 
-// CORS configuration for production
+// CORS configuration - more permissive for development
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:4000', 'https://lunqo.app'];
+  : [
+      'http://localhost:4000', 
+      'http://localhost:3000',
+      'http://127.0.0.1:4000',
+      'http://127.0.0.1:3000',
+      'https://lunqo.app'
+    ];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -23,6 +29,8 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      // Log the blocked origin for debugging (remove in production)
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
