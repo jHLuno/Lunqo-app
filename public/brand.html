@@ -199,7 +199,7 @@
 // Загрузка кампаний бренда через brandId /api/admin/brands/:brandId/campaigns
 async function loadCampaigns() {
   const brandId = localStorage.getItem('brandId');
-  const res = await fetch(`http://localhost:4000/api/brand/${brandId}/campaigns`, {
+  const res = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:4000' : 'https://lunqo.app'}/api/brand/${brandId}/campaigns`, {
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
@@ -224,7 +224,7 @@ async function loadCampaigns() {
 // === Экраны бренда
 async function loadScreens() {
   const brandId = localStorage.getItem('brandId');
-  const res = await fetch(`http://localhost:4000/api/brand/${brandId}/screens`, {
+  const res = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:4000' : 'https://lunqo.app'}/api/brand/${brandId}/screens`, {
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('token')
     }

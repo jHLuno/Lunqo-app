@@ -550,7 +550,10 @@
 </div>
 
 <script>
-const API = 'http://localhost:4000/api/admin';
+// Dynamic API URL - works for both localhost and production
+const API = window.location.hostname === 'localhost' 
+  ? 'http://localhost:4000/api/admin' 
+  : 'https://lunqo.app/api/admin';
 
 // ===== UTILITY FUNCTIONS =====
 function authorizedFetch(url, options = {}) {
@@ -742,7 +745,7 @@ async function createScreen() {
 
 async function editScreen(id) {
   try {
-    const res = await authorizedFetch(`http://localhost:4000/api/screens/${id}`);
+    const res = await authorizedFetch(`${API.replace('/admin', '')}/screens/${id}`);
     if (!res.ok) throw new Error(`HTTP status ${res.status}`);
     const screen = await res.json();
     document.getElementById('editScreenId').value = screen._id;
@@ -761,7 +764,7 @@ async function saveScreenEdit() {
     const brandId = document.getElementById('editScreenBrandId').value;
     if (!screenId || !brandId) return alert('Заполните все поля');
     
-    const res = await authorizedFetch(`http://localhost:4000/api/admin/screens/${id}`, {
+    const res = await authorizedFetch(`${API}/screens/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ screenId, brandId })
@@ -787,7 +790,7 @@ function closeScreenEditModal() {
 async function deleteScreen(id) {
   if (!confirm('Удалить экран?')) return;
   try {
-    const res = await authorizedFetch(`http://localhost:4000/api/screens/${id}`, { method: 'DELETE' });
+    const res = await authorizedFetch(`${API.replace('/admin', '')}/screens/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error(`HTTP status ${res.status}`);
     alert('✅ Экран удалён');
     loadScreens();
@@ -848,7 +851,7 @@ async function createCampaign() {
 
 async function editCampaign(id) {
   try {
-    const res = await authorizedFetch(`http://localhost:4000/api/admin/campaigns/${id}`);
+    const res = await authorizedFetch(`${API}/campaigns/${id}`);
     if (!res.ok) throw new Error(`HTTP status ${res.status}`);
     const campaign = await res.json();
     document.getElementById('editCampaignId').value = campaign._id;
@@ -873,7 +876,7 @@ async function saveCampaignEdit() {
     const videos = document.getElementById('editCampaignVideos').value.split('\n').map(v => v.trim()).filter(Boolean);
     if (!name || videos.length === 0) return alert('Заполните название и видео');
     
-    const res = await authorizedFetch(`http://localhost:4000/api/admin/campaigns/${id}`, {
+    const res = await authorizedFetch(`${API}/campaigns/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, startDate, endDate, promoUrl, videos })
@@ -902,7 +905,7 @@ function closeCampaignEditModal() {
 async function deleteCampaign(id) {
   if (!confirm('Удалить кампанию?')) return;
   try {
-    const res = await authorizedFetch(`http://localhost:4000/api/admin/campaigns/${id}`, { method: 'DELETE' });
+    const res = await authorizedFetch(`${API}/campaigns/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error(`HTTP status ${res.status}`);
     alert('✅ Кампания удалена');
     loadCampaignsList();
