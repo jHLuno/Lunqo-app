@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunqo - The Most Flexible AdTech Platform for In-Taxi Media</title>
+    <meta name="description" content="Lunqo lets developers implement in-taxi advertising once — so teams can control campaigns, targeting, and analytics without code changes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'electric-blue': '#18A0FB',
+                        'neon-green': '#59FF70',
+                        'hot-orange': '#FF7A45',
+                        'neon-yellow': '#FFD700',
+                        'deep-black': '#000000',
+                        'navy-dark': '#0a0a0a',
+                        'charcoal': '#1a1a1a',
+                        'off-white': '#EEEEEE',
+                        'light-gray': '#CCCCCC',
+                        'mid-gray': '#666666'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'slide-in': 'slideIn 0.8s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'scale-in': 'scaleIn 0.5s ease-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px #18A0FB' },
+                            '100%': { boxShadow: '0 0 40px #18A0FB, 0 0 60px #18A0FB' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateX(-30px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.8)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #1a1a1a 50%, #16213e 75%, #0f3460 100%);
+            background-attachment: fixed;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #18A0FB, #59FF70);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 30px rgba(24, 160, 251, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .section-divider {
+            background: linear-gradient(90deg, transparent, #18A0FB, transparent);
+            height: 1px;
+            width: 100%;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sticky-nav {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .logo-scroll {
+            animation: logoScroll 20s linear infinite;
+        }
+
+        @keyframes logoScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .video-placeholder {
+            background: linear-gradient(45deg, rgba(24, 160, 251, 0.1), rgba(89, 255, 112, 0.1));
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: #18A0FB;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(24, 160, 251, 0.2);
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #18A0FB;
+        }
+    </style>
+</head>
+<body class="font-inter text-off-white overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Navigation Component
+        const Navigation = () => {
+            const [isScrolled, setIsScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setIsScrolled(window.scrollY > 50);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'sticky-nav' : ''}`}>
+                    <div className="max-w-7xl mx-auto px-6 py-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-8">
+                                <img src="images/Lunqo.svg" alt="Lunqo" className="h-8 filter brightness-0 invert" />
+                                <div className="hidden md:flex space-x-6">
+                                    <a href="#features" className="text-light-gray hover:text-electric-blue transition-colors">Features</a>
+                                    <a href="#analytics" className="text-light-gray hover:text-electric-blue transition-colors">Analytics</a>
+                                    <a href="#pricing" className="text-light-gray hover:text-electric-blue transition-colors">Pricing</a>
+                                    <a href="#docs" className="text-light-gray hover:text-electric-blue transition-colors">Docs</a>
+                                    <a href="#resources" className="text-light-gray hover:text-electric-blue transition-colors">Resources</a>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <a href="#signin" className="text-light-gray hover:text-electric-blue transition-colors">Sign in</a>
+                                <a href="#demo" className="bg-electric-blue text-white px-6 py-2 rounded-lg hover-glow transition-all">Start free account</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        // Hero Section Component
+        const HeroSection = () => {
+            return (
+                <section className="pt-32 pb-20 px-6">
+                    <div className="max-w-7xl mx-auto text-center">
+                        <div className="mb-6">
+                            <span className="bg-electric-blue bg-opacity-20 text-electric-blue px-4 py-2 rounded-full text-sm font-semibold border border-electric-blue border-opacity-30">
+                                RELEASED Tiered campaigns
+                            </span>
+                        </div>
+                        
+                        <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
+                            <span className="block">The most flexible</span>
+                            <span className="gradient-text block">advertising & analytics</span>
+                            <span className="block">engine for taxis</span>
+                        </h1>
+                        
+                        <p className="text-xl text-light-gray mb-12 max-w-4xl mx-auto leading-relaxed">
+                            Lunqo lets developers implement in-taxi advertising once — so marketing teams can control campaigns, 
+                            targeting, and analytics without code changes, <span className="text-electric-blue">try the demo</span>.
+                        </p>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                            <button className="bg-electric-blue text-white px-8 py-4 rounded-lg font-semibold hover-glow transition-all">
+                                Demo with founder 👋 Founder
+                            </button>
+                            <button className="bg-white bg-opacity-10 text-white px-8 py-4 rounded-lg font-semibold hover:bg-opacity-20 transition-all border border-white border-opacity-20">
+                                Start free account
+                            </button>
+                        </div>
+                        
+                        {/* Video Placeholder */}
+                        <div className="video-placeholder rounded-2xl h-96 flex items-center justify-center text-light-gray text-lg">
+                            🎥 Interactive Dashboard Demo Video
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Feature Cards Component
+        const FeatureCards = () => {
+            const features = [
+                {
+                    title: "Campaign & Analytics",
+                    subtitle: "Launch usage-based campaigns without a rebuild.",
+                    description: "Decouple business logic from the code and support any campaign model without changing a line of code.",
+                    icon: "📊",
+                    highlights: [
+                        "Meter impressions and leverage limits to convert viewers",
+                        "Support any usage-based model; impressions, clicks, QR scans, CTR, etc",
+                        "Built on modern infrastructure, easy to implement and loved by developers"
+                    ]
+                },
+                {
+                    title: "Campaigns & Targeting",
+                    subtitle: "Manage campaigns, limits and the whole customer journey",
+                    description: "Campaign logic should live in config, not code. Take control of your advertising catalog so engineering doesn't have to.",
+                    icon: "🎯",
+                    highlights: [
+                        "Manage exceptions and campaign trials with overrides",
+                        "Set and manage trials for any campaign duration",
+                        "Track campaign performance against limits"
+                    ]
+                },
+                {
+                    title: "Smart Flags",
+                    subtitle: "Ship campaigns, gate them by audience, and monetize what gets viewed.",
+                    description: "Roll out, target, gate, track usage, and monetize campaigns — all from a flag.",
+                    icon: "🚩",
+                    highlights: [
+                        "Get usage, limit, and access in one flag check",
+                        "<50ms flag check time, leverage caching for better latency",
+                        "Roll out flags to audiences based on location, demographics, or any criteria"
+                    ]
+                },
+                {
+                    title: "Dashboard Components",
+                    subtitle: "Drop in admin portal, campaign table, analytics and more",
+                    description: "Built for React and extremely easy to implement and maintain.",
+                    icon: "🖥️",
+                    highlights: [
+                        "No code builder for easy setup and iteration",
+                        "Customize brand colors, fonts and design to match your company",
+                        "Designed to convert, expand and retain with opinionated UX"
+                    ]
+                },
+                {
+                    title: "Insights",
+                    subtitle: "Identify optimization opportunities and performance risks.",
+                    description: "Know who's over-performing, under-utilizing, and ready to expand. See what campaigns drive value.",
+                    icon: "📈",
+                    highlights: [
+                        "Map usage to revenue opportunities automatically",
+                        "Unified view of campaign and performance data",
+                        "Surface optimization opportunities to turn views into revenue"
+                    ]
+                }
+            ];
+
+            return (
+                <section className="py-20 px-6" id="features">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                            {features.map((feature, index) => (
+                                <div key={index} className="glass-effect rounded-2xl p-8 card-hover">
+                                    <div className="text-4xl mb-4">{feature.icon}</div>
+                                    <h3 className="text-2xl font-bold mb-2 text-electric-blue">{feature.title}</h3>
+                                    <h4 className="text-lg font-semibold mb-4 text-neon-green">{feature.subtitle}</h4>
+                                    <p className="text-light-gray mb-6 leading-relaxed">{feature.description}</p>
+                                    <ul className="space-y-2">
+                                        {feature.highlights.map((highlight, i) => (
+                                            <li key={i} className="text-sm text-light-gray flex items-start">
+                                                <span className="text-neon-green mr-2">✓</span>
+                                                {highlight}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button className="mt-6 text-electric-blue font-semibold hover:text-neon-green transition-colors">
+                                        See more →
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Trusted By Section
+        const TrustedBySection = () => {
+            const companies = [
+                "Uber", "Lyft", "Yellow Cab", "Metro Taxi", "City Cabs", 
+                "Fast Taxi", "Premium Fleet", "Urban Transport", "Taxi Plus", "Express Rides"
+            ];
+
+            return (
+                <section className="py-16 px-6">
+                    <div className="max-w-7xl mx-auto text-center">
+                        <p className="text-light-gray mb-8">Trusted in production by:</p>
+                        <div className="overflow-hidden">
+                            <div className="flex logo-scroll">
+                                {[...companies, ...companies].map((company, index) => (
+                                    <div key={index} className="flex-shrink-0 mx-8">
+                                        <div className="bg-white bg-opacity-10 px-6 py-3 rounded-lg text-light-gray hover:text-electric-blue transition-colors filter grayscale hover:grayscale-0">
+                                            {company}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Beliefs Section
+        const BeliefsSection = () => {
+            const beliefs = [
+                {
+                    title: "Campaigns Must Change",
+                    subtitle: "Great companies treat advertising like product.",
+                    points: [
+                        "Advertising is a growth lever, great companies iterate frequently",
+                        "How you present your campaigns is the most consequential input into audience engagement"
+                    ]
+                },
+                {
+                    title: "Don't Write Ad Code",
+                    subtitle: "Enable the business to own campaigns.",
+                    points: [
+                        "Stop ceding your roadmap to advertising projects. Focus on what's core product.",
+                        "Building campaigns and analytics internally comes with an infinite roadmap"
+                    ]
+                },
+                {
+                    title: "Ship campaigns not flags",
+                    subtitle: "Go beyond roll out.",
+                    points: [
+                        "Easily manage audiences, exceptions, trials, campaigns, and targeting models",
+                        "Flag, track, and monetize every campaign you want to optimize."
+                    ]
+                }
+            ];
+
+            return (
+                <section className="py-20 px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-5xl font-black mb-4">What we believe</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {beliefs.map((belief, index) => (
+                                <div key={index} className="text-center">
+                                    <h3 className="text-2xl font-bold mb-2 gradient-text">{belief.title}</h3>
+                                    <h4 className="text-lg font-semibold mb-6 text-neon-green">{belief.subtitle}</h4>
+                                    <ul className="space-y-4 text-light-gray">
+                                        {belief.points.map((point, i) => (
+                                            <li key={i} className="leading-relaxed">• {point}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Pricing Models Section
+        const PricingModelsSection = () => {
+            const models = [
+                { name: "Flat fee campaign", description: "Start with classic good, better, best campaigns and offer add-ons to premium features." },
+                { name: "Impression-based model", description: "Scale pricing with actual ad impressions delivered to audiences." },
+                { name: "Pay as you go", description: "Flexible pricing that grows with your advertising spend." },
+                { name: "Performance tiers", description: "Reward high-performing campaigns with better rates." },
+                { name: "Credit burndown", description: "Pre-paid credits for campaign spending with usage tracking.", badge: "coming soon" }
+            ];
+
+            return (
+                <section className="py-20 px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-5xl font-black mb-4">
+                                Turn on any <span className="gradient-text">pricing model</span> especially usage-based
+                            </h2>
+                            <p className="text-xl text-light-gray">Launch the pricing model that works for you, then iterate without changing any code</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {models.map((model, index) => (
+                                <div key={index} className="pricing-card rounded-xl p-6 relative">
+                                    {model.badge && (
+                                        <span className="absolute top-4 right-4 bg-neon-yellow text-black px-2 py-1 rounded text-xs font-semibold">
+                                            {model.badge}
+                                        </span>
+                                    )}
+                                    <h3 className="text-xl font-bold mb-3 text-electric-blue">{model.name}</h3>
+                                    <p className="text-light-gray leading-relaxed">{model.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="text-center mt-12">
+                            <button className="bg-electric-blue text-white px-8 py-3 rounded-lg font-semibold hover-glow transition-all">
+                                View Pricing & Analytics
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Use Cases Section
+        const UseCasesSection = () => {
+            const useCases = [
+                "Launching a new campaign or add-on",
+                "Layering self-serve onto sales-led",
+                "Adding sales-led on top of self-serve",
+                "Driving product-led expansion",
+                "Testing a move upmarket",
+                "Introducing usage-based or hybrid pricing"
+            ];
+
+            return (
+                <section className="py-20 px-6">
+                    <div className="max-w-7xl mx-auto text-center">
+                        <h2 className="text-5xl font-black mb-16">
+                            Built for the moments that make or break <span className="gradient-text">monetization</span>
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {useCases.map((useCase, index) => (
+                                <div key={index} className="glass-effect rounded-2xl p-8 card-hover text-center">
+                                    <div className="text-4xl mb-4">
+                                        {index === 0 ? "🚀" : index === 1 ? "🔄" : index === 2 ? "📈" : index === 3 ? "⚡" : index === 4 ? "🎯" : "💰"}
+                                    </div>
+                                    <h3 className="text-xl font-bold text-electric-blue">{useCase}</h3>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Testimonials Section
+        const TestimonialsSection = () => {
+            const testimonials = [
+                {
+                    quote: "Using Lunqo means our engineers can focus on building product features rather than maintaining advertising logic.",
+                    author: "Miguel Oller",
+                    role: "CTO, TaxiTech"
+                },
+                {
+                    quote: "We now have the ability to experiment rapidly and respond to business needs without backend delays.",
+                    author: "Aaron Wise",
+                    role: "CTO, FleetMax"
+                },
+                {
+                    quote: "What used to take months now takes weeks or days.",
+                    author: "Brian Smith",
+                    role: "Sr. Manager, Growth, UrbanAds"
+                }
+            ];
+
+            return (
+                <section className="py-20 px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-5xl font-black mb-4">Customers ❤️ Lunqo</h2>
+                            <p className="text-xl text-light-gray">Use Lunqo to advertise like the best adtech companies around.</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {testimonials.map((testimonial, index) => (
+                                <div key={index} className="testimonial-card rounded-xl p-6">
+                                    <p className="text-light-gray mb-6 italic">"{testimonial.quote}"</p>
+                                    <div>
+                                        <p className="font-bold text-electric-blue">{testimonial.author}</p>
+                                        <p className="text-sm text-light-gray">{testimonial.role}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // CTA Section
+        const CTASection = () => {
+            return (
+                <section className="py-20 px-6" id="demo">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <div className="glass-effect rounded-3xl p-12">
+                            <h2 className="text-5xl font-black mb-6">
+                                Ready to <span className="gradient-text">light up</span> your advertising?
+                            </h2>
+                            <p className="text-xl text-light-gray mb-12">
+                                Join hundreds of companies using Lunqo to monetize their taxi advertising efficiently.
+                            </p>
+                            
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button className="bg-electric-blue text-white px-8 py-4 rounded-lg font-semibold hover-glow transition-all">
+                                    Demo with founder 👋 Founder
+                                </button>
+                                <button className="bg-white bg-opacity-10 text-white px-8 py-4 rounded-lg font-semibold hover:bg-opacity-20 transition-all border border-white border-opacity-20">
+                                    Start free account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Footer Component
+        const Footer = () => {
+            return (
+                <footer className="py-16 px-6 border-t border-white border-opacity-10">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div>
+                                <h3 className="font-bold mb-4 text-electric-blue">Product</h3>
+                                <ul className="space-y-2 text-light-gray">
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Campaign & Analytics</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Campaigns & Targeting</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Dashboard Components</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Smart Flags</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Revenue Insights</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="font-bold mb-4 text-electric-blue">Developers & Docs</h3>
+                                <ul className="space-y-2 text-light-gray">
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Developers</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Quickstart</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Security</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">SDKs</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">API</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="font-bold mb-4 text-electric-blue">Resources</h3>
+                                <ul className="space-y-2 text-light-gray">
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Careers</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Blog</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Courses</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Podcast</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Customers</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="font-bold mb-4 text-electric-blue">Community</h3>
+                                <ul className="space-y-2 text-light-gray">
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Github</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Testimonials</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Discord</a></li>
+                                    <li><a href="#" className="hover:text-electric-blue transition-colors">Twitter</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div className="section-divider my-12"></div>
+                        
+                        <div className="flex flex-col md:flex-row justify-between items-center">
+                            <p className="text-light-gray">© 2024 Lunqo Inc.</p>
+                            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+                                <span className="bg-electric-blue text-white px-3 py-1 rounded text-sm font-semibold">
+                                    #1 AdTech Product of the Month
+                                </span>
+                                <a href="#" className="text-light-gray hover:text-electric-blue transition-colors">Privacy Policy</a>
+                                <a href="#" className="text-light-gray hover:text-electric-blue transition-colors">Terms of Service</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            return (
+                <div className="min-h-screen">
+                    <Navigation />
+                    <HeroSection />
+                    <TrustedBySection />
+                    <FeatureCards />
+                    <BeliefsSection />
+                    <PricingModelsSection />
+                    <UseCasesSection />
+                    <TestimonialsSection />
+                    <CTASection />
+                    <Footer />
+                </div>
+            );
+        };
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
