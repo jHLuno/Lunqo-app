@@ -55,7 +55,7 @@ const Footer = () => {
             >
               <div className="flex items-center mb-6">
                                     <img
-                      src="Lunqo.png"
+                      src="/Lunqo.png"
                       alt="Lunqo Logo"
                       className="w-8 h-8"
                     />
