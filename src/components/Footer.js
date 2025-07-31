@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
-import lunqoLogo from '../../public/Lunqo.svg';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -56,7 +55,7 @@ const Footer = () => {
             >
               <div className="flex items-center space-x-3 mb-6">
                 <img 
-                  src={lunqoLogo} 
+                  src="/Lunqo.svg" 
                   alt="Lunqo Logo" 
                   className="w-8 h-8"
                 />
