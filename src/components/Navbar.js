@@ -41,7 +41,7 @@ const Navbar = () => {
             className="flex items-center space-x-3"
           >
             <img 
-              src="/images/Lunqo.svg" 
+              src="/Lunqo.svg" 
               alt="Lunqo Logo" 
               className="w-8 h-8 lg:w-10 lg:h-10"
             />

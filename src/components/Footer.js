@@ -55,7 +55,7 @@ const Footer = () => {
             >
               <div className="flex items-center space-x-3 mb-6">
                 <img 
-                  src="/images/Lunqo.svg" 
+                  src="/Lunqo.svg" 
                   alt="Lunqo Logo" 
                   className="w-8 h-8"
                 />
