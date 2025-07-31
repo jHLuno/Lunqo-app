@@ -46,10 +46,12 @@ services:
         wget \
         xdg-utils \
         xvfb
-      # Install Node.js dependencies
+      # Install ALL Node.js dependencies (including devDependencies)
       npm ci
       # Build the React app
       npm run build
+      # Remove devDependencies to reduce size
+      npm prune --production
     startCommand: npm start
     envVars:
       - key: NODE_ENV
