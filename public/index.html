@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lunqo - AdTech Engine for SmartSeat Media</title>
+    <title>Lunqo: Light-Up Ads on the Go | SmartSeat Media AdTech Platform</title>
+    <meta name="description" content="Unified control, real-time insights, effortless scaling for in-taxi media. Book a demo today.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --charcoal: #1a1a1a;
+            --near-black: #0a0a0a;
+            --electric-blue: #18A0FB;
+            --neon-lime: #59FF70;
+            --hot-orange: #FF7A45;
+            --mid-gray: #666666;
+            --light-gray: #999999;
+            --white: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,27 +28,32 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
-            color: #ffffff;
-            overflow-x: hidden;
+            background: var(--charcoal);
+            color: var(--white);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Glass Header */
-        .header {
+        /* Sticky Navigation */
+        .nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 2rem;
             transition: all 0.3s ease;
+            padding: 1rem 2rem;
         }
 
-        .header-content {
+        .nav.scrolled {
+            padding: 0.75rem 2rem;
+            background: rgba(10, 10, 10, 0.98);
+        }
+
+        .nav-content {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
@@ -45,56 +62,57 @@
         }
 
         .logo {
-            height: 40px;
+            height: 32px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
         }
 
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .nav {
+        .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--white);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
         }
 
         .nav-link:hover {
-            color: #ffffff;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
+            color: var(--electric-blue);
         }
 
         .cta-button {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #ffffff;
+            background: linear-gradient(135deg, var(--electric-blue), #0d8ce6);
+            color: var(--white);
             padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 30px rgba(24, 160, 251, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--white);
+            margin: 3px 0;
+            transition: 0.3s;
         }
 
         /* Hero Section */
@@ -103,7 +121,8 @@
             display: flex;
             align-items: center;
             position: relative;
-            padding: 0 2rem;
+            background: linear-gradient(135deg, var(--near-black) 0%, var(--charcoal) 100%);
+            overflow: hidden;
         }
 
         .hero::before {
@@ -113,15 +132,16 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(89, 255, 112, 0.05) 0%, transparent 50%);
             pointer-events: none;
         }
 
         .hero-content {
             max-width: 1200px;
             margin: 0 auto;
-            width: 100%;
+            padding: 0 2rem;
             position: relative;
             z-index: 2;
         }
@@ -139,33 +159,33 @@
 
         .hero-badge {
             display: inline-block;
-            background: rgba(0, 212, 255, 0.1);
-            color: #00d4ff;
+            background: rgba(24, 160, 251, 0.1);
+            color: var(--electric-blue);
             padding: 0.5rem 1rem;
             border-radius: 50px;
             font-size: 0.875rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(24, 160, 251, 0.2);
         }
 
         .hero-title {
-            font-size: clamp(3rem, 8vw, 5rem);
+            font-size: clamp(3rem, 8vw, 4.5rem);
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #7c3aed 100%);
+            background: linear-gradient(135deg, var(--white) 0%, var(--electric-blue) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: gradientShift 3s ease-in-out infinite;
         }
 
         .hero-subtitle {
             font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
+            color: var(--light-gray);
+            margin-bottom: 2.5rem;
             max-width: 500px;
+            line-height: 1.6;
         }
 
         .hero-actions {
@@ -175,23 +195,35 @@
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #ffffff;
+            background: linear-gradient(135deg, var(--electric-blue), #0d8ce6);
+            color: var(--white);
             padding: 1rem 2rem;
-            border-radius: 50px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
+        }
+
+        .primary-btn:hover {
+            box-shadow: 0 0 30px rgba(24, 160, 251, 0.5);
+            transform: translateY(-2px);
         }
 
         .secondary-btn {
             background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
+            color: var(--white);
             padding: 1rem 2rem;
-            border-radius: 50px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--electric-blue);
         }
 
         .hero-visual {
@@ -199,25 +231,25 @@
             animation: fadeInRight 1s ease-out 0.3s both;
         }
 
-        .dashboard-preview {
+        .taxi-visual {
             width: 100%;
             height: 400px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
             position: relative;
             overflow: hidden;
         }
 
-        .dashboard-preview::before {
+        .taxi-visual::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.1) 50%, transparent 70%);
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(24, 160, 251, 0.1) 50%, transparent 70%);
             animation: shimmer 3s ease-in-out infinite;
         }
 
@@ -234,7 +266,7 @@
             position: absolute;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             animation: float 6s ease-in-out infinite;
@@ -258,27 +290,63 @@
             animation-delay: 4s;
         }
 
+        /* Audience Snapshot */
+        .audience-strip {
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .audience-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .audience-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .audience-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .audience-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-lime));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .audience-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .audience-benefit {
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            line-height: 1.4;
+        }
+
         /* Features Section */
         .features {
             padding: 8rem 2rem;
-            position: relative;
-        }
-
-        .features::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.05) 0%, transparent 70%);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
 
         .section-header {
@@ -290,7 +358,7 @@
             font-size: clamp(2.5rem, 6vw, 3.5rem);
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            background: linear-gradient(135deg, var(--white), var(--electric-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -298,22 +366,23 @@
 
         .section-subtitle {
             font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             max-width: 600px;
             margin: 0 auto;
         }
 
         .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
         }
 
         .feature-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
             position: relative;
@@ -327,7 +396,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-lime));
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -342,149 +411,203 @@
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            border-radius: 15px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-lime));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
         }
 
         .feature-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: #ffffff;
+            color: var(--white);
         }
 
         .feature-description {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             line-height: 1.6;
         }
 
-        /* Chart Section */
-        .chart-section {
-            padding: 8rem 2rem;
+        /* Analytics Demo */
+        .analytics-demo {
+            padding: 6rem 2rem;
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        .chart-container {
-            animation: fadeInLeft 1s ease-out;
-        }
-
-        .chart-card {
+        .demo-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .chart-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #ffffff;
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .chart {
+        .demo-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(24, 160, 251, 0.1), rgba(89, 255, 112, 0.05));
+            border-radius: 16px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-bar {
-            width: 60px;
-            border-radius: 10px 10px 0 0;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
             justify-content: center;
-            min-height: 100px;
+            font-size: 1.2rem;
+            color: var(--light-gray);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
-        .chart-value {
-            position: absolute;
-            top: -30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #ffffff;
+        /* Why Lunqo Section */
+        .why-lunqo {
+            padding: 8rem 2rem;
         }
 
-        .chart-label {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-
-        .stats-container {
-            animation: fadeInRight 1s ease-out 0.3s both;
-        }
-
-        .stats-grid {
+        .benefits-grid {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
         }
 
-        .stat-item {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
             padding: 1.5rem;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: float 6s ease-in-out infinite;
         }
 
-        .stat-item:nth-child(1) { animation-delay: 0s; }
-        .stat-item:nth-child(2) { animation-delay: 1s; }
-        .stat-item:nth-child(3) { animation-delay: 2s; }
-        .stat-item:nth-child(4) { animation-delay: 3s; }
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--neon-lime), var(--electric-blue));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .benefit-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--white);
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            font-weight: 500;
+        .benefit-content p {
+            color: var(--light-gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        /* CTA Section */
-        .cta-section {
+        /* Social Proof */
+        .social-proof {
             padding: 6rem 2rem;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(124, 58, 237, 0.05));
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .logos-grid {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .logo-item {
             text-align: center;
+            padding: 1rem;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .logo-item:hover {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .logo-placeholder {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--light-gray);
+        }
+
+        .testimonials {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--electric-blue);
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, rgba(24, 160, 251, 0.1), rgba(89, 255, 112, 0.05));
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .cta-title {
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            background: linear-gradient(135deg, var(--white), var(--electric-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -492,11 +615,8 @@
 
         .cta-subtitle {
             font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .cta-actions {
@@ -506,136 +626,16 @@
             flex-wrap: wrap;
         }
 
-        /* Contact Section */
-        .contact-section {
-            padding: 8rem 2rem;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: start;
-        }
-
-        .contact-title {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .contact-subtitle {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .contact-item h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: #ffffff;
-        }
-
-        .contact-item p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
-        }
-
-        .contact-form {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            position: relative;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .form-group select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #ffffff;
-            padding: 1rem 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
         /* Footer */
         .footer {
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--near-black);
             padding: 4rem 2rem 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(24, 160, 251, 0.3);
         }
 
         .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 3rem;
@@ -646,11 +646,11 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #ffffff;
+            color: var(--white);
         }
 
         .footer-section p {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             line-height: 1.6;
             margin-bottom: 1rem;
         }
@@ -664,19 +664,50 @@
         }
 
         .footer-section ul li a {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .footer-section ul li a:hover {
-            color: #ffffff;
+            color: var(--electric-blue);
         }
 
         .footer-logo {
             height: 30px;
             filter: brightness(0) invert(1);
             margin-bottom: 1rem;
+        }
+
+        .newsletter {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter input {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .newsletter button {
+            padding: 0.75rem 1rem;
+            background: var(--electric-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter button:hover {
+            background: #0d8ce6;
         }
 
         .footer-bottom {
@@ -688,7 +719,7 @@
         }
 
         .footer-bottom p {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
         }
 
         .footer-links {
@@ -697,13 +728,13 @@
         }
 
         .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--light-gray);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: #ffffff;
+            color: var(--electric-blue);
         }
 
         /* Animations */
@@ -729,23 +760,14 @@
             }
         }
 
-        @keyframes fadeInLeft {
+        @keyframes slideInUp {
             from {
                 opacity: 0;
-                transform: translateX(-30px);
+                transform: translateY(50px);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% {
-                filter: hue-rotate(0deg);
-            }
-            50% {
-                filter: hue-rotate(10deg);
+                transform: translateY(0);
             }
         }
 
@@ -769,35 +791,29 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
             .hero-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
 
-            .nav {
-                display: none;
-            }
-
-            .hero-actions {
-                flex-direction: column;
+            .audience-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .features-grid {
                 grid-template-columns: 1fr;
             }
 
-            .chart-grid {
+            .benefits-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
             }
 
             .footer-content {
@@ -817,327 +833,274 @@
             }
         }
 
-        /* Scroll animations */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .scroll-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Glass Header -->
-    <header class="header">
-        <div class="header-content">
+    <!-- Sticky Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-content">
             <img src="images/Lunqo.svg" alt="Lunqo" class="logo">
-            <nav class="nav">
-                <a href="#features" class="nav-link">Features</a>
+            <div class="nav-links">
+                <a href="#solutions" class="nav-link">Solutions</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
-                <a href="/admin.html" class="cta-button">Dashboard</a>
-            </nav>
+                <a href="#demo" class="cta-button">Book a Demo</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
             <div class="hero-grid">
                 <div class="hero-text">
-                    <div class="hero-badge">🚀 AdTech Engine</div>
-                    <h1 class="hero-title">Lunqo</h1>
-                    <p class="hero-subtitle">
-                        The AdTech engine behind SmartSeat Media. Assign videos to taxi-mounted screens, track impressions & QR-conversions in real-time, and run geotargeted campaigns.
-                    </p>
+                    <div class="hero-badge">🚀 AdTech Platform</div>
+                    <h1 class="hero-title">Lunqo: Light-Up Ads on the Go</h1>
+                    <p class="hero-subtitle">Unified control, real-time insights, effortless scaling for in-taxi media.</p>
                     <div class="hero-actions">
-                        <a href="/admin.html" class="primary-btn">Launch Dashboard</a>
-                        <a href="#features" class="secondary-btn">Learn More</a>
+                        <a href="#demo" class="primary-btn">Schedule a Live Demo</a>
+                        <a href="#overview" class="secondary-btn">Watch Overview</a>
                     </div>
                 </div>
                 <div class="hero-visual">
-                    <div class="dashboard-preview">
+                    <div class="taxi-visual">
                         <div class="floating-elements">
                             <div class="floating-card">
-                                <div style="font-size: 0.8rem; color: #00d4ff;">📊 Real-time Analytics</div>
+                                <div style="font-size: 0.8rem; color: var(--electric-blue);">📊 Real-time Analytics</div>
                             </div>
                             <div class="floating-card">
-                                <div style="font-size: 0.8rem; color: #7c3aed;">🎯 Geotargeting</div>
+                                <div style="font-size: 0.8rem; color: var(--neon-lime);">🎯 Geo-targeting</div>
                             </div>
                             <div class="floating-card">
-                                <div style="font-size: 0.8rem; color: #00d4ff;">📱 QR Tracking</div>
+                                <div style="font-size: 0.8rem; color: var(--hot-orange);">📱 QR Tracking</div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audience Snapshot -->
+    <section class="audience-strip">
+        <div class="audience-grid">
+            <div class="audience-card">
+                <div class="audience-icon">🚗</div>
+                <h3 class="audience-title">Fleet Owners</h3>
+                <p class="audience-benefit">Maximize revenue with smart ad placement</p>
+            </div>
+            <div class="audience-card">
+                <div class="audience-icon">📈</div>
+                <h3 class="audience-title">Advertisers</h3>
+                <p class="audience-benefit">Reach captive audiences in motion</p>
+            </div>
+            <div class="audience-card">
+                <div class="audience-icon">🏢</div>
+                <h3 class="audience-title">Agencies</h3>
+                <p class="audience-benefit">Streamlined campaign management</p>
+            </div>
+            <div class="audience-card">
+                <div class="audience-icon">💰</div>
+                <h3 class="audience-title">Investors</h3>
+                <p class="audience-benefit">High-growth AdTech opportunity</p>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header scroll-animate">
-                <h2 class="section-title">Powerful Features</h2>
-                <p class="section-subtitle">
-                    Everything you need to run successful taxi advertising campaigns
-                </p>
+    <section class="features" id="solutions">
+        <div class="section-header">
+            <h2 class="section-title">Feature Triad</h2>
+            <p class="section-subtitle">Everything you need to dominate in-taxi advertising</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎛️</div>
+                <h3 class="feature-title">Unified Digital Control</h3>
+                <p class="feature-description">Instant ad swap, geo/time targeting, and real-time content management across your entire fleet.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">📺</div>
-                    <h3 class="feature-title">Video Assignment</h3>
-                    <p class="feature-description">
-                        Seamlessly assign videos to taxi-mounted screens with our intuitive dashboard. Manage content across multiple vehicles and locations.
-                    </p>
-                </div>
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title">Real-time Analytics</h3>
-                    <p class="feature-description">
-                        Track impressions, views, and engagement metrics in real-time. Get detailed insights into your campaign performance.
-                    </p>
-                </div>
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title">Geotargeting</h3>
-                    <p class="feature-description">
-                        Run location-based campaigns with precision targeting. Reach your audience where it matters most.
-                    </p>
-                </div>
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">📱</div>
-                    <h3 class="feature-title">QR Conversion Tracking</h3>
-                    <p class="feature-description">
-                        Monitor QR code scans and conversions. Understand the full customer journey from impression to action.
-                    </p>
-                </div>
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">REST/Socket API</h3>
-                    <p class="feature-description">
-                        Powerful API for seamless integration. Build custom solutions and automate your advertising workflows.
-                    </p>
-                </div>
-                <div class="feature-card scroll-animate">
-                    <div class="feature-icon">🛠️</div>
-                    <h3 class="feature-title">Node.js + React</h3>
-                    <p class="feature-description">
-                        Built with modern technologies for reliability and performance. Scalable architecture for growing businesses.
-                    </p>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Real-Time Analytics</h3>
+                <p class="feature-description">Track impressions, riders, QR scans with live KPI counters that update in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Fast Scaling & API</h3>
+                <p class="feature-description">Plug-and-play setup with cloud uptime and seamless API integration for enterprise needs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Demo -->
+    <section class="analytics-demo" id="analytics">
+        <div class="demo-container">
+            <div class="section-header">
+                <h2 class="section-title">Interactive Analytics Demo</h2>
+                <p class="section-subtitle">See your campaigns perform in real-time</p>
+            </div>
+            <div class="demo-card">
+                <div class="demo-placeholder">
+                    📊 Dashboard Preview - Click to expand
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Chart Section -->
-    <section class="chart-section">
-        <div class="container">
-            <div class="chart-grid">
-                <div class="chart-container">
-                    <div class="chart-card">
-                        <h3 class="chart-title">Campaign Performance</h3>
-                        <div class="chart">
-                            <div class="chart-bar" style="height: 80%; background: linear-gradient(180deg, #00d4ff, #7c3aed);">
-                                <div class="chart-value">2.4M</div>
-                            </div>
-                            <div class="chart-label">Impressions</div>
-                        </div>
-                        <div class="chart">
-                            <div class="chart-bar" style="height: 65%; background: linear-gradient(180deg, #7c3aed, #00d4ff);">
-                                <div class="chart-value">156K</div>
-                            </div>
-                            <div class="chart-label">Clicks</div>
-                        </div>
-                        <div class="chart">
-                            <div class="chart-bar" style="height: 45%; background: linear-gradient(180deg, #00d4ff, #7c3aed);">
-                                <div class="chart-value">12.3K</div>
-                            </div>
-                            <div class="chart-label">Conversions</div>
-                        </div>
-                        <div class="chart">
-                            <div class="chart-bar" style="height: 90%; background: linear-gradient(180deg, #7c3aed, #00d4ff);">
-                                <div class="chart-value">6.5%</div>
-                            </div>
-                            <div class="chart-label">CTR</div>
-                        </div>
-                    </div>
+    <!-- Why Lunqo -->
+    <section class="why-lunqo" id="how-it-works">
+        <div class="section-header">
+            <h2 class="section-title">Why Lunqo?</h2>
+            <p class="section-subtitle">Proven results that drive ROI</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">✅</div>
+                <div class="benefit-content">
+                    <h4>40% Higher Engagement</h4>
+                    <p>Captive audience in motion delivers superior ad recall and conversion rates.</p>
                 </div>
-                <div class="stats-container">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-number">100%</div>
-                            <div class="stat-label">Real-time Tracking</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">24/7</div>
-                            <div class="stat-label">Campaign Monitoring</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">∞</div>
-                            <div class="stat-label">Scalable Solutions</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">🚀</div>
-                            <div class="stat-label">Future Ready</div>
-                        </div>
-                    </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">✅</div>
+                <div class="benefit-content">
+                    <h4>Real-Time Optimization</h4>
+                    <p>AI-powered insights automatically adjust campaigns for maximum performance.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">✅</div>
+                <div class="benefit-content">
+                    <h4>Scalable Infrastructure</h4>
+                    <p>Cloud-native platform handles thousands of screens with 99.9% uptime.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">✅</div>
+                <div class="benefit-content">
+                    <h4>Proven ROI</h4>
+                    <p>Average 3.2x return on ad spend with measurable conversion tracking.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">Ready to Transform Your Taxi Advertising?</h2>
-                <p class="cta-subtitle">Join leading brands using Lunqo to reach millions of passengers daily</p>
-                <div class="cta-actions">
-                    <a href="/admin.html" class="primary-btn">Start Free Trial</a>
-                    <a href="#contact" class="secondary-btn">Schedule Demo</a>
-                </div>
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="section-header">
+            <h2 class="section-title">Trusted by Industry Leaders</h2>
+        </div>
+        <div class="logos-grid">
+            <div class="logo-item">
+                <div class="logo-placeholder">Taxi Fleet A</div>
+            </div>
+            <div class="logo-item">
+                <div class="logo-placeholder">Brand X</div>
+            </div>
+            <div class="logo-item">
+                <div class="logo-placeholder">Agency Y</div>
+            </div>
+            <div class="logo-item">
+                <div class="logo-placeholder">Fleet B</div>
+            </div>
+            <div class="logo-item">
+                <div class="logo-placeholder">Brand Z</div>
+            </div>
+            <div class="logo-item">
+                <div class="logo-placeholder">Agency W</div>
+            </div>
+        </div>
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Lunqo transformed our taxi advertising from static to dynamic. We've seen a 45% increase in engagement and real-time insights that actually drive decisions."</p>
+                <div class="testimonial-author">— Sarah Chen, Marketing Director, Urban Fleet Co.</div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Form Section -->
-    <section class="contact-section" id="contact">
-        <div class="container">
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h2 class="contact-title">Get in Touch</h2>
-                    <p class="contact-subtitle">Ready to revolutionize your taxi advertising? Let's discuss how Lunqo can help you reach your target audience.</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-icon">📧</div>
-                            <div>
-                                <h4>Email</h4>
-                                <p>hello@lunqo.app</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">🌍</div>
-                            <div>
-                                <h4>Location</h4>
-                                <p>Global Coverage</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">⚡</div>
-                            <div>
-                                <h4>Response Time</h4>
-                                <p>Within 24 hours</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <form class="form">
-                        <div class="form-group">
-                            <input type="text" placeholder="Full Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" placeholder="Company Name">
-                        </div>
-                        <div class="form-group">
-                            <select required>
-                                <option value="">Select Inquiry Type</option>
-                                <option value="demo">Request Demo</option>
-                                <option value="pricing">Pricing Information</option>
-                                <option value="partnership">Partnership</option>
-                                <option value="support">Technical Support</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <textarea placeholder="Tell us about your project..." rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">Send Message</button>
-                    </form>
-                </div>
+    <!-- CTA Banner -->
+    <section class="cta-banner" id="demo">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to light up your fleet?</h2>
+            <p class="cta-subtitle">Join the future of in-taxi advertising with Lunqo</p>
+            <div class="cta-actions">
+                <a href="#contact" class="primary-btn">Get Started</a>
+                <a href="#overview" class="secondary-btn">Watch 60-sec Overview</a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <img src="images/Lunqo.svg" alt="Lunqo" class="footer-logo">
-                    <p>The AdTech engine behind SmartSeat Media. Transform your taxi advertising with real-time analytics and geotargeting.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="/admin.html">Dashboard</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="#api">API</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#careers">Careers</a></li>
-                        <li><a href="#blog">Blog</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#help">Help Center</a></li>
-                        <li><a href="#docs">Documentation</a></li>
-                        <li><a href="#status">Status</a></li>
-                        <li><a href="#contact">Contact Support</a></li>
-                    </ul>
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="images/Lunqo.svg" alt="Lunqo" class="footer-logo">
+                <p>Unified control, real-time insights, effortless scaling for in-taxi media. Transform your advertising with Lunqo.</p>
+                <div class="newsletter">
+                    <input type="email" placeholder="Stay updated">
+                    <button>Subscribe</button>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Lunqo. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#terms">Terms of Service</a>
-                </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="#analytics">Analytics</a></li>
+                    <li><a href="#api">API</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#press">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#status">Status</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Lunqo. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.scroll-animate').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Header scroll effect
+        // Navigation scroll effect
         window.addEventListener('scroll', () => {
-            const header = document.querySelector('.header');
+            const nav = document.getElementById('nav');
             if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.1)';
+                nav.classList.add('scrolled');
             } else {
-                header.style.background = 'rgba(255, 255, 255, 0.05)';
+                nav.classList.remove('scrolled');
             }
         });
 
@@ -1155,33 +1118,48 @@
             });
         });
 
-        // Form submission
-        document.querySelector('.form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Show success message
-            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
-            
-            // Reset form
-            this.reset();
-            
-            // Track conversion (you can add analytics here)
-            console.log('Lead captured:', data);
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.audience-card, .feature-card, .benefit-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
         });
 
-        // Add input event listeners for better UX
-        document.querySelectorAll('.form-group input, .form-group textarea, .form-group select').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.02)';
-            });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
+        // Demo card click handler
+        document.querySelector('.demo-card').addEventListener('click', function() {
+            alert('Demo dashboard would open in lightbox here');
+        });
+
+        // Newsletter subscription
+        document.querySelector('.newsletter button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = document.querySelector('.newsletter input').value;
+            if (email) {
+                alert('Thank you for subscribing!');
+                document.querySelector('.newsletter input').value = '';
+            }
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            // Add mobile menu functionality here
         });
     </script>
 </body>
