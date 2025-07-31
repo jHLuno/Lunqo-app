@@ -35,10 +35,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/template.html',
-      filename: 'index.html',
-    }),
+    // Removed HtmlWebpackPlugin to keep the direct index.html
   ],
   devServer: {
     static: {

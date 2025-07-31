@@ -40,11 +40,11 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-3"
           >
-            <img 
-              src="/Lunqo.svg" 
-              alt="Lunqo Logo" 
-              className="w-8 h-8 lg:w-10 lg:h-10"
-            />
+                                <img
+                      src="Lunqo.svg"
+                      alt="Lunqo Logo"
+                      className="w-8 h-8 lg:w-10 lg:h-10"
+                    />
             <span className="text-xl lg:text-2xl font-bold text-white">
               Lunqo
             </span>

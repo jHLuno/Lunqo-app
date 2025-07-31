@@ -54,11 +54,11 @@ const Footer = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center space-x-3 mb-6">
-                <img 
-                  src="/Lunqo.svg" 
-                  alt="Lunqo Logo" 
-                  className="w-8 h-8"
-                />
+                                    <img
+                      src="Lunqo.svg"
+                      alt="Lunqo Logo"
+                      className="w-8 h-8"
+                    />
                 <span className="text-xl font-bold text-white">Lunqo</span>
               </div>
               
