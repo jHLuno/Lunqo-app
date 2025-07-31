@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import lunqoLogo from '../Lunqo.png';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,11 +41,13 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
-                                <img
-                      src="/Lunqo.png"
-                      alt="Lunqo Logo"
-                      className="w-8 h-8 lg:w-10 lg:h-10"
-                    />
+            <img
+              src={lunqoLogo}
+              alt="Lunqo Logo"
+              className="w-8 h-8 lg:w-10 lg:h-10"
+              onError={(e) => console.error('Logo failed to load:', e.target.src)}
+              onLoad={() => console.log('Logo loaded successfully')}
+            />
           </motion.div>
 
           {/* Desktop Navigation */}

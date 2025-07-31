@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import lunqoLogo from '../Lunqo.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -55,9 +56,11 @@ const Footer = () => {
             >
               <div className="flex items-center mb-6">
                                     <img
-                      src="/Lunqo.png"
+                      src={lunqoLogo}
                       alt="Lunqo Logo"
                       className="w-8 h-8"
+                      onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
+                      onLoad={() => console.log('Footer logo loaded successfully')}
                     />
               </div>
               
