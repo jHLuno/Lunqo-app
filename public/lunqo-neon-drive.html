@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunqo - Neon Drive AdTech Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-blue': '#00D9FF',
+                        'neon-purple': '#B000FF',
+                        'neon-pink': '#FF006B',
+                        'neon-green': '#00FF88',
+                        'neon-yellow': '#FFFF00',
+                        'dark-bg': '#0A0A0F',
+                        'dark-card': '#1A1A2E',
+                        'dark-surface': '#16213E',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'slide-right': 'slideRight 0.8s ease-out',
+                        'fade-in': 'fadeIn 1s ease-out',
+                        'neon-pulse': 'neonPulse 2s ease-in-out infinite',
+                        'data-flow': 'dataFlow 3s linear infinite',
+                        'counter-up': 'counterUp 2s ease-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            'from': { filter: 'drop-shadow(0 0 20px currentColor)' },
+                            'to': { filter: 'drop-shadow(0 0 30px currentColor) drop-shadow(0 0 40px currentColor)' }
+                        },
+                        slideUp: {
+                            'from': { opacity: '0', transform: 'translateY(30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideRight: {
+                            'from': { opacity: '0', transform: 'translateX(-30px)' },
+                            'to': { opacity: '1', transform: 'translateX(0)' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        neonPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor' },
+                            '50%': { boxShadow: '0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor' }
+                        },
+                        dataFlow: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100vw)' }
+                        },
+                        counterUp: {
+                            'from': { transform: 'translateY(20px)', opacity: '0' },
+                            'to': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 20px #00D9FF, 0 0 40px #00D9FF, 0 0 60px #00D9FF',
+                        'neon-purple': '0 0 20px #B000FF, 0 0 40px #B000FF, 0 0 60px #B000FF',
+                        'neon-pink': '0 0 20px #FF006B, 0 0 40px #FF006B, 0 0 60px #FF006B',
+                        'neon-green': '0 0 20px #00FF88, 0 0 40px #00FF88, 0 0 60px #00FF88',
+                        'card-hover': '0 20px 60px rgba(0, 217, 255, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2)',
+                        'card-glow': '0 0 40px rgba(0, 217, 255, 0.4), inset 0 0 40px rgba(176, 0, 255, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #0a0a0f 100%);
+            overflow-x: hidden;
+        }
+
+        .neon-text {
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neomorphism {
+            background: linear-gradient(145deg, #1e1e2e, #1a1a28);
+            box-shadow: 
+                20px 20px 40px #0a0a0a,
+                -20px -20px 40px #2a2a3a,
+                inset 5px 5px 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .data-visualization {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(176, 0, 255, 0.1) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00D9FF;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating-particles:nth-child(2) { animation-delay: -2s; background: #B000FF; }
+        .floating-particles:nth-child(3) { animation-delay: -4s; background: #FF006B; }
+        .floating-particles:nth-child(4) { animation-delay: -6s; background: #00FF88; }
+
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .holographic-card {
+            background: linear-gradient(135deg, 
+                rgba(0, 217, 255, 0.1) 0%,
+                rgba(176, 0, 255, 0.1) 25%,
+                rgba(255, 0, 107, 0.1) 50%,
+                rgba(0, 255, 136, 0.1) 75%,
+                rgba(0, 217, 255, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 80px rgba(0, 217, 255, 0.4);
+        }
+
+        .circuit-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300D9FF' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        @keyframes matrix-rain {
+            0% { transform: translateY(-100vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        .matrix-rain {
+            position: absolute;
+            color: #00FF88;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            animation: matrix-rain 4s linear infinite;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+    <!-- Floating Particles Background -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="floating-particles" style="left: 10%; top: 20%;"></div>
+        <div class="floating-particles" style="left: 80%; top: 30%;"></div>
+        <div class="floating-particles" style="left: 60%; top: 70%;"></div>
+        <div class="floating-particles" style="left: 20%; top: 80%;"></div>
+        <div class="floating-particles" style="left: 90%; top: 60%;"></div>
+        <div class="floating-particles" style="left: 40%; top: 10%;"></div>
+    </div>
+
+    <!-- Matrix Rain Effect -->
+    <div id="matrix-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-morphism">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="text-2xl font-bold neon-text text-neon-blue animate-glow">
+                        LUNQO
+                    </div>
+                    <div class="text-sm text-neon-green">v2.4.7</div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="hover:text-neon-blue transition-colors">Dashboard</a>
+                    <a href="#" class="hover:text-neon-purple transition-colors">Analytics</a>
+                    <a href="#" class="hover:text-neon-pink transition-colors">Campaigns</a>
+                    <a href="#" class="hover:text-neon-green transition-colors">API</a>
+                </div>
+                
+                <button class="neomorphism px-6 py-2 rounded-xl text-neon-blue hover:shadow-neon-blue hover:animate-neon-pulse transition-all">
+                    Launch App
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 grid-pattern">
+        <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+            <!-- Holographic Title -->
+            <div class="mb-8 animate-slide-up">
+                <h1 class="text-7xl md:text-9xl font-black neon-text text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink mb-6 animate-glow">
+                    NEON DRIVE
+                </h1>
+                <div class="text-xl md:text-2xl text-neon-green animate-slide-right">
+                    Next-Generation AdTech Platform
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 animate-fade-in">
+                <div class="holographic-card rounded-2xl p-6 hover-lift">
+                    <div class="text-3xl font-bold text-neon-blue neon-text" id="active-campaigns">0</div>
+                    <div class="text-sm text-gray-300">Active Campaigns</div>
+                    <div class="w-full bg-dark-bg rounded-full h-2 mt-2">
+                        <div class="bg-gradient-to-r from-neon-blue to-neon-purple h-2 rounded-full" style="width: 78%"></div>
+                    </div>
+                </div>
+                
+                <div class="holographic-card rounded-2xl p-6 hover-lift">
+                    <div class="text-3xl font-bold text-neon-purple neon-text" id="total-impressions">0</div>
+                    <div class="text-sm text-gray-300">Total Impressions</div>
+                    <div class="w-full bg-dark-bg rounded-full h-2 mt-2">
+                        <div class="bg-gradient-to-r from-neon-purple to-neon-pink h-2 rounded-full" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="holographic-card rounded-2xl p-6 hover-lift">
+                    <div class="text-3xl font-bold text-neon-pink neon-text" id="revenue">$0</div>
+                    <div class="text-sm text-gray-300">Revenue</div>
+                    <div class="w-full bg-dark-bg rounded-full h-2 mt-2">
+                        <div class="bg-gradient-to-r from-neon-pink to-neon-green h-2 rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="holographic-card rounded-2xl p-6 hover-lift">
+                    <div class="text-3xl font-bold text-neon-green neon-text" id="conversion-rate">0%</div>
+                    <div class="text-sm text-gray-300">Conversion Rate</div>
+                    <div class="w-full bg-dark-bg rounded-full h-2 mt-2">
+                        <div class="bg-gradient-to-r from-neon-green to-neon-blue h-2 rounded-full" style="width: 67%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Dashboard Preview -->
+            <div class="data-visualization rounded-3xl p-8 mb-12 relative overflow-hidden">
+                <div class="absolute inset-0 circuit-pattern opacity-20"></div>
+                <h3 class="text-2xl font-bold text-neon-blue mb-6 relative z-10">Live Analytics Dashboard</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
+                    <!-- Real-time Chart -->
+                    <div class="neomorphism rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold text-neon-purple">Performance Metrics</h4>
+                            <div class="flex space-x-2">
+                                <div class="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
+                                <span class="text-sm text-neon-green">Live</span>
+                            </div>
+                        </div>
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <!-- Geographic Data -->
+                    <div class="neomorphism rounded-2xl p-6">
+                        <h4 class="text-lg font-semibold text-neon-blue mb-4">Geographic Distribution</h4>
+                        <canvas id="geoChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <button class="neomorphism px-8 py-4 rounded-2xl text-neon-blue hover:shadow-neon-blue hover:animate-neon-pulse transition-all text-lg font-semibold">
+                    🚀 Start Free Trial
+                </button>
+                <button class="glass-morphism px-8 py-4 rounded-2xl text-neon-purple hover:shadow-neon-purple transition-all text-lg font-semibold border border-neon-purple">
+                    📊 View Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-neon-blue opacity-10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple opacity-10 rounded-full blur-3xl animate-bounce-slow"></div>
+            <div class="absolute top-1/2 right-1/3 w-48 h-48 bg-neon-pink opacity-10 rounded-full blur-3xl animate-spin-slow"></div>
+        </div>
+    </section>
+
+    <!-- Feature Boxes Section -->
+    <section class="py-20 px-6 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black neon-text text-neon-blue mb-4">
+                    Advanced Features
+                </h2>
+                <p class="text-xl text-gray-300">Cutting-edge technology for modern advertising</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- AI-Powered Analytics -->
+                <div class="holographic-card rounded-3xl p-8 hover-lift relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-blue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="text-4xl mb-4 text-neon-blue animate-glow">🤖</div>
+                        <h3 class="text-2xl font-bold text-neon-blue mb-4">AI-Powered Analytics</h3>
+                        <p class="text-gray-300 mb-6">Machine learning algorithms analyze campaign performance in real-time, providing actionable insights.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center text-sm">
+                                <div class="w-2 h-2 bg-neon-green rounded-full mr-3"></div>
+                                <span>Predictive modeling</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="w-2 h-2 bg-neon-purple rounded-full mr-3"></div>
+                                <span>Automated optimization</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <div class="w-2 h-2 bg-neon-pink rounded-full mr-3"></div>
+                                <span>Anomaly detection</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Chart -->
+                        <div class="mt-6 h-16 bg-dark-bg rounded-lg p-2">
+                            <canvas id="miniChart1" width="200" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Targeting -->
+                <div class="holographic-card rounded-3xl p-8 hover-lift relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="text-4xl mb-4 text-neon-purple animate-glow">🎯</div>
+                        <h3 class="text-2xl font-bold text-neon-purple mb-4">Real-time Targeting</h3>
+                        <p class="text-gray-300 mb-6">Dynamic audience segmentation based on location, demographics, and behavior patterns.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="neomorphism rounded-lg p-3 text-center">
+                                <div class="text-lg font-bold text-neon-green">2.4M</div>
+                                <div class="text-xs text-gray-400">Active Users</div>
+                            </div>
+                            <div class="neomorphism rounded-lg p-3 text-center">
+                                <div class="text-lg font-bold text-neon-blue">98.7%</div>
+                                <div class="text-xs text-gray-400">Accuracy</div>
+                            </div>
+                        </div>
+
+                        <!-- Targeting Visualization -->
+                        <div class="relative h-16">
+                            <div class="absolute inset-0 bg-gradient-to-r from-neon-purple/30 to-neon-blue/30 rounded-lg"></div>
+                            <div class="absolute top-2 left-2 w-3 h-3 bg-neon-purple rounded-full animate-ping"></div>
+                            <div class="absolute bottom-2 right-2 w-2 h-2 bg-neon-blue rounded-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blockchain Integration -->
+                <div class="holographic-card rounded-3xl p-8 hover-lift relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="text-4xl mb-4 text-neon-green animate-glow">⛓️</div>
+                        <h3 class="text-2xl font-bold text-neon-green mb-4">Blockchain Security</h3>
+                        <p class="text-gray-300 mb-6">Immutable transaction records and smart contract automation for transparent operations.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Transaction Hash</span>
+                                <span class="text-xs text-neon-green font-mono">0x7a8f9...</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Block Height</span>
+                                <span class="text-xs text-neon-blue">8,456,789</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Gas Used</span>
+                                <span class="text-xs text-neon-purple">21,000</span>
+                            </div>
+                        </div>
+
+                        <!-- Blockchain Animation -->
+                        <div class="mt-6 flex justify-center">
+                            <div class="flex space-x-2">
+                                <div class="w-4 h-4 bg-neon-green rounded border-2 border-neon-green animate-pulse"></div>
+                                <div class="w-4 h-4 bg-neon-blue rounded border-2 border-neon-blue animate-pulse" style="animation-delay: 0.5s"></div>
+                                <div class="w-4 h-4 bg-neon-purple rounded border-2 border-neon-purple animate-pulse" style="animation-delay: 1s"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced API -->
+                <div class="holographic-card rounded-3xl p-8 hover-lift relative overflow-hidden group md:col-span-2 lg:col-span-1">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-pink/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="text-4xl mb-4 text-neon-pink animate-glow">⚡</div>
+                        <h3 class="text-2xl font-bold text-neon-pink mb-4">Lightning API</h3>
+                        <p class="text-gray-300 mb-6">Ultra-fast RESTful API with GraphQL support and real-time WebSocket connections.</p>
+                        
+                        <!-- Code Example -->
+                        <div class="bg-dark-bg rounded-lg p-4 mb-4 font-mono text-xs">
+                            <div class="text-neon-green">GET /api/v2/campaigns</div>
+                            <div class="text-gray-400">{"status": "success",</div>
+                            <div class="text-gray-400"> "data": [...],</div>
+                            <div class="text-gray-400"> "latency": "12ms"}</div>
+                        </div>
+
+                        <!-- API Stats -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-neon-pink">99.9%</div>
+                                <div class="text-xs text-gray-400">Uptime</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-neon-blue">&lt;50ms</div>
+                                <div class="text-xs text-gray-400">Response</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Visualization Engine -->
+                <div class="holographic-card rounded-3xl p-8 hover-lift relative overflow-hidden group md:col-span-2">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-blue/20 via-neon-purple/20 to-neon-pink/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <div class="text-4xl mb-2 text-neon-blue animate-glow">📊</div>
+                                <h3 class="text-2xl font-bold text-neon-blue">Advanced Data Visualization</h3>
+                                <p class="text-gray-300 mt-2">Interactive charts and real-time data streaming for comprehensive insights.</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-bold text-neon-green">342%</div>
+                                <div class="text-sm text-gray-400">Performance Increase</div>
+                            </div>
+                        </div>
+
+                        <!-- Large Chart Area -->
+                        <div class="neomorphism rounded-2xl p-6">
+                            <canvas id="advancedChart" width="600" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Flow Visualization -->
+    <section class="py-20 px-6 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-30"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black neon-text text-neon-purple mb-4">
+                    Data Flow Architecture
+                </h2>
+                <p class="text-xl text-gray-300">Real-time data processing at scale</p>
+            </div>
+
+            <!-- Interactive Data Flow -->
+            <div class="relative">
+                <!-- Data Sources -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <div class="text-center">
+                        <div class="holographic-card rounded-2xl p-6 hover-lift">
+                            <div class="text-3xl mb-4 text-neon-blue">📱</div>
+                            <h4 class="text-lg font-semibold text-neon-blue">Mobile Apps</h4>
+                            <div class="text-sm text-gray-400 mt-2">iOS & Android SDKs</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="holographic-card rounded-2xl p-6 hover-lift">
+                            <div class="text-3xl mb-4 text-neon-purple">🌐</div>
+                            <h4 class="text-lg font-semibold text-neon-purple">Web Analytics</h4>
+                            <div class="text-sm text-gray-400 mt-2">JavaScript Tracking</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="holographic-card rounded-2xl p-6 hover-lift">
+                            <div class="text-3xl mb-4 text-neon-green">🚗</div>
+                            <h4 class="text-lg font-semibold text-neon-green">IoT Devices</h4>
+                            <div class="text-sm text-gray-400 mt-2">Smart Taxi Screens</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Processing Pipeline -->
+                <div class="data-visualization rounded-3xl p-8 mb-12">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-neon-blue">Real-time Processing Pipeline</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                        <div class="neomorphism rounded-xl p-4 text-center">
+                            <div class="text-2xl mb-2 text-neon-blue">⚡</div>
+                            <div class="text-sm font-semibold">Ingestion</div>
+                            <div class="text-xs text-gray-400">Apache Kafka</div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="animate-data-flow text-neon-blue">→</div>
+                        </div>
+                        
+                        <div class="neomorphism rounded-xl p-4 text-center">
+                            <div class="text-2xl mb-2 text-neon-purple">🔄</div>
+                            <div class="text-sm font-semibold">Processing</div>
+                            <div class="text-xs text-gray-400">Apache Flink</div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="animate-data-flow text-neon-purple" style="animation-delay: 1s">→</div>
+                        </div>
+                        
+                        <div class="neomorphism rounded-xl p-4 text-center">
+                            <div class="text-2xl mb-2 text-neon-green">💾</div>
+                            <div class="text-sm font-semibold">Storage</div>
+                            <div class="text-xs text-gray-400">ClickHouse</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="neomorphism rounded-2xl p-6 text-center hover-lift">
+                        <div class="text-3xl font-bold text-neon-blue neon-text">5.2B</div>
+                        <div class="text-sm text-gray-400">Events/Day</div>
+                        <div class="w-full bg-dark-bg rounded-full h-2 mt-3">
+                            <div class="bg-neon-blue h-2 rounded-full animate-pulse" style="width: 89%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="neomorphism rounded-2xl p-6 text-center hover-lift">
+                        <div class="text-3xl font-bold text-neon-purple neon-text">12ms</div>
+                        <div class="text-sm text-gray-400">Avg Latency</div>
+                        <div class="w-full bg-dark-bg rounded-full h-2 mt-3">
+                            <div class="bg-neon-purple h-2 rounded-full animate-pulse" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="neomorphism rounded-2xl p-6 text-center hover-lift">
+                        <div class="text-3xl font-bold text-neon-green neon-text">99.99%</div>
+                        <div class="text-sm text-gray-400">Uptime</div>
+                        <div class="w-full bg-dark-bg rounded-full h-2 mt-3">
+                            <div class="bg-neon-green h-2 rounded-full animate-pulse" style="width: 99%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="neomorphism rounded-2xl p-6 text-center hover-lift">
+                        <div class="text-3xl font-bold text-neon-pink neon-text">847TB</div>
+                        <div class="text-sm text-gray-400">Data Stored</div>
+                        <div class="w-full bg-dark-bg rounded-full h-2 mt-3">
+                            <div class="bg-neon-pink h-2 rounded-full animate-pulse" style="width: 72%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 px-6 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="text-4xl font-black neon-text text-neon-blue mb-4 animate-glow">
+                    LUNQO NEON DRIVE
+                </div>
+                <p class="text-gray-400">The future of advertising technology</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h4 class="text-lg font-semibold text-neon-blue mb-4">Platform</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-neon-blue transition-colors">Dashboard</a></li>
+                        <li><a href="#" class="hover:text-neon-blue transition-colors">Analytics</a></li>
+                        <li><a href="#" class="hover:text-neon-blue transition-colors">Campaigns</a></li>
+                        <li><a href="#" class="hover:text-neon-blue transition-colors">API Docs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-neon-purple mb-4">Solutions</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-neon-purple transition-colors">In-Taxi Advertising</a></li>
+                        <li><a href="#" class="hover:text-neon-purple transition-colors">Real-time Analytics</a></li>
+                        <li><a href="#" class="hover:text-neon-purple transition-colors">Geo-targeting</a></li>
+                        <li><a href="#" class="hover:text-neon-purple transition-colors">Campaign Management</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-neon-green mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-neon-green transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-neon-green transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-neon-green transition-colors">Press</a></li>
+                        <li><a href="#" class="hover:text-neon-green transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-neon-pink mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-dark-card rounded-full flex items-center justify-center hover:shadow-neon-blue transition-all">
+                            <span class="text-neon-blue">📧</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-dark-card rounded-full flex items-center justify-center hover:shadow-neon-purple transition-all">
+                            <span class="text-neon-purple">💬</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-dark-card rounded-full flex items-center justify-center hover:shadow-neon-green transition-all">
+                            <span class="text-neon-green">🐦</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-500 border-t border-gray-800 pt-8">
+                <p>&copy; 2024 Lunqo Neon Drive. All rights reserved. Powered by next-gen AdTech.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script>
+        // Counter animations
+        function animateCounter(elementId, targetValue, suffix = '') {
+            const element = document.getElementById(elementId);
+            const duration = 2000;
+            const startTime = performance.now();
+            const startValue = 0;
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+                
+                element.textContent = currentValue.toLocaleString() + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Matrix rain effect
+        function createMatrixRain() {
+            const container = document.getElementById('matrix-container');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            
+            function createRainDrop() {
+                const drop = document.createElement('div');
+                drop.className = 'matrix-rain';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                drop.textContent = chars[Math.floor(Math.random() * chars.length)];
+                container.appendChild(drop);
+                
+                setTimeout(() => {
+                    if (container.contains(drop)) {
+                        container.removeChild(drop);
+                    }
+                }, 4000);
+            }
+            
+            setInterval(createRainDrop, 200);
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                }
+            };
+
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 20}, (_, i) => i),
+                    datasets: [{
+                        data: Array.from({length: 20}, () => Math.random() * 100 + 50),
+                        borderColor: '#00D9FF',
+                        backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        data: Array.from({length: 20}, () => Math.random() * 80 + 40),
+                        borderColor: '#B000FF',
+                        backgroundColor: 'rgba(176, 0, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Geographic Chart
+            const geoCtx = document.getElementById('geoChart').getContext('2d');
+            new Chart(geoCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['North America', 'Europe', 'Asia', 'Others'],
+                    datasets: [{
+                        data: [35, 28, 25, 12],
+                        backgroundColor: ['#00D9FF', '#B000FF', '#FF006B', '#00FF88'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    cutout: '70%'
+                }
+            });
+
+            // Mini Charts
+            ['miniChart1', 'advancedChart'].forEach((chartId, index) => {
+                const ctx = document.getElementById(chartId)?.getContext('2d');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: Array.from({length: 10}, (_, i) => i),
+                            datasets: [{
+                                data: Array.from({length: 10}, () => Math.random() * 100),
+                                backgroundColor: index === 0 ? '#00D9FF' : ['#00D9FF', '#B000FF', '#FF006B', '#00FF88'].map(color => color + '80').slice(0, 10),
+                                borderWidth: 0
+                            }]
+                        },
+                        options: chartOptions
+                    });
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start counter animations
+            setTimeout(() => {
+                animateCounter('active-campaigns', 1247);
+                animateCounter('total-impressions', 8547000);
+                animateCounter('revenue', 2847000, '');
+                animateCounter('conversion-rate', 23, '%');
+            }, 500);
+
+            // Update revenue display
+            setTimeout(() => {
+                document.getElementById('revenue').textContent = '$2.84M';
+            }, 2500);
+
+            // Initialize matrix rain
+            createMatrixRain();
+
+            // Initialize charts
+            initCharts();
+
+            // Intersection Observer for animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe animated elements
+            document.querySelectorAll('.animate-slide-up, .animate-slide-right, .animate-fade-in').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+
+            // Real-time data updates
+            setInterval(() => {
+                // Update random metrics
+                const metrics = document.querySelectorAll('.neon-text');
+                metrics.forEach(metric => {
+                    if (metric.textContent.includes('%')) {
+                        const baseValue = parseInt(metric.textContent);
+                        const newValue = baseValue + (Math.random() - 0.5) * 2;
+                        metric.textContent = Math.max(0, Math.min(100, newValue)).toFixed(1) + '%';
+                    }
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 
