@@ -50,6 +50,9 @@ services:
       npm ci
       # Build the React app
       npm run build
+      # Ensure favicon files are copied to public directory
+      cp public/favicon.* public/ 2>/dev/null || true
+      cp public/Lunqo.svg public/ 2>/dev/null || true
       # Remove devDependencies to reduce size
       npm prune --production
     startCommand: npm start
