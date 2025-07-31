@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunqo – Light-Up Ads on the Go</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-confetti@6.1.0/dist/react-confetti.umd.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            color: white;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(24,160,251,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float 5s ease-in-out infinite;
+        }
+
+        @keyframes particle-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+    </style>
+    <script type="text/tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'electric-blue': '#18A0FB',
+                        'neon-green': '#59FF70',
+                        'deep-black': '#0a0a0a',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        glowPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(24,160,251,0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(24,160,251,0.6)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.FramerMotion;
+
+        // Particle Background Component
+        const ParticleBackground = ({ count = 20 }) => {
+            return (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    {Array.from({ length: count }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="particle"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                                width: `${10 + Math.random() * 20}px`,
+                                height: `${10 + Math.random() * 20}px`,
+                                opacity: Math.random() * 0.5 + 0.1,
+                                animationDelay: `${Math.random() * 3}s`
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        // Animated Counter Component
+        const AnimatedCounter = ({ target, duration = 2000, suffix = '' }) => {
+            const [count, setCount] = useState(0);
+            const ref = useRef();
+
+            useEffect(() => {
+                const observer = new IntersectionObserver(([entry]) => {
+                    if (entry.isIntersecting) {
+                        let start = 0;
+                        const increment = target / (duration / 16);
+                        const timer = setInterval(() => {
+                            start += increment;
+                            if (start >= target) {
+                                setCount(target);
+                                clearInterval(timer);
+                            } else {
+                                setCount(Math.floor(start));
+                            }
+                        }, 16);
+                    }
+                });
+
+                if (ref.current) observer.observe(ref.current);
+                return () => observer.disconnect();
+            }, [target, duration]);
+
+            return <motion.span ref={ref} initial={{ scale: 0.9 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
+                {count.toLocaleString()}{suffix}
+            </motion.span>;
+        };
+
+        // Logo Carousel Component
+        const LogoCarousel = () => {
+            const logos = [
+                'https://via.placeholder.com/150x50?text=Uber',
+                'https://via.placeholder.com/150x50?text=Lyft',
+                'https://via.placeholder.com/150x50?text=Google',
+                'https://via.placeholder.com/150x50?text=Starbucks',
+                'https://via.placeholder.com/150x50?text=Nike',
+                'https://via.placeholder.com/150x50?text=Adidas',
+                'https://via.placeholder.com/150x50?text=Coca-Cola',
+                'https://via.placeholder.com/150x50?text=Pepsi'
+            ];
+
+            return (
+                <motion.div className="overflow-hidden" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }}>
+                    <motion.div
+                        className="flex"
+                        animate={{ x: ['0%', '-50%'] }}
+                        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                        style={{ width: '200%' }}
+                    >
+                        {[...logos, ...logos].map((src, i) => (
+                            <motion.img
+                                key={i}
+                                src={src}
+                                alt="Partner logo"
+                                className="h-12 mx-6 filter grayscale hover:grayscale-0 transition-all duration-300"
+                                whileHover={{ scale: 1.1 }}
+                            />
+                        ))}
+                    </motion.div>
+                </motion.div>
+            );
+        };
+
+        // Demo Chart Component
+        const DemoChart = () => {
+            const chartRef = useRef(null);
+
+            useEffect(() => {
+                if (chartRef.current) {
+                    new Chart(chartRef.current, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Impressions', 'Clicks', 'Conversions', 'CTR'],
+                            datasets: [{
+                                label: 'Campaign Metrics',
+                                data: [2.4, 0.156, 0.0123, 6.5],
+                                backgroundColor: [
+                                    'rgba(24, 160, 251, 0.6)',
+                                    'rgba(89, 255, 112, 0.6)',
+                                    'rgba(255, 122, 69, 0.6)',
+                                    'rgba(255, 215, 0, 0.6)'
+                                ],
+                                borderColor: [
+                                    '#18A0FB',
+                                    '#59FF70',
+                                    '#FF7A45',
+                                    '#FFD700'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            scales: {
+                                x: {
+                                    display: false
+                                },
+                                y: {
+                                    ticks: {
+                                        color: '#CCCCCC'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
+            }, []);
+
+            return <canvas ref={chartRef} className="w-full h-64"></canvas>;
+        };
+
+        // Ad Network Simulator Component
+        const AdNetworkSimulator = () => {
+            const [taxis, setTaxis] = useState([]);
+
+            const addTaxi = (e) => {
+                setTaxis(prev => [...prev, { id: Date.now(), x: e.clientX, y: e.clientY }]);
+            };
+
+            return (
+                <div onClick={addTaxi} className="relative h-96 bg-gradient-to-br from-[#16213e] to-[#0f3460] rounded-2xl overflow-hidden cursor-pointer">
+                    <AnimatePresence>
+                        {taxis.map(taxi => (
+                            <motion.div
+                                key={taxi.id}
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0, opacity: 0 }}
+                                className="absolute w-12 h-12 rounded-full bg-[#18A0FB]/50 border border-[#18A0FB] flex items-center justify-center"
+                                style={{ left: taxi.x - 24, top: taxi.y - 24 }}
+                            >
+                                🚗
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                    <div className="absolute bottom-4 left-4 text-sm bg-black/50 px-3 py-1 rounded-full">
+                        Click to add taxis and simulate ad network
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const [scrolled, setScrolled] = useState(false);
+            const [confetti, setConfetti] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <div className="min-h-screen relative">
+                    <ParticleBackground count={50} />
+                    {/* Navigation */}
+                    <motion.nav
+                        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-2 bg-black/80' : 'py-4 bg-transparent'}`}
+                        initial={{ y: -100 }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="container flex justify-between items-center">
+                            <img src="/images/Lunqo.svg" alt="Lunqo" className="h-8" />
+                            <div className="hidden md:flex space-x-6">
+                                <a href="#features" className="hover:text-[#18A0FB] transition-colors">Features</a>
+                                <a href="#how-it-works" className="hover:text-[#18A0FB] transition-colors">How it Works</a>
+                                <a href="#pricing" className="hover:text-[#18A0FB] transition-colors">Pricing</a>
+                                <a href="#docs" className="hover:text-[#18A0FB] transition-colors">Docs</a>
+                                <a href="#resources" className="hover:text-[#18A0FB] transition-colors">Resources</a>
+                            </div>
+                            <button className="btn-primary" onClick={() => setConfetti(true)}>Sign Up</button>
+                        </div>
+                    </motion.nav>
+
+                    {/* Hero Section */}
+                    <section className="min-h-screen flex items-center relative overflow-hidden">
+                        <motion.div
+                            className="container z-10"
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <h1 className="text-6xl font-bold mb-4">The most flexible AdTech engine for taxi screens</h1>
+                            <p className="text-xl mb-8">Lunqo lets you assign videos, track impressions & QR-conversions in real time, and run geotargeted campaigns without code changes.</p>
+                            <button className="btn-primary mr-4">Try the Demo</button>
+                            <button className="btn-secondary">Start Free Account</button>
+                            <motion.div
+                                className="mt-12 p-8 bg-black/50 rounded-xl"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Interactive Ad Simulator - Drag to place ads</p>
+                                <AdNetworkSimulator />
+                            </motion.div>
+                        </motion.div>
+                    </section>
+
+                    {/* Features Section */}
+                    <section id="features" className="py-20">
+                        <div className="container">
+                            <h2 className="text-4xl font-bold mb-12 text-center">Core Features</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <motion.div className="card" whileHover={{ y: -10 }}>
+                                    <h3 className="text-2xl font-bold mb-4">Unified Control</h3>
+                                    <p>Manage ads across all screens with geo-targeting.</p>
+                                </motion.div>
+                                <motion.div className="card" whileHover={{ y: -10 }}>
+                                    <h3 className="text-2xl font-bold mb-4">Real-Time Analytics</h3>
+                                    <p>Track impressions and conversions instantly.</p>
+                                </motion.div>
+                                <motion.div className="card" whileHover={{ y: -10 }}>
+                                    <h3 className="text-2xl font-bold mb-4">Easy Scaling</h3>
+                                    <p>Plug-and-play API for rapid expansion.</p>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* How It Works Section */}
+                    <section id="how-it-works" className="py-20 bg-black/20">
+                        <div className="container">
+                            <h2 className="text-4xl font-bold mb-12 text-center">How Lunqo Works</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <motion.div className="card text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+                                    <h3 className="text-xl font-bold mb-2">Connect Screens</h3>
+                                    <p>Add your taxi screens via API.</p>
+                                </motion.div>
+                                <motion.div className="card text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                                    <h3 className="text-xl font-bold mb-2">Assign Campaigns</h3>
+                                    <p>Set geo-targeted video ads.</p>
+                                </motion.div>
+                                <motion.div className="card text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                                    <h3 className="text-xl font-bold mb-2">Track Performance</h3>
+                                    <p>Monitor real-time metrics.</p>
+                                </motion.div>
+                                <motion.div className="card text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                                    <h3 className="text-xl font-bold mb-2">Optimize & Scale</h3>
+                                    <p>Adjust and expand effortlessly.</p>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Testimonials Section */}
+                    <section className="py-20">
+                        <div className="container">
+                            <h2 className="text-4xl font-bold mb-12 text-center">What Our Partners Say</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <motion.div className="card p-6" whileHover={{ scale: 1.05 }}>
+                                    <p className="mb-4">"Lunqo revolutionized our fleet revenue."</p>
+                                    <p className="text-sm text-gray-400">- Fleet Owner</p>
+                                </motion.div>
+                                <motion.div className="card p-6" whileHover={{ scale: 1.05 }}>
+                                    <p className="mb-4">"Best AdTech for targeted campaigns."</p>
+                                    <p className="text-sm text-gray-400">- Brand Manager</p>
+                                </motion.div>
+                                <motion.div className="card p-6" whileHover={{ scale: 1.05 }}>
+                                    <p className="mb-4">"Scalable and easy to integrate."</p>
+                                    <p className="text-sm text-gray-400">- Investor</p>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* CTA Section */}
+                    <section className="py-20 text-center">
+                        <div className="container">
+                            <h2 className="text-4xl font-bold mb-4">Ready to Light Up Your Ads?</h2>
+                            <p className="text-xl mb-8">Get started with Lunqo today</p>
+                            <button className="btn-primary">Sign Up Free</button>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="py-6 text-center bg-black/50">
+                        <div className="container">
+                            <p>&copy; 2024 Lunqo. All rights reserved.</p>
+                        </div>
+                    </footer>
+
+                    {confetti && <Confetti numberOfPieces={200} />}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html> 
