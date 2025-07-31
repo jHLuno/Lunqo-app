@@ -38,16 +38,13 @@ const Navbar = () => {
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-3"
+            className="flex items-center"
           >
                                 <img
                       src="Lunqo.png"
                       alt="Lunqo Logo"
                       className="w-8 h-8 lg:w-10 lg:h-10"
                     />
-            <span className="text-xl lg:text-2xl font-bold text-white">
-              Lunqo
-            </span>
           </motion.div>
 
           {/* Desktop Navigation */}

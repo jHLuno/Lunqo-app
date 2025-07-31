@@ -53,13 +53,12 @@ const Footer = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-center space-x-3 mb-6">
+              <div className="flex items-center mb-6">
                                     <img
                       src="Lunqo.png"
                       alt="Lunqo Logo"
                       className="w-8 h-8"
                     />
-                <span className="text-xl font-bold text-white">Lunqo</span>
               </div>
               
               <p className="text-dark-300 mb-6 leading-relaxed">
