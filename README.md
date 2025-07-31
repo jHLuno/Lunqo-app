@@ -203,8 +203,8 @@ This project is licensed under the ISC License.
 ## 📞 Support
 
 For support or questions:
-- Email: hello@lunqo.app
-- Phone: +1 (555) 123-4567
+- Email: business@lunqo.app
+- Telegram: @arney_himself
 
 ---
 

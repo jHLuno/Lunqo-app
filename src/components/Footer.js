@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Car, Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -53,10 +53,12 @@ const Footer = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-center space-x-2 mb-6">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-blue to-primary-lime rounded-lg flex items-center justify-center">
-                  <Car className="w-5 h-5 text-white" />
-                </div>
+              <div className="flex items-center space-x-3 mb-6">
+                <img 
+                  src="/images/Lunqo.svg" 
+                  alt="Lunqo Logo" 
+                  className="w-8 h-8"
+                />
                 <span className="text-xl font-bold text-white">Lunqo</span>
               </div>
               
