@@ -1,4 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* SF Pro Display Font Declarations - These reference the preloaded font files */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../public/fonts/SF-Pro-Display-Regular.d1f5e6e16dd4f75c3950.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../public/fonts/SF-Pro-Display-Medium.b85d841dacb040b84951.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../public/fonts/SF-Pro-Display-Bold.b1f4d2c69fa808ebca12.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
