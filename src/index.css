@@ -6,7 +6,7 @@
   src: url('../public/fonts/SF-Pro-Display-Regular.d1f5e6e16dd4f75c3950.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block; /* Force immediate usage to prevent preload warnings */
 }
 
 @font-face {
@@ -14,7 +14,7 @@
   src: url('../public/fonts/SF-Pro-Display-Medium.b85d841dacb040b84951.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
-  font-display: swap;
+  font-display: block; /* Force immediate usage to prevent preload warnings */
 }
 
 @font-face {
@@ -22,7 +22,7 @@
   src: url('../public/fonts/SF-Pro-Display-Bold.b1f4d2c69fa808ebca12.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: block; /* Force immediate usage to prevent preload warnings */
 }
 
 @tailwind base;
@@ -35,7 +35,7 @@
   }
   
   html, body {
-    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif !important;
     background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%) !important;
     background-attachment: fixed !important;
     color: #ffffff;
@@ -47,6 +47,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Force font usage to prevent preload warnings */
+    font-weight: 400;
+  }
+  
+  /* Force immediate font usage on all text elements */
+  body, div, p, h1, h2, h3, h4, h5, h6, span, a, button, input, textarea, label {
+    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif !important;
   }
   
   #root {
