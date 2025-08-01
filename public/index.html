@@ -72,11 +72,11 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.08) 0%, transparent 50%);
-            filter: blur(60px);
+                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.06) 0%, transparent 50%);
+            filter: blur(40px);
             z-index: -1;
-            animation: backgroundShift 60s ease-in-out infinite;
+            animation: backgroundShift 90s ease-in-out infinite;
             /* Hardware acceleration for background */
             transform: translateZ(0);
             will-change: transform;
@@ -84,7 +84,7 @@
         
         @keyframes backgroundShift {
             0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(-2px, -2px, 0); }
+            50% { transform: translate3d(-1px, -1px, 0); }
         }
         
         .loading {
@@ -129,6 +129,16 @@
             transform: translateZ(0);
         }
         
+        /* Performance mode classes */
+        .performance-mode {
+            animation-duration: 0.1s !important;
+            transition-duration: 0.1s !important;
+        }
+        
+        .performance-mode body::before {
+            animation: none !important;
+        }
+        
         /* Optimize for reduced motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
@@ -141,7 +151,7 @@
         /* High refresh rate optimizations */
         @media (min-resolution: 120dpi) and (min-width: 1200px) {
             body::before {
-                animation-duration: 90s;
+                animation-duration: 120s;
             }
         }
     </style>
@@ -164,13 +174,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" integrity="sha256-huW7yWl7tNfP7lGk46XE+Sp0nCotjzYodhVKlwaNeco=" crossorigin="anonymous"></script>
     
     <script>
-        // Advanced 120fps performance monitoring
+        // Advanced 120fps performance monitoring with aggressive optimization
         let frameCount = 0;
         let lastTime = performance.now();
         let fps = 120;
         let isMonitoring = false;
         let lowFpsCount = 0;
         let highFpsCount = 0;
+        let performanceMode = false;
         
         // Performance optimization flags
         let isHighRefreshRate = window.matchMedia('(min-resolution: 120dpi)').matches;
@@ -190,7 +201,7 @@
                 // Track performance trends
                 if (fps < 100) {
                     lowFpsCount++;
-                    if (lowFpsCount > 3) {
+                    if (lowFpsCount > 2) {
                         console.warn(`Performance optimization needed: ${fps} fps (target: 120fps)`);
                         optimizePerformance();
                     }
@@ -209,43 +220,79 @@
         }
         
         function optimizePerformance() {
-            // Dynamic performance optimizations
-            const elements = document.querySelectorAll('.animate-120fps');
-            elements.forEach(el => {
-                el.style.willChange = 'transform, opacity';
-                el.style.transform = 'translateZ(0)';
+            if (performanceMode) return; // Already in performance mode
+            
+            performanceMode = true;
+            console.log('🚀 Enabling aggressive performance mode');
+            
+            // Add performance mode class to body
+            document.body.classList.add('performance-mode');
+            
+            // Disable heavy animations
+            const animatedElements = document.querySelectorAll('[class*="animate"], [class*="motion"]');
+            animatedElements.forEach(el => {
+                el.style.animation = 'none';
+                el.style.transition = 'none';
             });
             
-            // Reduce animation complexity if needed
-            if (fps < 80) {
-                document.body.style.setProperty('--animation-duration', '0.1s');
+            // Disable background animation
+            const bodyBefore = document.querySelector('body::before');
+            if (bodyBefore) {
+                bodyBefore.style.animation = 'none';
             }
+            
+            // Reduce blur effects
+            const blurElements = document.querySelectorAll('[style*="blur"], [class*="blur"]');
+            blurElements.forEach(el => {
+                el.style.filter = 'blur(0px)';
+                el.style.backdropFilter = 'none';
+            });
+            
+            // Optimize SmoothScroll for performance
+            if (window.SmoothScroll) {
+                SmoothScroll({
+                    animationTime: 300,    // Much faster
+                    stepSize: 30,          // Smaller steps
+                    accelerationDelta: 10, // Minimal acceleration
+                    accelerationMax: 1,    // No acceleration
+                    pulseAlgorithm: false, // Disable pulse
+                    pulseScale: 1,         // No pulse
+                    pulseNormalize: 1,     // No pulse
+                    keyboardSupport: true,
+                    arrowScroll: 20,       // Smaller steps
+                    touchpadSupport: true,
+                });
+            }
+            
+            // Reduce motion for all elements
+            document.documentElement.style.setProperty('--animation-duration', '0.1s');
+            document.documentElement.style.setProperty('--transition-duration', '0.1s');
         }
         
-        // Initialize SmoothScroll with 120fps optimizations
+        // Initialize SmoothScroll with conservative settings
         SmoothScroll({
-            // Время скролла 600 = 0.6 секунды (faster for 120fps)
-            animationTime    : 600,
+            // Время скролла 400 = 0.4 секунды (much faster)
+            animationTime    : 400,
             // Размер шага в пикселях 
-            stepSize         : 60,
+            stepSize         : 40,
 
             // Дополнительные настройки:
             
             // Ускорение 
-            accelerationDelta : 20,  // Reduced for smoother 120fps
+            accelerationDelta : 15,  // Minimal for performance
             // Максимальное ускорение
-            accelerationMax   : 1.5, // Reduced for better performance
+            accelerationMax   : 1.2, // Minimal acceleration
 
             // Поддержка клавиатуры
             keyboardSupport   : true,  
             // Шаг скролла стрелками на клавиатуре в пикселях
-            arrowScroll       : 40,
+            arrowScroll       : 30,
 
             // Pulse (less tweakable)
             // ratio of "tail" to "acceleration"
-            pulseAlgorithm   : true,
-            pulseScale       : 3,    // Reduced for 120fps
-            pulseNormalize   : 1,
+            pulseAlgorithm   : false, // Disabled for performance
+            pulseScale       : 1,     // No pulse
+            pulseNormalize   : 1,     // No pulse
 
             // Поддержка тачпада
             touchpadSupport   : true,

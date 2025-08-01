@@ -66,9 +66,9 @@
     background: 
       radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.06) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.06) 0%, transparent 50%);
-    filter: blur(60px);
+    filter: blur(40px);
     z-index: -1;
-    animation: backgroundShift 60s ease-in-out infinite;
+    animation: backgroundShift 90s ease-in-out infinite;
     /* Hardware acceleration */
     transform: translateZ(0);
     will-change: transform;
@@ -76,7 +76,7 @@
   
   @keyframes backgroundShift {
     0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-2px, -2px, 0); }
+    50% { transform: translate3d(-1px, -1px, 0); }
   }
 
   * {
@@ -110,6 +110,31 @@
   
   .animate-fast {
     transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Performance mode - automatically applied when FPS drops */
+  .performance-mode * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
+  
+  .performance-mode body::before {
+    animation: none !important;
+  }
+  
+  .performance-mode .animate-120fps {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .performance-mode [class*="motion"] {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .performance-mode [style*="blur"] {
+    filter: blur(0px) !important;
+    backdrop-filter: none !important;
   }
   
   /* Optimize for high refresh rate displays */
@@ -265,6 +290,15 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     transform: translateZ(0);
+  }
+  
+  /* Performance mode utilities */
+  .performance-mode .hover-lift:hover {
+    transform: translateZ(0) translateY(-2px);
+  }
+  
+  .performance-mode .hover-scale:hover {
+    transform: translateZ(0) scale(1.01);
   }
 }
 
