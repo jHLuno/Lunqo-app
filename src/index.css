@@ -11,14 +11,7 @@
   
   body {
     scroll-behavior: smooth;
-    /* Smooth mouse wheel scrolling */
-    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* For iOS */
-  }
-  
-  /* Smooth mouse wheel scrolling for all scrollable elements */
-  * {
-    scroll-behavior: smooth;
   }
   
   /* Custom scrollbar with smooth behavior */

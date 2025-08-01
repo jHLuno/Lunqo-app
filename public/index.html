@@ -112,7 +112,38 @@
     <!-- React Bundle -->
     <script src="bundle.js"></script>
     
+    <!-- SmoothScroll.js for enhanced mouse wheel scrolling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" integrity="sha256-huW7yWl7tNfP7lGk46XE+Sp0nCotjzYodhVKlwaNeco=" crossorigin="anonymous"></script>
     <script>
+        // Initialize SmoothScroll with your settings
+        SmoothScroll({
+            // Время скролла 800 = 0.8 секунды
+            animationTime    : 800,
+            // Размер шага в пикселях 
+            stepSize         : 75,
+
+            // Дополнительные настройки:
+            
+            // Ускорение 
+            accelerationDelta : 30,  
+            // Максимальное ускорение
+            accelerationMax   : 2,   
+
+            // Поддержка клавиатуры
+            keyboardSupport   : true,  
+            // Шаг скролла стрелками на клавиатуре в пикселях
+            arrowScroll       : 50,
+
+            // Pulse (less tweakable)
+            // ratio of "tail" to "acceleration"
+            pulseAlgorithm   : true,
+            pulseScale       : 4,
+            pulseNormalize   : 1,
+
+            // Поддержка тачпада
+            touchpadSupport   : true,
+        });
+        
         // Hide loading screen when React app loads
         window.addEventListener('load', function() {
             const loading = document.getElementById('loading');
