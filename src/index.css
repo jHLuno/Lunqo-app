@@ -8,13 +8,20 @@
     scroll-behavior: smooth;
   }
   
-  body {
+  html, body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
-    background-attachment: fixed;
+    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%) !important;
+    background-attachment: fixed !important;
     color: #ffffff;
     overflow-x: hidden;
     position: relative;
+    min-height: 100vh;
+  }
+  
+  #root {
+    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%) !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
   }
   
   /* Add animated background elements */
