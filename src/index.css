@@ -6,6 +6,44 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed navbar */
+  }
+  
+  body {
+    scroll-behavior: smooth;
+    /* Smooth mouse wheel scrolling */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* For iOS */
+  }
+  
+  /* Smooth mouse wheel scrolling for all scrollable elements */
+  * {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar with smooth behavior */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #18A0FB;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #59FF70;
+  }
+  
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #18A0FB #1a1a1a;
   }
   
   html, body {
@@ -76,6 +114,7 @@
 
   .nav-link {
     @apply text-dark-300 hover:text-white transition-colors duration-200 font-medium;
+    scroll-behavior: smooth;
   }
 
   .section-padding {
@@ -103,25 +142,18 @@
   .animate-pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite;
   }
+  
+  /* Smooth scrolling utilities */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+  .scroll-padding-nav {
+    scroll-padding-top: 80px;
+  }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
 
-::-webkit-scrollbar-track {
-  background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #18A0FB;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #59FF70;
-}
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
