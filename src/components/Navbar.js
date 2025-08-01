@@ -44,7 +44,7 @@ const Navbar = () => {
             <img
               src={lunqoLogo}
               alt="Lunqo Logo"
-              className="w-8 h-8 lg:w-10 lg:h-10"
+              className="w-10 h-10 lg:w-12 lg:h-12"
               onError={(e) => console.error('Logo failed to load:', e.target.src)}
               onLoad={() => console.log('Logo loaded successfully')}
             />
