@@ -28,7 +28,7 @@ const AnalyticsDemo = () => {
   ];
 
   return (
-    <section id="analytics" className="section-padding bg-dark-900/30">
+    <section id="analytics" className="section-padding bg-dark-800/8">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

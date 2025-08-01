@@ -60,7 +60,7 @@ const AudienceStrip = () => {
   };
 
   return (
-    <section className="section-padding bg-dark-900/50">
+    <section className="section-padding bg-dark-800/20">
       <div className="container-custom">
         <motion.div
           ref={ref}
