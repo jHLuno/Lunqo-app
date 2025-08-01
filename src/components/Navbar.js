@@ -12,7 +12,7 @@ const Navbar = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    // Throttle scroll events for better performance
+    // Ultra-optimized scroll throttling for 120fps
     let ticking = false;
     const throttledHandleScroll = () => {
       if (!ticking) {
@@ -41,7 +41,7 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 transform-gpu ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 transform-gpu animate-120fps ${
         isScrolled 
           ? 'glass-effect border-b border-dark-700/50' 
           : 'bg-transparent'
@@ -52,8 +52,8 @@ const Navbar = () => {
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center"
+            transition={{ duration: 0.12 }}
+            className="flex items-center animate-120fps"
           >
             <img
               src={lunqoLogo}
@@ -70,9 +70,9 @@ const Navbar = () => {
               <motion.a
                 key={item.name}
                 href={item.href}
-                className="nav-link"
+                className="nav-link animate-120fps"
                 whileHover={{ y: -1 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.12 }}
               >
                 {item.name}
               </motion.a>
@@ -81,16 +81,17 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <motion.button
-            className="hidden lg:block btn-primary"
+            className="hidden lg:block btn-primary hover-scale animate-120fps"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.12 }}
           >
             Book a Demo
           </motion.button>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-white"
+            className="lg:hidden p-2 text-white animate-120fps"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -103,21 +104,21 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden glass-effect rounded-xl mt-4 mb-4"
+            transition={{ duration: 0.2 }}
+            className="lg:hidden glass-effect rounded-xl mt-4 mb-4 animate-120fps"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block nav-link py-2"
+                  className="block nav-link py-2 animate-120fps"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <button className="w-full btn-primary mt-4">
+              <button className="w-full btn-primary mt-4 hover-scale">
                 Book a Demo
               </button>
             </div>

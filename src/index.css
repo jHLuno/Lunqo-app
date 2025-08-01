@@ -26,7 +26,7 @@
   ::-webkit-scrollbar-thumb {
     background: #18A0FB;
     border-radius: 4px;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -55,7 +55,7 @@
     min-height: 100vh;
   }
   
-  /* Simplified animated background for better performance */
+  /* Ultra-optimized animated background for 120fps */
   body::before {
     content: '';
     position: fixed;
@@ -68,33 +68,59 @@
       radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.06) 0%, transparent 50%);
     filter: blur(60px);
     z-index: -1;
-    animation: backgroundShift 50s ease-in-out infinite;
+    animation: backgroundShift 60s ease-in-out infinite;
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    will-change: transform;
   }
   
   @keyframes backgroundShift {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-3px, -3px); }
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-2px, -2px, 0); }
   }
 
   * {
     box-sizing: border-box;
   }
   
-  /* Performance optimizations */
+  /* Advanced performance optimizations for 120fps */
   * {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
     will-change: auto;
   }
   
-  /* Optimize transforms for better performance */
+  /* Optimize transforms for 120fps */
   .transform-gpu {
-    transform: translateZ(0);
+    transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
   }
   
-  /* Optimize animations for better performance */
-  .animate-optimized {
+  /* High performance animation classes */
+  .animate-120fps {
     will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+  
+  .animate-smooth {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-fast {
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Optimize for high refresh rate displays */
+  @media (min-resolution: 120dpi) {
+    * {
+      transform: translate3d(0, 0, 0);
+    }
+    
+    .animate-120fps {
+      will-change: transform, opacity;
+    }
   }
   
   /* Reduce motion for better performance */
@@ -109,15 +135,18 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
+    @apply bg-primary-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-150 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
+    transform: translateZ(0);
   }
 
   .btn-secondary {
-    @apply bg-transparent border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
+    @apply bg-transparent border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-150 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
+    transform: translateZ(0);
   }
 
   .card {
-    @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 transition-all duration-200 hover:border-primary-blue/30 hover:shadow-glow;
+    @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 transition-all duration-150 hover:border-primary-blue/30 hover:shadow-glow;
+    transform: translateZ(0);
   }
 
   .gradient-text {
@@ -126,10 +155,11 @@
 
   .glass-effect {
     @apply bg-dark-800/20 backdrop-blur-md border border-dark-700/50;
+    transform: translateZ(0);
   }
 
   .nav-link {
-    @apply text-dark-300 hover:text-white transition-colors duration-200 font-medium;
+    @apply text-dark-300 hover:text-white transition-colors duration-150 font-medium;
     scroll-behavior: smooth;
   }
 
@@ -153,10 +183,12 @@
 
   .animate-float {
     animation: float 8s ease-in-out infinite;
+    transform: translateZ(0);
   }
 
   .animate-pulse-glow {
     animation: pulseGlow 3s ease-in-out infinite;
+    transform: translateZ(0);
   }
   
   /* Smooth scrolling utilities */
@@ -168,33 +200,71 @@
     scroll-padding-top: 80px;
   }
   
-  /* Performance optimized animations */
+  /* Performance optimized animations for 120fps */
   .animate-float-slow {
     animation: float 12s ease-in-out infinite;
+    transform: translateZ(0);
   }
   
   .animate-float-fast {
     animation: float 4s ease-in-out infinite;
+    transform: translateZ(0);
   }
   
   /* GPU acceleration utilities */
   .gpu-accelerated {
-    transform: translateZ(0);
+    transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
   }
   
-  /* Optimized transitions */
+  /* Ultra-fast transitions for 120fps */
+  .transition-ultra-fast {
+    transition: all 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
   .transition-fast {
-    transition: all 0.2s ease;
+    transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .transition-medium {
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .transition-slow {
-    transition: all 0.5s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* High performance hover effects */
+  .hover-lift {
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  .hover-lift:hover {
+    transform: translateZ(0) translateY(-4px);
+  }
+  
+  .hover-scale {
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  .hover-scale:hover {
+    transform: translateZ(0) scale(1.02);
+  }
+  
+  /* Performance monitoring classes */
+  .performance-track {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+  
+  /* Optimized backdrop blur */
+  .backdrop-blur-optimized {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateZ(0);
   }
 }
 

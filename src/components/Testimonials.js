@@ -51,9 +51,9 @@ const Testimonials = () => {
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -68,27 +68,27 @@ const Testimonials = () => {
         {/* Logo Strip */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
           className="mb-16"
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
             {logos.map((logo, index) => (
               <motion.div
                 key={logo}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+                transition={{ delay: 0.2 + index * 0.05, duration: 0.5 }}
                 className="flex items-center justify-center"
               >
                 <div className="text-center group cursor-pointer">
-                  <div className="w-20 h-20 bg-dark-800/50 border border-dark-700 rounded-xl flex items-center justify-center group-hover:border-primary-blue/30 group-hover:bg-primary-blue/5 transition-all duration-300">
-                    <span className="text-lg font-semibold text-dark-300 group-hover:text-primary-blue transition-colors duration-300">
+                  <div className="w-20 h-20 bg-dark-800/50 border border-dark-700 rounded-xl flex items-center justify-center group-hover:border-primary-blue/30 group-hover:bg-primary-blue/5 transition-all duration-200">
+                    <span className="text-lg font-semibold text-dark-300 group-hover:text-primary-blue transition-colors duration-200">
                       {logo.split(' ').map(word => word[0]).join('')}
                     </span>
                   </div>
-                  <p className="text-sm text-dark-400 mt-2 group-hover:text-dark-300 transition-colors duration-300">
+                  <p className="text-sm text-dark-400 mt-2 group-hover:text-dark-300 transition-colors duration-200">
                     {logo}
                   </p>
                 </div>
@@ -99,19 +99,19 @@ const Testimonials = () => {
 
         {/* Testimonials Slider */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
           className="relative max-w-4xl mx-auto"
         >
           <div className="card p-8 lg:p-12">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentTestimonial}
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.3 }}
                 className="text-center"
               >
                 {/* Quote Icon */}
@@ -151,7 +151,7 @@ const Testimonials = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     index === currentTestimonial 
                       ? 'bg-primary-blue' 
                       : 'bg-dark-600 hover:bg-dark-500'
@@ -163,13 +163,13 @@ const Testimonials = () => {
             {/* Navigation Arrows */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-200"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-200"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -178,15 +178,15 @@ const Testimonials = () => {
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 1, duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
           className="text-center mt-16"
         >
           <motion.button
             className="btn-primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Join Our Success Stories
           </motion.button>
