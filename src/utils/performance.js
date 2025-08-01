@@ -14,7 +14,7 @@ export const throttle = (func, limit) => {
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
-  };
+  }
 };
 
 /**
@@ -115,6 +115,7 @@ export class PerformanceMonitor {
   constructor() {
     this.metrics = new Map();
     this.observers = [];
+    this.isInitialized = false;
   }
 
   /**
@@ -122,8 +123,13 @@ export class PerformanceMonitor {
    * @param {string} name - Metric name
    */
   startMeasure(name) {
-    if (typeof performance !== 'undefined') {
-      performance.mark(`${name}-start`);
+    if (typeof performance !== 'undefined' && !this.isInitialized) {
+      try {
+        performance.mark(`${name}-start`);
+        this.isInitialized = true;
+      } catch (error) {
+        // Silently handle performance API errors
+      }
     }
   }
 
@@ -132,17 +138,23 @@ export class PerformanceMonitor {
    * @param {string} name - Metric name
    */
   endMeasure(name) {
-    if (typeof performance !== 'undefined') {
-      performance.mark(`${name}-end`);
-      performance.measure(name, `${name}-start`, `${name}-end`);
-      
-      const measure = performance.getEntriesByName(name)[0];
-      this.metrics.set(name, measure.duration);
-      
-      // Clean up marks
-      performance.clearMarks(`${name}-start`);
-      performance.clearMarks(`${name}-end`);
-      performance.clearMeasures(name);
+    if (typeof performance !== 'undefined' && this.isInitialized) {
+      try {
+        performance.mark(`${name}-end`);
+        performance.measure(name, `${name}-start`, `${name}-end`);
+        
+        const measure = performance.getEntriesByName(name)[0];
+        if (measure) {
+          this.metrics.set(name, measure.duration);
+        }
+        
+        // Clean up marks
+        performance.clearMarks(`${name}-start`);
+        performance.clearMarks(`${name}-end`);
+        performance.clearMeasures(name);
+      } catch (error) {
+        // Silently handle performance API errors
+      }
     }
   }
 
@@ -159,6 +171,8 @@ export class PerformanceMonitor {
    * @param {Function} callback - Callback with FPS data
    */
   monitorFrameRate(callback) {
+    if (typeof window === 'undefined') return;
+    
     let frameCount = 0;
     let lastTime = performance.now();
     
