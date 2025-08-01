@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import lunqoLogo from '../Lunqo.png';
+import lunqoLogo from '../Lunqo-white.png';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
