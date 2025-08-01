@@ -32,15 +32,42 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
+            background-attachment: fixed;
             color: white;
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Add animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 165, 0, 0.05) 0%, transparent 50%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-10px, -10px) scale(1.05); }
+            50% { transform: translate(10px, -5px) scale(0.95); }
+            75% { transform: translate(-5px, 10px) scale(1.02); }
         }
         
         .loading {
             position: fixed;
             inset: 0;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
             display: flex;
             align-items: center;
             justify-content: center;
