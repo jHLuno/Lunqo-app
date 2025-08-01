@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
           type: 'asset/resource',
           generator: {
-            filename: isProduction ? 'fonts/[name].[hash][ext]' : 'fonts/[name][ext]'
+            filename: 'fonts/[name][ext]' // No hashing for fonts
           }
         },
       ],

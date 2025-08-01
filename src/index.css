@@ -3,7 +3,7 @@
 /* SF Pro Display Font Declarations - These reference the preloaded font files */
 @font-face {
   font-family: 'SF Pro Display';
-  src: url('../public/fonts/SF-Pro-Display-Regular.d1f5e6e16dd4f75c3950.otf') format('opentype');
+  src: url('../public/fonts/SF-Pro-Display-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: block; /* Force immediate usage to prevent preload warnings */
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'SF Pro Display';
-  src: url('../public/fonts/SF-Pro-Display-Medium.b85d841dacb040b84951.otf') format('opentype');
+  src: url('../public/fonts/SF-Pro-Display-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: block; /* Force immediate usage to prevent preload warnings */
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: 'SF Pro Display';
-  src: url('../public/fonts/SF-Pro-Display-Bold.b1f4d2c69fa808ebca12.otf') format('opentype');
+  src: url('../public/fonts/SF-Pro-Display-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
   font-display: block; /* Force immediate usage to prevent preload warnings */
