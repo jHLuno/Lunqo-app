@@ -9,7 +9,7 @@
   }
   
   html, body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%) !important;
     background-attachment: fixed !important;
     color: #ffffff;
