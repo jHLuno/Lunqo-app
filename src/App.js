@@ -12,9 +12,9 @@ import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="min-h-screen scroll-smooth transform-gpu performance-track">
+    <div className="min-h-screen">
       <Navbar />
-      <main className="transform-gpu performance-track">
+      <main>
         <Hero />
         <AudienceStrip />
         <FeatureTriad />

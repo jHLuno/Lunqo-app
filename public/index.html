@@ -7,10 +7,6 @@
     <meta name="keywords" content="adtech, taxi ads, digital advertising, fleet management, smartseat media">
     <meta name="author" content="Lunqo">
     
-    <!-- Performance optimizations -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="format-detection" content="telephone=no">
-    
     <!-- Favicon - Complete favicon set -->
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
@@ -20,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/favicons/android-chrome-512x512.png">
     <link rel="manifest" href="/favicons/site.webmanifest">
     
-    <!-- Fonts with performance optimizations -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,42 +24,23 @@
     <title>Lunqo - Light-Up Ads on the Go</title>
     
     <style>
-        /* Critical CSS for 120fps performance */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        /* Hardware acceleration for all elements */
-        * {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-            will-change: auto;
-        }
-        
-        /* Optimize for high refresh rate displays */
-        @media (min-resolution: 120dpi) {
-            * {
-                transform: translate3d(0, 0, 0);
-            }
-        }
-        
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #1a1a2e 50%, #16213e 75%, #0f3460 100%);
             background-attachment: fixed;
             color: white;
             line-height: 1.6;
             position: relative;
             overflow-x: hidden;
-            /* Force hardware acceleration */
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
         }
         
-        /* Optimized background animation for 120fps */
+        /* Add animated background elements */
         body::before {
             content: '';
             position: fixed;
@@ -72,19 +49,19 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.06) 0%, transparent 50%);
-            filter: blur(40px);
+                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 165, 0, 0.05) 0%, transparent 50%);
+            filter: blur(100px);
             z-index: -1;
-            animation: backgroundShift 90s ease-in-out infinite;
-            /* Hardware acceleration for background */
-            transform: translateZ(0);
-            will-change: transform;
+            animation: backgroundShift 20s ease-in-out infinite;
         }
         
         @keyframes backgroundShift {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(-1px, -1px, 0); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-10px, -10px) scale(1.05); }
+            50% { transform: translate(10px, -5px) scale(0.95); }
+            75% { transform: translate(-5px, 10px) scale(1.02); }
         }
         
         .loading {
@@ -95,7 +72,6 @@
             align-items: center;
             justify-content: center;
             z-index: 50;
-            transform: translateZ(0);
         }
         
         .loading-content {
@@ -110,49 +86,15 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
-            transform: translateZ(0);
         }
         
         @keyframes spin {
-            0% { transform: translateZ(0) rotate(0deg); }
-            100% { transform: translateZ(0) rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         #root {
             min-height: 100vh;
-            transform: translateZ(0);
-        }
-        
-        /* High performance animations */
-        .animate-120fps {
-            will-change: transform, opacity;
-            transform: translateZ(0);
-        }
-        
-        /* Performance mode classes */
-        .performance-mode {
-            animation-duration: 0.1s !important;
-            transition-duration: 0.1s !important;
-        }
-        
-        .performance-mode body::before {
-            animation: none !important;
-        }
-        
-        /* Optimize for reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-        
-        /* High refresh rate optimizations */
-        @media (min-resolution: 120dpi) and (min-width: 1200px) {
-            body::before {
-                animation-duration: 120s;
-            }
         }
     </style>
 </head>
@@ -170,145 +112,7 @@
     <!-- React Bundle -->
     <script src="bundle.js"></script>
     
-    <!-- SmoothScroll.js for enhanced mouse wheel scrolling - Optimized for 120fps -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" integrity="sha256-huW7yWl7tNfP7lGk46XE+Sp0nCotjzYodhVKlwaNeco=" crossorigin="anonymous"></script>
-    
     <script>
-        // Advanced 120fps performance monitoring with aggressive optimization
-        let frameCount = 0;
-        let lastTime = performance.now();
-        let fps = 120;
-        let isMonitoring = false;
-        let lowFpsCount = 0;
-        let highFpsCount = 0;
-        let performanceMode = false;
-        
-        // Performance optimization flags
-        let isHighRefreshRate = window.matchMedia('(min-resolution: 120dpi)').matches;
-        let isHighPerformance = navigator.hardwareConcurrency >= 8;
-        
-        function measureFPS() {
-            if (!isMonitoring) return;
-            
-            frameCount++;
-            const currentTime = performance.now();
-            
-            if (currentTime >= lastTime + 1000) {
-                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-                frameCount = 0;
-                lastTime = currentTime;
-                
-                // Track performance trends
-                if (fps < 100) {
-                    lowFpsCount++;
-                    if (lowFpsCount > 2) {
-                        console.warn(`Performance optimization needed: ${fps} fps (target: 120fps)`);
-                        optimizePerformance();
-                    }
-                } else {
-                    lowFpsCount = 0;
-                    highFpsCount++;
-                }
-                
-                // Log success when reaching target
-                if (fps >= 120 && highFpsCount === 1) {
-                    console.log(`✅ Target achieved: ${fps} fps`);
-                }
-            }
-            
-            requestAnimationFrame(measureFPS);
-        }
-        
-        function optimizePerformance() {
-            if (performanceMode) return; // Already in performance mode
-            
-            performanceMode = true;
-            console.log('🚀 Enabling aggressive performance mode');
-            
-            // Add performance mode class to body
-            document.body.classList.add('performance-mode');
-            
-            // Disable heavy animations
-            const animatedElements = document.querySelectorAll('[class*="animate"], [class*="motion"]');
-            animatedElements.forEach(el => {
-                el.style.animation = 'none';
-                el.style.transition = 'none';
-            });
-            
-            // Disable background animation
-            const bodyBefore = document.querySelector('body::before');
-            if (bodyBefore) {
-                bodyBefore.style.animation = 'none';
-            }
-            
-            // Reduce blur effects
-            const blurElements = document.querySelectorAll('[style*="blur"], [class*="blur"]');
-            blurElements.forEach(el => {
-                el.style.filter = 'blur(0px)';
-                el.style.backdropFilter = 'none';
-            });
-            
-            // Optimize SmoothScroll for performance
-            if (window.SmoothScroll) {
-                SmoothScroll({
-                    animationTime: 300,    // Much faster
-                    stepSize: 30,          // Smaller steps
-                    accelerationDelta: 10, // Minimal acceleration
-                    accelerationMax: 1,    // No acceleration
-                    pulseAlgorithm: false, // Disable pulse
-                    pulseScale: 1,         // No pulse
-                    pulseNormalize: 1,     // No pulse
-                    keyboardSupport: true,
-                    arrowScroll: 20,       // Smaller steps
-                    touchpadSupport: true,
-                });
-            }
-            
-            // Reduce motion for all elements
-            document.documentElement.style.setProperty('--animation-duration', '0.1s');
-            document.documentElement.style.setProperty('--transition-duration', '0.1s');
-        }
-        
-        // Initialize SmoothScroll with conservative settings
-        SmoothScroll({
-            // Время скролла 400 = 0.4 секунды (much faster)
-            animationTime    : 400,
-            // Размер шага в пикселях 
-            stepSize         : 40,
-
-            // Дополнительные настройки:
-            
-            // Ускорение 
-            accelerationDelta : 15,  // Minimal for performance
-            // Максимальное ускорение
-            accelerationMax   : 1.2, // Minimal acceleration
-
-            // Поддержка клавиатуры
-            keyboardSupport   : true,  
-            // Шаг скролла стрелками на клавиатуре в пикселях
-            arrowScroll       : 30,
-
-            // Pulse (less tweakable)
-            // ratio of "tail" to "acceleration"
-            pulseAlgorithm   : false, // Disabled for performance
-            pulseScale       : 1,     // No pulse
-            pulseNormalize   : 1,     // No pulse
-
-            // Поддержка тачпада
-            touchpadSupport   : true,
-        });
-        
-        // Start FPS monitoring after React loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                isMonitoring = true;
-                measureFPS();
-                
-                // Log system capabilities
-                console.log(`System: ${navigator.hardwareConcurrency} cores, High refresh: ${isHighRefreshRate}`);
-            }, 2000);
-        });
-        
         // Hide loading screen when React app loads
         window.addEventListener('load', function() {
             const loading = document.getElementById('loading');
@@ -319,54 +123,6 @@
                 }, 300);
             }
         });
-        
-        // Ultra-optimized scroll handling for 120fps
-        let scrollTimeout;
-        let lastScrollTime = 0;
-        const scrollThrottle = 1000 / 120; // 120fps = 8.33ms per frame
-        
-        window.addEventListener('scroll', (e) => {
-            const now = performance.now();
-            if (now - lastScrollTime >= scrollThrottle) {
-                lastScrollTime = now;
-                
-                if (scrollTimeout) {
-                    clearTimeout(scrollTimeout);
-                }
-                scrollTimeout = setTimeout(() => {
-                    // Handle scroll end
-                }, 8); // ~120fps
-            }
-        }, { passive: true });
-        
-        // Optimized resize handling
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            if (resizeTimeout) {
-                clearTimeout(resizeTimeout);
-            }
-            resizeTimeout = setTimeout(() => {
-                // Handle resize end
-            }, 16); // ~60fps for resize is fine
-        }, { passive: true });
-        
-        // Prevent layout thrashing
-        let rafId;
-        function debounceRAF(func) {
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-            }
-            rafId = requestAnimationFrame(func);
-        }
-        
-        // Performance hints for browser
-        if ('connection' in navigator) {
-            const connection = navigator.connection;
-            if (connection.effectiveType === '4g' && connection.downlink > 10) {
-                // High-speed connection, can load more assets
-                console.log('High-speed connection detected');
-            }
-        }
     </script>
 </body>
 </html>
