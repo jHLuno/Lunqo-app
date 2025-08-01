@@ -58,7 +58,7 @@ const Footer = () => {
                                     <img
                       src={lunqoLogo}
                       alt="Lunqo Logo"
-                      className="w-10 h-10"
+                      className="w-18 h-18 lg:w-24 lg:h-24"
                       onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
                       onLoad={() => console.log('Footer logo loaded successfully')}
                     />
