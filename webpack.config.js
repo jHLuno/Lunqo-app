@@ -87,7 +87,7 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: './public/index.html',
         filename: 'index.html',
-        inject: true,
+        inject: 'body', // Inject scripts at the end of body
         minify: isProduction ? {
           removeComments: true,
           collapseWhitespace: true,
