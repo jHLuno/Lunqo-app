@@ -33,37 +33,14 @@ const FeatureTriad = () => {
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
   return (
     <section id="solutions" className="section-padding bg-dark-800/5">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -78,30 +55,32 @@ const FeatureTriad = () => {
         {/* Features Grid */}
         <motion.div
           ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
           className="grid grid-cols-1 lg:grid-cols-3 gap-8"
         >
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ delay: 0.2 + index * 0.1, duration: 0.6 }}
               className="card group relative overflow-hidden"
               whileHover={{ 
-                y: -10,
-                transition: { duration: 0.3 }
+                y: -5,
+                transition: { duration: 0.2 }
               }}
             >
               {/* Background Gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
               
               {/* Icon */}
               <motion.div
-                className={`w-20 h-20 rounded-3xl bg-${feature.color}/10 border border-${feature.color}/20 flex items-center justify-center mb-6 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/40 transition-all duration-300`}
+                className={`w-20 h-20 rounded-3xl bg-${feature.color}/10 border border-${feature.color}/20 flex items-center justify-center mb-6 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/40 transition-all duration-200`}
                 whileHover={{ 
-                  scale: 1.1,
-                  rotate: 5
+                  scale: 1.05,
+                  transition: { duration: 0.2 }
                 }}
               >
                 <feature.icon 
@@ -111,31 +90,31 @@ const FeatureTriad = () => {
 
               {/* Content */}
               <div className="relative z-10">
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-white transition-colors duration-300">
+                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-white transition-colors duration-200">
                   {feature.title}
                 </h3>
-                <p className="text-dark-300 leading-relaxed group-hover:text-dark-200 transition-colors duration-300">
+                <p className="text-dark-300 leading-relaxed group-hover:text-dark-200 transition-colors duration-200">
                   {feature.description}
                 </p>
               </div>
 
               {/* Hover Effect Border */}
-              <div className={`absolute inset-0 rounded-2xl border border-transparent group-hover:border-${feature.color}/30 transition-all duration-300`} />
+              <div className={`absolute inset-0 rounded-2xl border border-transparent group-hover:border-${feature.color}/30 transition-all duration-200`} />
             </motion.div>
           ))}
         </motion.div>
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
           className="text-center mt-16"
         >
           <motion.button
             className="btn-primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Explore All Features
           </motion.button>

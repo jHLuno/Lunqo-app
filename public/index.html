@@ -40,7 +40,7 @@
             overflow-x: hidden;
         }
         
-        /* Add animated background elements */
+        /* Simplified background animation for better performance */
         body::before {
             content: '';
             position: fixed;
@@ -49,19 +49,16 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255, 165, 0, 0.05) 0%, transparent 50%);
-            filter: blur(100px);
+                radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.08) 0%, transparent 50%);
+            filter: blur(80px);
             z-index: -1;
-            animation: backgroundShift 20s ease-in-out infinite;
+            animation: backgroundShift 40s ease-in-out infinite;
         }
         
         @keyframes backgroundShift {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(-10px, -10px) scale(1.05); }
-            50% { transform: translate(10px, -5px) scale(0.95); }
-            75% { transform: translate(-5px, 10px) scale(1.02); }
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5px, -5px); }
         }
         
         .loading {
@@ -96,6 +93,20 @@
         #root {
             min-height: 100vh;
         }
+        
+        /* Performance optimizations */
+        * {
+            will-change: auto;
+        }
+        
+        /* Optimize animations for better performance */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -112,36 +123,33 @@
     <!-- React Bundle -->
     <script src="bundle.js"></script>
     
-    <!-- SmoothScroll.js for enhanced mouse wheel scrolling -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" integrity="sha256-huW7yWl7tNfP7lGk46XE+Sp0nCotjzYodhVKlwaNeco=" crossorigin="anonymous"></script>
     <script>
-        // Initialize SmoothScroll with your settings
-        SmoothScroll({
-            // Время скролла 800 = 0.8 секунды
-            animationTime    : 800,
-            // Размер шага в пикселях 
-            stepSize         : 75,
-
-            // Дополнительные настройки:
+        // Performance monitoring
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 60;
+        
+        function measureFPS() {
+            frameCount++;
+            const currentTime = performance.now();
             
-            // Ускорение 
-            accelerationDelta : 30,  
-            // Максимальное ускорение
-            accelerationMax   : 2,   
-
-            // Поддержка клавиатуры
-            keyboardSupport   : true,  
-            // Шаг скролла стрелками на клавиатуре в пикселях
-            arrowScroll       : 50,
-
-            // Pulse (less tweakable)
-            // ratio of "tail" to "acceleration"
-            pulseAlgorithm   : true,
-            pulseScale       : 4,
-            pulseNormalize   : 1,
-
-            // Поддержка тачпада
-            touchpadSupport   : true,
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                frameCount = 0;
+                lastTime = currentTime;
+                
+                // Log FPS if it's below 50 (indicating performance issues)
+                if (fps < 50) {
+                    console.warn(`Low FPS detected: ${fps} fps`);
+                }
+            }
+            
+            requestAnimationFrame(measureFPS);
+        }
+        
+        // Start FPS monitoring after page loads
+        window.addEventListener('load', () => {
+            setTimeout(measureFPS, 1000);
         });
         
         // Hide loading screen when React app loads
@@ -154,6 +162,17 @@
                 }, 300);
             }
         });
+        
+        // Optimize scroll performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(() => {
+                // Handle scroll end
+            }, 16); // ~60fps
+        }, { passive: true });
     </script>
 </body>
 </html>
