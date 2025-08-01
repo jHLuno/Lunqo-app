@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Zap, BarChart3, Rocket } from 'lucide-react';
@@ -7,9 +7,11 @@ const FeatureTriad = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
+    rootMargin: '50px',
   });
 
-  const features = [
+  // Memoized features data
+  const features = useMemo(() => [
     {
       icon: Zap,
       title: 'Unified Digital Control',
@@ -31,9 +33,10 @@ const FeatureTriad = () => {
       color: 'primary-orange',
       gradient: 'from-primary-orange to-orange-500'
     }
-  ];
+  ], []);
 
-  const containerVariants = {
+  // Memoized animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -42,9 +45,9 @@ const FeatureTriad = () => {
         delayChildren: 0.1
       }
     }
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
@@ -54,16 +57,49 @@ const FeatureTriad = () => {
         ease: "easeOut"
       }
     }
-  };
+  }), []);
+
+  const sectionVariants = useMemo(() => ({
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  }), []);
+
+  const ctaVariants = useMemo(() => ({
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay: 0.8, duration: 0.8, ease: "easeOut" }
+  }), []);
+
+  const iconVariants = useMemo(() => ({
+    whileHover: { 
+      scale: 1.1,
+      rotate: 5,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    }
+  }), []);
+
+  const cardVariants = useMemo(() => ({
+    whileHover: { 
+      y: -10,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    }
+  }), []);
+
+  // Optimized event handlers
+  const handleExploreClick = useCallback(() => {
+    // Explore click handler
+    console.log('Explore features clicked');
+  }, []);
 
   return (
     <section id="solutions" className="section-padding bg-dark-800/5">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
+          variants={sectionVariants}
+          initial="initial"
+          animate={inView ? "animate" : "initial"}
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -87,22 +123,20 @@ const FeatureTriad = () => {
             <motion.div
               key={feature.title}
               variants={itemVariants}
-              className="card group relative overflow-hidden"
+              className="card group relative overflow-hidden gpu-accelerated"
               whileHover={{ 
                 y: -10,
-                transition: { duration: 0.3 }
+                transition: { duration: 0.3, ease: "easeInOut" }
               }}
             >
               {/* Background Gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500 gpu-accelerated`} />
               
               {/* Icon */}
               <motion.div
-                className={`w-20 h-20 rounded-3xl bg-${feature.color}/10 border border-${feature.color}/20 flex items-center justify-center mb-6 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/40 transition-all duration-300`}
-                whileHover={{ 
-                  scale: 1.1,
-                  rotate: 5
-                }}
+                className={`w-20 h-20 rounded-3xl bg-${feature.color}/10 border border-${feature.color}/20 flex items-center justify-center mb-6 group-hover:bg-${feature.color}/20 group-hover:border-${feature.color}/40 transition-all duration-300 gpu-accelerated`}
+                variants={iconVariants}
+                whileHover="whileHover"
               >
                 <feature.icon 
                   className={`w-10 h-10 text-${feature.color}`} 
@@ -120,22 +154,24 @@ const FeatureTriad = () => {
               </div>
 
               {/* Hover Effect Border */}
-              <div className={`absolute inset-0 rounded-2xl border border-transparent group-hover:border-${feature.color}/30 transition-all duration-300`} />
+              <div className={`absolute inset-0 rounded-2xl border border-transparent group-hover:border-${feature.color}/30 transition-all duration-300 gpu-accelerated`} />
             </motion.div>
           ))}
         </motion.div>
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
+          variants={ctaVariants}
+          initial="initial"
+          animate={inView ? "animate" : "initial"}
           className="text-center mt-16"
         >
           <motion.button
-            className="btn-primary"
+            className="btn-primary gpu-accelerated"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeInOut" }}
+            onClick={handleExploreClick}
           >
             Explore All Features
           </motion.button>
@@ -145,4 +181,4 @@ const FeatureTriad = () => {
   );
 };
 
-export default FeatureTriad; 
+export default React.memo(FeatureTriad); 

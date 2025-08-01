@@ -1,34 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import lunqoLogo from '../Lunqo-white.png';
+
+// Throttle function for performance
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  }
+};
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navItems = [
+  // Memoized nav items to prevent unnecessary re-renders
+  const navItems = useMemo(() => [
     { name: 'Solutions', href: '#solutions' },
     { name: 'Analytics', href: '#analytics' },
     { name: 'How It Works', href: '#how-it-works' },
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
-  ];
+  ], []);
+
+  // Optimized scroll handler with throttling
+  const handleScroll = useCallback(
+    throttle(() => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
+    }, 16), // ~60fps throttling
+    []
+  );
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  // Memoized motion variants for better performance
+  const navVariants = useMemo(() => ({
+    initial: { y: -100 },
+    animate: { y: 0 },
+    transition: { duration: 0.3, ease: "easeOut" }
+  }), []);
+
+  const logoVariants = useMemo(() => ({
+    whileHover: { scale: 1.05 },
+    transition: { duration: 0.2, ease: "easeInOut" }
+  }), []);
+
+  const navLinkVariants = useMemo(() => ({
+    whileHover: { y: -2 },
+    transition: { duration: 0.2, ease: "easeInOut" }
+  }), []);
+
+  const buttonVariants = useMemo(() => ({
+    whileHover: { scale: 1.05 },
+    whileTap: { scale: 0.95 },
+    transition: { duration: 0.15, ease: "easeInOut" }
+  }), []);
+
+  const mobileMenuVariants = useMemo(() => ({
+    initial: { opacity: 0, height: 0 },
+    animate: { opacity: 1, height: 'auto' },
+    exit: { opacity: 0, height: 0 },
+    transition: { duration: 0.3, ease: "easeInOut" }
+  }), []);
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      initial="initial"
+      animate="animate"
+      variants={navVariants}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated ${
         isScrolled 
           ? 'glass-effect border-b border-dark-700/50' 
           : 'bg-transparent'
@@ -38,15 +89,17 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center"
+            variants={logoVariants}
+            whileHover="whileHover"
+            className="flex items-center gpu-accelerated"
           >
             <img
               src={lunqoLogo}
               alt="Lunqo Logo"
               className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
-              onError={(e) => console.error('Logo failed to load:', e.target.src)}
-              onLoad={() => console.log('Logo loaded successfully')}
+              loading="eager"
+              decoding="async"
+              style={{ transform: 'translateZ(0)' }}
             />
           </motion.div>
 
@@ -56,9 +109,10 @@ const Navbar = () => {
               <motion.a
                 key={item.name}
                 href={item.href}
-                className="nav-link"
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
+                className="nav-link gpu-accelerated"
+                variants={navLinkVariants}
+                whileHover="whileHover"
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               >
                 {item.name}
               </motion.a>
@@ -67,17 +121,19 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <motion.button
-            className="hidden lg:block btn-primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="hidden lg:block btn-primary gpu-accelerated"
+            variants={buttonVariants}
+            whileHover="whileHover"
+            whileTap="whileTap"
           >
             Book a Demo
           </motion.button>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-white"
+            className="lg:hidden p-2 text-white gpu-accelerated"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -86,23 +142,24 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden glass-effect rounded-xl mt-4 mb-4"
+            variants={mobileMenuVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="lg:hidden glass-effect rounded-xl mt-4 mb-4 gpu-accelerated"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block nav-link py-2"
+                  className="block nav-link py-2 gpu-accelerated"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <button className="w-full btn-primary mt-4">
+              <button className="w-full btn-primary mt-4 gpu-accelerated">
                 Book a Demo
               </button>
             </div>
@@ -113,4 +170,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default React.memo(Navbar); 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Car, Building2, Users, TrendingUp } from 'lucide-react';
@@ -7,9 +7,11 @@ const AudienceStrip = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
+    rootMargin: '50px',
   });
 
-  const audiences = [
+  // Memoized audiences data
+  const audiences = useMemo(() => [
     {
       icon: Car,
       title: 'Fleet Owners',
@@ -34,9 +36,10 @@ const AudienceStrip = () => {
       benefit: 'High-growth adtech opportunity',
       color: 'primary-blue'
     }
-  ];
+  ], []);
 
-  const containerVariants = {
+  // Memoized animation variants
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -45,9 +48,9 @@ const AudienceStrip = () => {
         delayChildren: 0.2
       }
     }
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -57,7 +60,22 @@ const AudienceStrip = () => {
         ease: "easeOut"
       }
     }
-  };
+  }), []);
+
+  const cardVariants = useMemo(() => ({
+    whileHover: { 
+      y: -8,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    }
+  }), []);
+
+  const iconVariants = useMemo(() => ({
+    whileHover: { 
+      scale: 1.1,
+      rotate: 5,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    }
+  }), []);
 
   return (
     <section className="section-padding bg-dark-800/20">
@@ -73,19 +91,17 @@ const AudienceStrip = () => {
             <motion.div
               key={audience.title}
               variants={itemVariants}
-              className="card group cursor-pointer"
+              className="card group cursor-pointer gpu-accelerated"
               whileHover={{ 
                 y: -8,
-                transition: { duration: 0.3 }
+                transition: { duration: 0.3, ease: "easeInOut" }
               }}
             >
               <div className="flex flex-col items-center text-center space-y-4">
                 <motion.div
-                  className={`w-16 h-16 rounded-2xl bg-${audience.color}/10 border border-${audience.color}/20 flex items-center justify-center group-hover:bg-${audience.color}/20 group-hover:border-${audience.color}/40 transition-all duration-300`}
-                  whileHover={{ 
-                    scale: 1.1,
-                    rotate: 5
-                  }}
+                  className={`w-16 h-16 rounded-2xl bg-${audience.color}/10 border border-${audience.color}/20 flex items-center justify-center group-hover:bg-${audience.color}/20 group-hover:border-${audience.color}/40 transition-all duration-300 gpu-accelerated`}
+                  variants={iconVariants}
+                  whileHover="whileHover"
                 >
                   <audience.icon 
                     className={`w-8 h-8 text-${audience.color}`} 
@@ -109,4 +125,4 @@ const AudienceStrip = () => {
   );
 };
 
-export default AudienceStrip; 
+export default React.memo(AudienceStrip); 
