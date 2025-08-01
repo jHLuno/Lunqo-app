@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'public'),
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
       chunkFilename: isProduction ? '[name].[contenthash].chunk.js' : '[name].chunk.js',
-      clean: false, // Don't clean the entire public directory
+      clean: true, // Clean the output directory before each build
     },
     module: {
       rules: [
@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
           type: 'asset/resource',
           generator: {
-            filename: 'fonts/[name][ext]' // No hashing for fonts
+            filename: 'fonts/[name][ext]' // No hashing for fonts to prevent duplicates
           }
         },
       ],
