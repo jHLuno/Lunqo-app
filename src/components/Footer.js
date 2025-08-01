@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
-import lunqoLogo from '../Lunqo.png';
+import lunqoLogo from '../Lunqo-white.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
