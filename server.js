@@ -51,11 +51,6 @@ app.use(express.static('public', {
   }
 }));
 
-// Handle client-side routing for React app
-app.get(['/en', '/ru', '/en/*', '/ru/*'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 
 
 // Import models for public endpoints

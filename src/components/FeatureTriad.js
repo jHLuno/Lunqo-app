@@ -2,7 +2,6 @@ import React, { useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Zap, BarChart3, Rocket } from 'lucide-react';
-import { t } from '../utils/localization';
 
 const FeatureTriad = () => {
   const [ref, inView] = useInView({
@@ -15,22 +14,22 @@ const FeatureTriad = () => {
   const features = useMemo(() => [
     {
       icon: Zap,
-      title: t('features.unified.title'),
-      description: t('features.unified.description'),
+      title: 'Unified Digital Control',
+      description: 'Instant ad swap, geo/time targeting, and real-time campaign management across all your fleet screens.',
       color: 'primary-blue',
       gradient: 'from-primary-blue to-blue-600'
     },
     {
       icon: BarChart3,
-      title: t('features.analytics.title'),
-      description: t('features.analytics.description'),
+      title: 'Real-Time Analytics',
+      description: 'Live KPI tracking with impressions, riders, QR scans, and engagement metrics that update in real-time.',
       color: 'primary-lime',
       gradient: 'from-primary-lime to-green-500'
     },
     {
       icon: Rocket,
-      title: t('features.scaling.title'),
-      description: t('features.scaling.description'),
+      title: 'Fast Scaling & API Integration',
+      description: 'Plug-and-play setup with cloud uptime, seamless API integration, and rapid fleet expansion capabilities.',
       color: 'primary-orange',
       gradient: 'from-primary-orange to-orange-500'
     }
@@ -104,10 +103,11 @@ const FeatureTriad = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            {t('features.title')}
+            The Ultimate Toolkit for
+            <span className="gradient-text"> In-Taxi Media</span>
           </h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-            {t('features.subtitle')}
+            Everything you need to control, analyze, and scale your digital advertising across taxi fleets.
           </p>
         </motion.div>
 
@@ -173,7 +173,7 @@ const FeatureTriad = () => {
             transition={{ duration: 0.15, ease: "easeInOut" }}
             onClick={handleExploreClick}
           >
-            {t('features.explore')}
+            Explore All Features
           </motion.button>
         </motion.div>
       </div>

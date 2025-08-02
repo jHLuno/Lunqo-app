@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 import lunqoLogo from '../Lunqo-white.png';
-import { t } from '../utils/localization';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -66,7 +65,8 @@ const Footer = () => {
               </div>
               
               <p className="text-dark-300 mb-6 leading-relaxed">
-                {t('footer.description')}
+                Unified control, real-time insights, effortless scaling for in-taxi media. 
+                Transforming how fleet owners and advertisers connect with captive audiences.
               </p>
 
               {/* Contact Info */}
@@ -162,7 +162,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-dark-400 text-sm">
-              {t('footer.copyright').replace('2024', currentYear)}
+              © {currentYear} Lunqo. All rights reserved.
             </div>
             
             {/* Social Links */}

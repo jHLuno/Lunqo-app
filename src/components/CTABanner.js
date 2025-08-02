@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight, Play } from 'lucide-react';
-import { t } from '../utils/localization';
 
 const CTABanner = () => {
   const [ref, inView] = useInView({
@@ -73,7 +72,7 @@ const CTABanner = () => {
               className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
             >
               <div className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" />
-              <span className="text-sm text-white font-medium">{t('cta.badge')}</span>
+              <span className="text-sm text-white font-medium">Ready to Transform Your Fleet?</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -83,10 +82,10 @@ const CTABanner = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
             >
-              {t('cta.title.part1')}
-              <span className="gradient-text"> {t('cta.title.part2')}</span>
+              Ready to
+              <span className="gradient-text"> Light Up</span>
               <br />
-              {t('cta.title.part3')}
+              Your Fleet?
             </motion.h2>
 
             {/* Subheadline */}
@@ -96,7 +95,7 @@ const CTABanner = () => {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed"
             >
-              {t('cta.subtitle')}
+              Join hundreds of fleet owners who have already transformed their revenue with Lunqo's smart advertising platform.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -111,7 +110,7 @@ const CTABanner = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span>{t('cta.buttons.demo')}</span>
+                <span>Get Started Today</span>
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
               
@@ -121,7 +120,7 @@ const CTABanner = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Play className="w-5 h-5" />
-                <span>{t('cta.buttons.contact')}</span>
+                <span>Watch 60-sec Overview</span>
               </motion.button>
             </motion.div>
 
