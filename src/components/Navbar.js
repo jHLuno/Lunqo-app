@@ -100,7 +100,7 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="transition-all duration-300 gpu-accelerated flex justify-center items-start py-4"
+      className="navbar-fixed transition-all duration-300 gpu-accelerated flex justify-center items-start py-4"
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${

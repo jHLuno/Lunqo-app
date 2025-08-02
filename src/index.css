@@ -284,6 +284,12 @@
     width: 100vw !important;
     transform: none !important;
     will-change: transform !important;
+    background: transparent !important;
+  }
+
+  /* Add padding to body to account for fixed navbar */
+  body {
+    padding-top: 80px !important;
   }
 
   /* Ensure body and html don't interfere */
