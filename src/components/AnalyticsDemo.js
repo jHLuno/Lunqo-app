@@ -206,7 +206,7 @@ const AnalyticsDemo = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm overscroll-none overflow-hidden p-4"
               role="dialog"
               aria-modal="true"
               onClick={onBackdropClick}
@@ -216,7 +216,7 @@ const AnalyticsDemo = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-screen overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-6">
