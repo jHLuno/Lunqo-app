@@ -2,11 +2,8 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Car, Building2, Users, TrendingUp } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { translations } from '../utils/localization';
 
 const AudienceStrip = () => {
-  const { language } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -17,29 +14,29 @@ const AudienceStrip = () => {
   const audiences = useMemo(() => [
     {
       icon: Car,
-      title: translations[language]?.taxiCompanies || 'Taxi Companies',
+      title: 'Fleet Owners',
       benefit: 'Maximize revenue per vehicle',
       color: 'primary-blue'
     },
     {
       icon: Building2,
-      title: translations[language]?.rideSharing || 'Ride-Sharing',
+      title: 'Advertisers',
       benefit: 'Reach captive audiences',
       color: 'primary-lime'
     },
     {
       icon: Users,
-      title: translations[language]?.fleetOperators || 'Fleet Operators',
+      title: 'Agencies',
       benefit: 'Scale campaigns effortlessly',
       color: 'primary-orange'
     },
     {
       icon: TrendingUp,
-      title: translations[language]?.transportServices || 'Transport Services',
+      title: 'Investors',
       benefit: 'High-growth adtech opportunity',
       color: 'primary-blue'
     }
-  ], [language]);
+  ], []);
 
   // Memoized animation variants
   const containerVariants = useMemo(() => ({
