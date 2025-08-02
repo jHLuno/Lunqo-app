@@ -40,7 +40,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-dark-800/20 border-t border-dark-700/50">
+    <footer className="bg-black/90 border-t border-dark-700/50">
       {/* Neon Separator */}
       <div className="h-px bg-gradient-to-r from-transparent via-primary-blue to-transparent opacity-50" />
       
@@ -125,7 +125,7 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="mt-12 pt-8 border-t border-dark-800"
+          className="mt-12 pt-8 border-t border-dark-700/50"
         >
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div>
@@ -158,7 +158,7 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
-          className="mt-8 pt-8 border-t border-dark-800"
+          className="mt-8 pt-8 border-t border-dark-700/50"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-dark-400 text-sm">
