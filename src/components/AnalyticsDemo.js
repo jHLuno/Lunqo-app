@@ -2,24 +2,39 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-// Alternative body scroll management using class-based approach
+// Proper body scroll lock implementation
 const useBodyScrollLock = (isLocked) => {
   useEffect(() => {
     if (isLocked) {
-      document.body.classList.add('modal-open');
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      
+      // Get scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Lock the body and prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = '17px'; // compensate for scrollbar
-    } else {
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      // Prevent touch scrolling on mobile
+      document.body.style.touchAction = 'none';
+      
+      // Return cleanup function
+      return () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        document.body.style.touchAction = '';
+        window.scrollTo(0, scrollY);
+      };
     }
-
-    return () => {
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-    };
   }, [isLocked]);
 };
 
@@ -247,15 +262,16 @@ const AnalyticsDemo = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
             onClick={(e) => e.target === e.currentTarget && handleModalClose()}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           >
             <motion.div
               variants={modalVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
