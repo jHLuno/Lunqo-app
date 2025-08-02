@@ -2,43 +2,79 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const fs = require('fs');
 
-// Custom plugin to remove duplicate script tags
+// Custom plugin to remove outdated or duplicate script tags generated across builds
 class RemoveDuplicateScriptsPlugin {
   apply(compiler) {
     compiler.hooks.afterEmit.tap('RemoveDuplicateScriptsPlugin', (compilation) => {
       const htmlPath = path.resolve(__dirname, 'public/index.html');
-      if (fs.existsSync(htmlPath)) {
-        let html = fs.readFileSync(htmlPath, 'utf8');
-        
-        // Find all script tags with src attributes
-        const scriptRegex = /<script[^>]*src="([^"]*\.js)"[^>]*><\/script>/g;
-        const scripts = [];
-        let match;
-        
-        // Extract all script src values
-        while ((match = scriptRegex.exec(html)) !== null) {
-          scripts.push(match[1]); // Get the src value
-        }
-        
-        // Remove ALL script tags (both with and without src)
-        html = html.replace(/<script[^>]*><\/script>/g, '');
-        
-        // Get unique script files
-        const uniqueScripts = [...new Set(scripts)];
-        
-        // Create new script tags
-        const scriptTags = uniqueScripts.map(src => 
-          `<script defer="defer" src="${src}"></script>`
-        ).join('\n');
-        
-        // Insert scripts before closing body tag
-        html = html.replace('</body>', `${scriptTags}\n</body>`);
-        
-        // Clean up any extra whitespace
-        html = html.replace(/\n\s*\n/g, '\n');
-        
-        fs.writeFileSync(htmlPath, html);
+      if (!fs.existsSync(htmlPath)) return;
+
+      // 1. Read the current HTML output
+      let html = fs.readFileSync(htmlPath, 'utf8');
+
+      // 2. Determine which JS assets were emitted in THIS build
+      const currentBuildScripts = new Set(
+        Object.keys(compilation.assets)
+          .filter((name) => name.endsWith('.js'))
+          .map((name) => path.basename(name))
+      );
+
+      // 3. Extract every script src reference from the HTML
+      const scriptRegex = /<script[^>]*src="([^"]+\.js)"[^>]*><\/script>/gi;
+      const scriptsInHtml = [];
+      let match;
+      while ((match = scriptRegex.exec(html)) !== null) {
+        scriptsInHtml.push(match[1]);
       }
+
+      // 4. Strip ALL existing script tags from HTML (we will re-insert)
+      html = html.replace(/<script[^>]*><\/script>/gi, '');
+
+      // 5. Keep only unique script src values that belong to the current build output
+      const finalScripts = scriptsInHtml
+        .filter((src) => currentBuildScripts.has(path.basename(src)))
+        .filter((src, idx, arr) => arr.indexOf(src) === idx);
+
+      // 6. Optional: ensure predictable ordering (runtime → vendors → rest)
+      const order = ['runtime', 'vendors'];
+      finalScripts.sort((a, b) => {
+        const aIdx = order.findIndex((prefix) => path.basename(a).startsWith(prefix));
+        const bIdx = order.findIndex((prefix) => path.basename(b).startsWith(prefix));
+        return (aIdx === -1 ? order.length : aIdx) - (bIdx === -1 ? order.length : bIdx);
+      });
+
+      // 7. Re-create script tags
+      const scriptTags = finalScripts
+        .map((src) => `<script defer="defer" src="${src}"></script>`) 
+        .join('\n');
+
+      // 8. Re-insert the script tags just before the closing body tag
+      html = html.replace('</body>', `${scriptTags}\n</body>`);
+
+      // 9. Remove outdated .js and .map files that are not part of the current build
+      const publicDir = path.resolve(__dirname, 'public');
+      const preservedDirs = new Set(['favicons', 'images', 'fonts']);
+
+      fs.readdirSync(publicDir).forEach((file) => {
+        // Skip directories that must be preserved
+        if (preservedDirs.has(file)) return;
+
+        const filePath = path.join(publicDir, file);
+        const ext = path.extname(file);
+        const isMap = file.endsWith('.map');
+        const isJs = ext === '.js';
+
+        // If it's a JS or MAP and not part of current build assets, delete it
+        if ((isJs || isMap) && !currentBuildScripts.has(file) && file !== 'index.html') {
+          try {
+            fs.unlinkSync(filePath);
+          } catch (err) {
+            console.warn(`Failed to delete outdated asset ${file}:`, err);
+          }
+        }
+      });
+
+      fs.writeFileSync(htmlPath, html);
     });
   }
 }
