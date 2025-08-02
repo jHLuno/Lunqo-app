@@ -261,7 +261,7 @@ const Navbar = () => {
     </motion.nav>
   );
 
-  return createPortal(navbarContent, document.body);
+  return navbarContent;
 };
 
 export default React.memo(Navbar); 
