@@ -47,7 +47,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="section-padding bg-dark-800/15">
+    <section id="testimonials" className="section-padding bg-dark-800/15">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

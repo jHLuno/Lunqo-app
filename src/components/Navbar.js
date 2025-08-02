@@ -23,11 +23,11 @@ const Navbar = () => {
 
   // Memoized nav items to prevent unnecessary re-renders
   const navItems = useMemo(() => [
-    { name: 'Solutions', href: '#solutions' },
+    { name: 'Solutions', href: '#solutions' }, 
     { name: 'Analytics', href: '#analytics' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Advantages', href: '#advantages' },
+    { name: 'Testimonials', href: '#testimonials' },
+    { name: 'Contact us', href: '#footer' },
   ], []);
 
   // Optimized scroll handler with throttling
