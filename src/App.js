@@ -72,15 +72,15 @@ const AppContent = () => {
 
 function App() {
   return (
-    <LanguageProvider>
-      <Router>
+    <Router>
+      <LanguageProvider>
         <Routes>
           <Route path="/en" element={<AppContent />} />
           <Route path="/ru" element={<AppContent />} />
           <Route path="/" element={<Navigate to="/en" replace />} />
         </Routes>
-      </Router>
-    </LanguageProvider>
+      </LanguageProvider>
+    </Router>
   );
 }
 

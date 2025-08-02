@@ -60,12 +60,17 @@ export const LanguageProvider = ({ children }) => {
       const savedLanguage = localStorage.getItem('lunqo-language');
       if (savedLanguage && translations[savedLanguage]) {
         setLanguage(savedLanguage);
-        // Redirect to the correct language path
-        navigate(`/${savedLanguage}${location.pathname}`);
+        // Only redirect if we're not already on a language path
+        if (!location.pathname.startsWith('/en') && !location.pathname.startsWith('/ru')) {
+          navigate(`/${savedLanguage}${location.pathname}`);
+        }
       } else {
         // Default to English
         setLanguage('en');
-        navigate(`/en${location.pathname}`);
+        // Only redirect if we're not already on a language path
+        if (!location.pathname.startsWith('/en') && !location.pathname.startsWith('/ru')) {
+          navigate(`/en${location.pathname}`);
+        }
       }
     }
   }, [location.pathname, navigate, translations]);

@@ -100,14 +100,13 @@ const Hero = () => {
 
   // Optimized button click handlers
   const handleDemoClick = useCallback(() => {
-    // Demo click handler
-    console.log('Demo clicked');
-  }, []);
+    window.open(t('urls.demo'), '_blank', 'noopener,noreferrer');
+  }, [t]);
 
   const handleWatchClick = useCallback(() => {
-    // Watch click handler
-    console.log('Watch clicked');
-  }, []);
+    // Watch click handler - could link to a video or overview page
+    window.open(t('urls.website') + '/overview', '_blank', 'noopener,noreferrer');
+  }, [t]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden animate-120fps">

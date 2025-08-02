@@ -43,6 +43,25 @@ export const ru = {
     exploreAll: 'Изучить все функции'
   },
 
+  // URLs and Links
+  urls: {
+    website: 'https://lunqo.app',
+    demo: 'https://lunqo.app/demo',
+    contact: 'https://lunqo.app/contact',
+    apiDocs: 'https://lunqo.app/api-docs',
+    pricing: 'https://lunqo.app/pricing',
+    about: 'https://lunqo.app/about',
+    careers: 'https://lunqo.app/careers',
+    blog: 'https://lunqo.app/blog',
+    helpCenter: 'https://lunqo.app/help',
+    status: 'https://lunqo.app/status',
+    documentation: 'https://lunqo.app/docs',
+    privacy: 'https://lunqo.app/privacy',
+    terms: 'https://lunqo.app/terms',
+    cookies: 'https://lunqo.app/cookies',
+    gdpr: 'https://lunqo.app/gdpr'
+  },
+
   // Footer
   footer: {
     description: 'Единое управление, аналитика в реальном времени, простое масштабирование для медиа в такси. Преобразуем способ связи владельцев парков и рекламодателей с привлеченной аудиторией.',

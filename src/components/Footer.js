@@ -10,35 +10,35 @@ const Footer = () => {
 
   const footerLinks = {
     product: [
-      { name: t('footer.links.product.features'), href: '#features' },
-      { name: t('footer.links.product.analytics'), href: '#analytics' },
-      { name: t('footer.links.product.apiDocs'), href: '#api' },
-      { name: t('footer.links.product.pricing'), href: '#pricing' }
+      { name: t('footer.links.product.features'), href: t('urls.website') + '/features' },
+      { name: t('footer.links.product.analytics'), href: t('urls.website') + '/analytics' },
+      { name: t('footer.links.product.apiDocs'), href: t('urls.apiDocs') },
+      { name: t('footer.links.product.pricing'), href: t('urls.pricing') }
     ],
     company: [
-      { name: t('footer.links.company.about'), href: '#about' },
-      { name: t('footer.links.company.careers'), href: '#careers' },
-      { name: t('footer.links.company.blog'), href: '#blog' },
-      { name: t('footer.links.company.press'), href: '#press' }
+      { name: t('footer.links.company.about'), href: t('urls.about') },
+      { name: t('footer.links.company.careers'), href: t('urls.careers') },
+      { name: t('footer.links.company.blog'), href: t('urls.blog') },
+      { name: t('footer.links.company.press'), href: t('urls.website') + '/press' }
     ],
     support: [
-      { name: t('footer.links.support.helpCenter'), href: '#help' },
-      { name: t('footer.links.support.contact'), href: '#contact' },
-      { name: t('footer.links.support.status'), href: '#status' },
-      { name: t('footer.links.support.documentation'), href: '#docs' }
+      { name: t('footer.links.support.helpCenter'), href: t('urls.helpCenter') },
+      { name: t('footer.links.support.contact'), href: t('urls.contact') },
+      { name: t('footer.links.support.status'), href: t('urls.status') },
+      { name: t('footer.links.support.documentation'), href: t('urls.documentation') }
     ],
     legal: [
-      { name: t('footer.links.legal.privacyPolicy'), href: '#privacy' },
-      { name: t('footer.links.legal.termsOfService'), href: '#terms' },
-      { name: t('footer.links.legal.cookiePolicy'), href: '#cookies' },
-      { name: t('footer.links.legal.gdpr'), href: '#gdpr' }
+      { name: t('footer.links.legal.privacyPolicy'), href: t('urls.privacy') },
+      { name: t('footer.links.legal.termsOfService'), href: t('urls.terms') },
+      { name: t('footer.links.legal.cookiePolicy'), href: t('urls.cookies') },
+      { name: t('footer.links.legal.gdpr'), href: t('urls.gdpr') }
     ]
   };
 
   const socialLinks = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Github, href: '#', label: 'GitHub' }
+    { icon: Twitter, href: 'https://twitter.com/lunqoapp', label: 'Twitter' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/lunqo', label: 'LinkedIn' },
+    { icon: Github, href: 'https://github.com/lunqo', label: 'GitHub' }
   ];
 
   return (
@@ -74,11 +74,15 @@ const Footer = () => {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Mail className="w-4 h-4 text-primary-blue" />
-                  <span>{t('footer.contact.email')}</span>
+                  <a href={`mailto:${t('footer.contact.email')}`} className="hover:text-primary-blue transition-colors duration-200">
+                    {t('footer.contact.email')}
+                  </a>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Phone className="w-4 h-4 text-primary-blue" />
-                  <span>{t('footer.contact.phone')}</span>
+                  <a href={`tel:${t('footer.contact.phone')}`} className="hover:text-primary-blue transition-colors duration-200">
+                    {t('footer.contact.phone')}
+                  </a>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <MapPin className="w-4 h-4 text-primary-blue" />
@@ -108,6 +112,8 @@ const Footer = () => {
                         <a
                           href={link.href}
                           className="text-dark-300 hover:text-primary-blue transition-colors duration-200 text-sm"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {link.name}
                         </a>
@@ -174,6 +180,8 @@ const Footer = () => {
                   href={social.href}
                   className="w-10 h-10 bg-dark-800 border border-dark-700 rounded-lg flex items-center justify-center text-dark-300 hover:text-primary-blue hover:border-primary-blue/30 transition-all duration-200"
                   aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <social.icon className="w-5 h-5" />
                 </a>

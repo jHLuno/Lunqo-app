@@ -59,6 +59,11 @@ const Navbar = () => {
     setIsLanguageMenuOpen(false);
   };
 
+  // Handle demo button click
+  const handleDemoClick = () => {
+    window.open(t('urls.demo'), '_blank', 'noopener,noreferrer');
+  };
+
   // Memoized motion variants for better performance
   const navVariants = useMemo(() => ({
     initial: { y: -100 },
@@ -183,6 +188,7 @@ const Navbar = () => {
               variants={buttonVariants}
               whileHover="whileHover"
               whileTap="whileTap"
+              onClick={handleDemoClick}
             >
               {t('nav.bookDemo')}
             </motion.button>
@@ -240,7 +246,10 @@ const Navbar = () => {
                 </button>
               </div>
               
-              <button className="w-full btn-primary mt-4 gpu-accelerated">
+              <button 
+                className="w-full btn-primary mt-4 gpu-accelerated"
+                onClick={handleDemoClick}
+              >
                 {t('nav.bookDemo')}
               </button>
             </div>
