@@ -250,55 +250,62 @@ const AnalyticsDemo = () => {
       <Portal>
         <AnimatePresence>
           {open && (
-            <motion.div
-              variants={overlayAnim}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm overscroll-none overflow-hidden p-4"
-              role="dialog"
-              aria-modal="true"
-              onClick={onBackdropClick}
+            <div
               style={{
                 position: 'fixed',
                 top: 0,
                 left: 0,
-                right: 0,
-                bottom: 0,
+                width: '100vw',
+                height: '100vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 9999,
+                zIndex: 99999,
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 backdropFilter: 'blur(4px)'
               }}
+              role="dialog"
+              aria-modal="true"
+              onClick={onBackdropClick}
             >
-              <motion.div
-                variants={modalAnim}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-screen overflow-hidden"
+              <div
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   position: 'relative',
-                  maxWidth: '64rem',
-                  width: '90%',
-                  maxHeight: '90vh',
-                  overflow: 'hidden',
+                  width: '90vw',
+                  maxWidth: '800px',
+                  height: '80vh',
+                  maxHeight: '600px',
                   backgroundColor: 'rgb(31, 41, 55)',
-                  borderRadius: '1.5rem',
-                  padding: '2rem',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                  zIndex: 10000
+                  borderRadius: '24px',
+                  padding: '32px',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                  zIndex: 100000,
+                  overflow: 'hidden',
+                  border: '2px solid rgba(255, 255, 255, 0.1)'
                 }}
               >
+                {/* TEST: Bright visibility check */}
+                <div style={{
+                  position: 'absolute',
+                  top: '10px',
+                  left: '10px',
+                  background: 'red',
+                  color: 'white',
+                  padding: '10px',
+                  fontSize: '16px',
+                  zIndex: 999999
+                }}>
+                  MODAL IS VISIBLE!
+                </div>
+
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
                   <button
                     onClick={closeModal}
                     aria-label="Close modal"
                     className="text-dark-400 hover:text-white transition-colors"
+                    style={{ background: 'red', padding: '10px' }}
                   >
                     <X size={24} />
                   </button>
@@ -347,8 +354,8 @@ const AnalyticsDemo = () => {
                     Get Full Access
                   </motion.button>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           )}
         </AnimatePresence>
       </Portal>
