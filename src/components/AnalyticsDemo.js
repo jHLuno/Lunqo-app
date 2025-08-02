@@ -63,7 +63,9 @@ const AnalyticsDemo = () => {
   }), []);
 
   // Optimized event handlers
-  const handleModalOpen = useCallback(() => {
+  const handleModalOpen = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsModalOpen(true);
   }, []);
 
@@ -95,6 +97,15 @@ const AnalyticsDemo = () => {
       // Restore scroll position
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
+
+    // Cleanup function to ensure scroll is restored if component unmounts
+    return () => {
+      if (isModalOpen) {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+      }
+    };
   }, [isModalOpen]);
 
   // Calculate chart heights once
