@@ -100,198 +100,236 @@
       transform: translate3d(-5px, 10px, 0) scale(1.02); 
     }
   }
-
-  * {
-    box-sizing: border-box;
+  
+  /* Smooth section transitions - remove all borders and create seamless flow */
+  section {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-
-  /* Performance optimizations for all elements */
-  * {
-    /* Enable GPU acceleration for all transforms */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
+  
+  /* Create smooth gradient overlays for sections instead of solid backgrounds */
+  section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(13, 17, 23, 0.02) 20%,
+      rgba(13, 17, 23, 0.05) 50%,
+      rgba(13, 17, 23, 0.02) 80%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 0;
   }
-
-  /* Optimize images for performance */
+  
+  /* Ensure all section content is above the overlay */
+  section > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Remove any default borders from all elements */
+  * {
+    border-color: transparent !important;
+  }
+  
+  /* Only allow borders on specific interactive elements */
+  button, input, textarea, .card, .glass-effect {
+    border-color: inherit !important;
+  }
+  
+  /* Optimized image rendering */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    transform: translateZ(0);
-  }
-}
-
-@layer components {
-  .btn-primary {
-    @apply bg-primary-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
-    /* GPU acceleration for button animations */
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .btn-secondary {
-    @apply bg-transparent border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
-    /* GPU acceleration for button animations */
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .card {
-    @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 transition-all duration-300 hover:border-primary-blue/30 hover:shadow-glow;
-    /* GPU acceleration for card animations */
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent;
-  }
-
-  .glass-effect {
-    @apply bg-dark-800/20 backdrop-blur-md border border-dark-700/50;
-    /* GPU acceleration for glass effect */
-    transform: translateZ(0);
-  }
-
-  .nav-link {
-    @apply text-dark-300 hover:text-white transition-colors duration-200 font-medium;
-  }
-
-  .section-padding {
-    @apply py-20 px-4 sm:px-6 lg:px-8;
-  }
-
-  .container-custom {
-    @apply max-w-7xl mx-auto;
-  }
-
-  /* High-performance animation classes */
-  .animate-120fps {
-    /* Optimized for 120fps displays */
-    transform: translateZ(0);
-    will-change: transform, opacity;
     backface-visibility: hidden;
-  }
-
-  .hover-scale {
-    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateZ(0);
-    will-change: transform;
   }
-
+  
+  /* Enhanced button styles with smooth transitions */
+  .btn-primary {
+    background: linear-gradient(135deg, #18a0fb 0%, #0d8ce6 100%);
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  /* Enhanced card styles */
+  .card {
+    background: rgba(13, 17, 23, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  /* Gradient text effect */
+  .gradient-text {
+    background: linear-gradient(135deg, #18a0fb 0%, #78ffd6 50%, #ffa500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Glass effect with enhanced blur */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Smooth navigation links */
+  .nav-link {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Enhanced section padding with smooth transitions */
+  .section-padding {
+    padding: 6rem 0;
+    position: relative;
+    background: transparent !important;
+  }
+  
+  /* Custom container with smooth edges */
+  .container-custom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* 120fps animations for ultra-smooth performance */
+  .animate-120fps {
+    animation-duration: 0.008s; /* 120fps = 8.33ms per frame */
+    animation-timing-function: linear;
+  }
+  
+  /* Enhanced hover effects */
+  .hover-scale {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
   .hover-scale:hover {
-    transform: translateZ(0) scale(1.02);
+    transform: translateZ(0) scale(1.05);
   }
-}
-
-@layer utilities {
+  
+  /* Text effects */
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
-
+  
   .text-glow {
     text-shadow: 0 0 20px rgba(24, 160, 251, 0.5);
   }
-
-  /* Optimized float animation with GPU acceleration */
+  
+  /* Floating animation */
   .animate-float {
     animation: float 6s ease-in-out infinite;
     transform: translateZ(0);
-    will-change: transform;
   }
-
+  
   @keyframes float {
-    0%, 100% { 
-      transform: translate3d(0, 0, 0); 
+    0%, 100% {
+      transform: translateZ(0) translateY(0px);
     }
-    50% { 
-      transform: translate3d(0, -10px, 0); 
+    50% {
+      transform: translateZ(0) translateY(-20px);
     }
   }
-
-  /* Optimized pulse glow animation */
+  
+  /* Pulse glow effect */
   .animate-pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite;
-    transform: translateZ(0);
-    will-change: opacity, transform;
   }
-
+  
   @keyframes pulseGlow {
-    0%, 100% { 
-      opacity: 1; 
-      transform: translate3d(0, 0, 0) scale(1); 
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
     }
-    50% { 
-      opacity: 0.7; 
-      transform: translate3d(0, 0, 0) scale(1.05); 
+    50% {
+      box-shadow: 0 0 40px rgba(24, 160, 251, 0.6);
     }
   }
-
-  /* Performance utility classes */
+  
+  /* GPU acceleration class */
   .gpu-accelerated {
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
     will-change: transform;
   }
-
+  
+  /* Smooth transitions */
   .smooth-transition {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
+  
+  /* Fast transitions for interactive elements */
   .fast-transition {
-    transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-/* Optimized scrollbar with GPU acceleration */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #18A0FB;
-  border-radius: 4px;
-  transform: translateZ(0);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #59FF70;
-}
-
-/* Enhanced reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Performance optimizations for different screen refresh rates */
-@media (min-resolution: 120dpi) {
-  .animate-120fps {
-    /* Optimizations for high refresh rate displays */
-    will-change: transform, opacity;
-  }
-}
-
-/* Optimize for mobile performance */
-@media (max-width: 768px) {
-  body::before {
-    /* Reduce background animation complexity on mobile */
-    filter: blur(60px);
-    animation-duration: 45s;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .animate-float {
-    animation-duration: 8s;
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(13, 17, 23, 0.5);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #18a0fb 0%, #78ffd6 100%);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0d8ce6 0%, #5ae6b8 100%);
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* High refresh rate support */
+  @media (min-resolution: 120dpi) {
+    .animate-120fps {
+      animation-duration: 0.004s; /* 240fps = 4.17ms per frame */
+    }
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    body::before {
+      filter: blur(80px);
+    }
+    
+    .animate-float {
+      animation-duration: 4s;
+    }
   }
 } 

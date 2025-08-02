@@ -40,7 +40,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-dark-800/20 border-t border-dark-700/50">
+            <footer className="border-t border-dark-700/50">
       {/* Neon Separator */}
       <div className="h-px bg-gradient-to-r from-transparent via-primary-blue to-transparent opacity-50" />
       

@@ -14,7 +14,7 @@ const Footer = lazy(() => import('./components/Footer'));
 
 // Loading fallback component
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-dark-900">
+  <div className="min-h-screen flex items-center justify-center">
     <div className="flex items-center space-x-2">
       <div className="w-2 h-2 bg-primary-blue rounded-full animate-pulse"></div>
       <div className="w-2 h-2 bg-primary-blue rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
@@ -35,32 +35,32 @@ function App() {
           <Hero />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <AudienceStrip />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <FeatureTriad />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <AnalyticsDemo />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <WhyLunqo />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <Testimonials />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+        <Suspense fallback={<div className="h-32" />}>
           <CTABanner />
         </Suspense>
       </main>
       
-      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
+      <Suspense fallback={<div className="h-32" />}>
         <Footer />
       </Suspense>
     </div>
