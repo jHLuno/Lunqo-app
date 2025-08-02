@@ -1,5 +1,7 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { autoRedirectToLanguage } from './utils/geoDetection';
 
 // Lazy load components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
@@ -23,47 +25,65 @@ const LoadingFallback = () => (
   </div>
 );
 
-function App() {
+// Main page component
+const MainPage = () => {
   return (
     <div className="min-h-screen gpu-accelerated">
       <Suspense fallback={<LoadingFallback />}>
-      <Navbar />
+        <Navbar />
       </Suspense>
       
       <main>
         <Suspense fallback={<LoadingFallback />}>
-        <Hero />
+          <Hero />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AudienceStrip />
+          <AudienceStrip />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <FeatureTriad />
+          <FeatureTriad />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AnalyticsDemo />
+          <AnalyticsDemo />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <WhyLunqo />
+          <WhyLunqo />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <Testimonials />
+          <Testimonials />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <CTABanner />
+          <CTABanner />
         </Suspense>
       </main>
       
       <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-      <Footer />
+        <Footer />
       </Suspense>
     </div>
+  );
+};
+
+function App() {
+  useEffect(() => {
+    // Auto-redirect to appropriate language version
+    autoRedirectToLanguage();
+  }, []);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/en" element={<MainPage />} />
+        <Route path="/ru" element={<MainPage />} />
+        <Route path="/" element={<Navigate to="/en" replace />} />
+      </Routes>
+    </Router>
   );
 }
 

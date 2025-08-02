@@ -191,7 +191,13 @@ module.exports = (env, argv) => {
       compress: true,
       port: 3000,
       hot: true,
-      historyApiFallback: true,
+      historyApiFallback: {
+        rewrites: [
+          { from: /^\/en/, to: '/index.html' },
+          { from: /^\/ru/, to: '/index.html' },
+          { from: /./, to: '/index.html' }
+        ]
+      },
       client: {
         overlay: {
           errors: true,

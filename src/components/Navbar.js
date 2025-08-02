@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import lunqoLogo from '../Lunqo-white.png';
+import { t } from '../utils/localization';
 
 // Throttle function for performance
 const throttle = (func, limit) => {
@@ -23,11 +24,9 @@ const Navbar = () => {
 
   // Memoized nav items to prevent unnecessary re-renders
   const navItems = useMemo(() => [
-    { name: 'Solutions', href: '#solutions' }, 
-    { name: 'Analytics', href: '#analytics' },
-    { name: 'Advantages', href: '#advantages' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact us', href: '#footer' },
+    { name: t('navbar.features'), href: '#solutions' }, 
+    { name: t('navbar.about'), href: '#analytics' },
+    { name: t('navbar.contact'), href: '#advantages' },
   ], []);
 
   // Optimized scroll handler with throttling
@@ -126,7 +125,7 @@ const Navbar = () => {
             whileHover="whileHover"
             whileTap="whileTap"
           >
-            Book a Demo
+            {t('hero.cta.demo')}
           </motion.button>
 
           {/* Mobile Menu Button */}
@@ -160,7 +159,7 @@ const Navbar = () => {
                 </a>
               ))}
               <button className="w-full btn-primary mt-4 gpu-accelerated">
-                Book a Demo
+                {t('hero.cta.demo')}
               </button>
             </div>
           </motion.div>

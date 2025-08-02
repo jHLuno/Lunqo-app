@@ -1,14 +1,15 @@
 import React, { useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Play, ArrowRight, MapPin, Grid3X3 } from 'lucide-react';
+import { t } from '../utils/localization';
 
 const Hero = () => {
   // Memoized stats data to prevent unnecessary re-renders
   const stats = useMemo(() => [
-    { label: 'Fleets Served', value: '500+' },
-    { label: 'Daily Impressions', value: '2.5M+' },
-    { label: 'Cities Covered', value: '25+' },
-    { label: 'Uptime', value: '99.9%' }
+    { label: t('hero.stats.fleets'), value: '500+' },
+    { label: t('hero.stats.impressions'), value: '2.5M+' },
+    { label: t('hero.stats.cities'), value: '25+' },
+    { label: t('hero.stats.uptime'), value: '99.9%' }
   ], []);
 
   // Memoized animation variants for better performance
@@ -154,7 +155,7 @@ const Hero = () => {
             className="inline-flex items-center space-x-2 bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-full px-4 py-2 mb-8 animate-120fps gpu-accelerated"
           >
             <div className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" />
-            <span className="text-sm text-dark-300">SmartSeat Media Platform</span>
+            <span className="text-sm text-dark-300">{t('hero.badge')}</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -164,10 +165,10 @@ const Hero = () => {
             animate="animate"
             className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 animate-120fps"
           >
-            <span className="text-white">Lunqo: </span>
-            <span className="gradient-text">Light-Up Ads</span>
+            <span className="text-white">{t('hero.title.part1')}</span>
+            <span className="gradient-text">{t('hero.title.part2')}</span>
             <br />
-            <span className="text-white">on the Go</span>
+            <span className="text-white">{t('hero.title.part3')}</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -177,7 +178,7 @@ const Hero = () => {
             animate="animate"
             className="text-lg sm:text-xl lg:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed animate-120fps"
           >
-            Unified control, real-time insights, effortless scaling for in-taxi media.
+            {t('hero.subtitle')}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -194,7 +195,7 @@ const Hero = () => {
               transition={{ duration: 0.12, ease: "easeInOut" }}
               onClick={handleDemoClick}
             >
-              <span>Schedule a Live Demo</span>
+              <span>{t('hero.cta.demo')}</span>
               <ArrowRight className="w-5 h-5" />
             </motion.button>
             
@@ -206,7 +207,7 @@ const Hero = () => {
               onClick={handleWatchClick}
             >
               <Play className="w-5 h-5" />
-              <span>Watch Overview</span>
+              <span>{t('hero.cta.watch')}</span>
             </motion.button>
           </motion.div>
 
