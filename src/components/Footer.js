@@ -2,32 +2,35 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 import lunqoLogo from '../Lunqo-white.png';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
 
 const Footer = () => {
+  const { language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     product: [
-      { name: 'Features', href: '#features' },
-      { name: 'Analytics', href: '#analytics' },
+      { name: translations[language]?.solutions || 'Features', href: '#features' },
+      { name: translations[language]?.analytics || 'Analytics', href: '#analytics' },
       { name: 'API Docs', href: '#api' },
       { name: 'Pricing', href: '#pricing' }
     ],
     company: [
-      { name: 'About', href: '#about' },
-      { name: 'Careers', href: '#careers' },
+      { name: translations[language]?.about || 'About', href: '#about' },
+      { name: translations[language]?.careers || 'Careers', href: '#careers' },
       { name: 'Blog', href: '#blog' },
       { name: 'Press', href: '#press' }
     ],
     support: [
-      { name: 'Help Center', href: '#help' },
-      { name: 'Contact', href: '#contact' },
+      { name: translations[language]?.helpCenter || 'Help Center', href: '#help' },
+      { name: translations[language]?.contact || 'Contact', href: '#contact' },
       { name: 'Status', href: '#status' },
-      { name: 'Documentation', href: '#docs' }
+      { name: translations[language]?.documentation || 'Documentation', href: '#docs' }
     ],
     legal: [
-      { name: 'Privacy Policy', href: '#privacy' },
-      { name: 'Terms of Service', href: '#terms' },
+      { name: translations[language]?.privacy || 'Privacy Policy', href: '#privacy' },
+      { name: translations[language]?.terms || 'Terms of Service', href: '#terms' },
       { name: 'Cookie Policy', href: '#cookies' },
       { name: 'GDPR', href: '#gdpr' }
     ]
@@ -65,8 +68,7 @@ const Footer = () => {
               </div>
               
               <p className="text-dark-300 mb-6 leading-relaxed">
-                Unified control, real-time insights, effortless scaling for in-taxi media. 
-                Transforming how fleet owners and advertisers connect with captive audiences.
+                {translations[language]?.footerDescription || 'Unified control, real-time insights, effortless scaling for in-taxi media. Transforming how fleet owners and advertisers connect with captive audiences.'}
               </p>
 
               {/* Contact Info */}
@@ -162,7 +164,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-dark-400 text-sm">
-              © {currentYear} Lunqo. All rights reserved.
+              © {currentYear} Lunqo. {translations[language]?.allRightsReserved || 'All rights reserved.'}
             </div>
             
             {/* Social Links */}

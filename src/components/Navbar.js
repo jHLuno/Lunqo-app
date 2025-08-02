@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import lunqoLogo from '../Lunqo-white.png';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
+import LanguageSwitcher from './LanguageSwitcher';
 
 // Throttle function for performance
 const throttle = (func, limit) => {
@@ -20,15 +23,16 @@ const throttle = (func, limit) => {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { language } = useLanguage();
 
   // Memoized nav items to prevent unnecessary re-renders
   const navItems = useMemo(() => [
-    { name: 'Solutions', href: '#solutions' }, 
-    { name: 'Analytics', href: '#analytics' },
-    { name: 'Advantages', href: '#advantages' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact us', href: '#footer' },
-  ], []);
+    { name: translations[language]?.solutions || 'Solutions', href: '#solutions' }, 
+    { name: translations[language]?.analytics || 'Analytics', href: '#analytics' },
+    { name: translations[language]?.advantages || 'Advantages', href: '#advantages' },
+    { name: translations[language]?.testimonials || 'Testimonials', href: '#testimonials' },
+    { name: translations[language]?.contactUs || 'Contact us', href: '#footer' },
+  ], [language]);
 
   // Optimized scroll handler with throttling
   const handleScroll = useCallback(
@@ -119,15 +123,20 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <motion.button
-            className="hidden lg:block btn-primary gpu-accelerated"
-            variants={buttonVariants}
-            whileHover="whileHover"
-            whileTap="whileTap"
-          >
-            Book a Demo
-          </motion.button>
+          {/* Language Switcher */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <LanguageSwitcher />
+            
+            {/* CTA Button */}
+            <motion.button
+              className="btn-primary gpu-accelerated"
+              variants={buttonVariants}
+              whileHover="whileHover"
+              whileTap="whileTap"
+            >
+              {translations[language]?.bookDemo || 'Book a Demo'}
+            </motion.button>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -159,8 +168,11 @@ const Navbar = () => {
                   {item.name}
                 </a>
               ))}
+              <div className="flex items-center justify-center pt-4">
+                <LanguageSwitcher />
+              </div>
               <button className="w-full btn-primary mt-4 gpu-accelerated">
-                Book a Demo
+                {translations[language]?.bookDemo || 'Book a Demo'}
               </button>
             </div>
           </motion.div>

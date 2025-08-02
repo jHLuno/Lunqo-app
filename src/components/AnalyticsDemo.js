@@ -2,20 +2,23 @@ import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { TrendingUp, Users, Eye, MousePointer } from "lucide-react";
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
 
 const AnalyticsDemo = () => {
+  const { language } = useLanguage();
   /* ----------------- Intersection ----------------- */
   const [sectionRef, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   /* ----------------- Demo data ----------------- */
   const metrics = useMemo(
     () => [
-      { label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
+      { label: translations[language]?.impressions || "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
       { label: "Active Riders", value: "45K", change: "+8%", icon: Users },
-      { label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
-      { label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
+      { label: translations[language]?.engagement || "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
+      { label: translations[language]?.revenue || "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
     ],
-    []
+    [language]
   );
 
   const chartData = useMemo(
@@ -45,10 +48,10 @@ const AnalyticsDemo = () => {
         {/* Section Header */}
         <motion.div ref={sectionRef} variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-6">
-            Real‑Time <span className="gradient-text">Analytics</span>
+            {translations[language]?.analyticsTitle || 'Real‑Time Analytics'}
           </h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-            Monitor your campaigns with live data, track performance metrics, and optimise for engagement.
+            {translations[language]?.analyticsSubtitle || 'Monitor your campaigns with live data, track performance metrics, and optimise for engagement.'}
           </p>
         </motion.div>
 

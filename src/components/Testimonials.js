@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
 
 const Testimonials = () => {
+  const { language } = useLanguage();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -57,11 +60,10 @@ const Testimonials = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Trusted by Industry
-            <span className="gradient-text"> Leaders</span>
+            {translations[language]?.testimonialsTitle || 'What Our Clients Say'}
           </h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-            Join hundreds of fleet owners and advertisers who have transformed their business with Lunqo.
+            {translations[language]?.testimonialsSubtitle || 'Join hundreds of fleet owners and advertisers who have transformed their business with Lunqo.'}
           </p>
         </motion.div>
 

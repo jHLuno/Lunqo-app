@@ -2,8 +2,11 @@ import React, { useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Zap, BarChart3, Rocket } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
 
 const FeatureTriad = () => {
+  const { language } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -14,26 +17,26 @@ const FeatureTriad = () => {
   const features = useMemo(() => [
     {
       icon: Zap,
-      title: 'Unified Digital Control',
-      description: 'Instant ad swap, geo/time targeting, and real-time campaign management across all your fleet screens.',
+      title: translations[language]?.unifiedControl || 'Unified Control',
+      description: translations[language]?.unifiedControlDesc || 'Manage all your taxi screens from one dashboard',
       color: 'primary-blue',
       gradient: 'from-primary-blue to-blue-600'
     },
     {
       icon: BarChart3,
-      title: 'Real-Time Analytics',
-      description: 'Live KPI tracking with impressions, riders, QR scans, and engagement metrics that update in real-time.',
+      title: translations[language]?.realTimeInsights || 'Real-Time Insights',
+      description: translations[language]?.realTimeInsightsDesc || 'Track performance and engagement instantly',
       color: 'primary-lime',
       gradient: 'from-primary-lime to-green-500'
     },
     {
       icon: Rocket,
-      title: 'Fast Scaling & API Integration',
-      description: 'Plug-and-play setup with cloud uptime, seamless API integration, and rapid fleet expansion capabilities.',
+      title: translations[language]?.effortlessScaling || 'Effortless Scaling',
+      description: translations[language]?.effortlessScalingDesc || 'Expand your network without complexity',
       color: 'primary-orange',
       gradient: 'from-primary-orange to-orange-500'
     }
-  ], []);
+  ], [language]);
 
   // Memoized animation variants
   const containerVariants = useMemo(() => ({
@@ -103,8 +106,7 @@ const FeatureTriad = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            The Ultimate Toolkit for
-            <span className="gradient-text"> In-Taxi Media</span>
+            {translations[language]?.featuresTitle || 'Why Choose Lunqo'}
           </h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">
             Everything you need to control, analyze, and scale your digital advertising across taxi fleets.

@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 // Lazy load components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
@@ -25,45 +26,47 @@ const LoadingFallback = () => (
 
 function App() {
   return (
-    <div className="min-h-screen gpu-accelerated">
-      <Suspense fallback={<LoadingFallback />}>
-      <Navbar />
-      </Suspense>
-      
-      <main>
+    <LanguageProvider>
+      <div className="min-h-screen gpu-accelerated">
         <Suspense fallback={<LoadingFallback />}>
-        <Hero />
+        <Navbar />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AudienceStrip />
-        </Suspense>
+        <main>
+          <Suspense fallback={<LoadingFallback />}>
+          <Hero />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <AudienceStrip />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <FeatureTriad />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <AnalyticsDemo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <WhyLunqo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <Testimonials />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <CTABanner />
+          </Suspense>
+        </main>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <FeatureTriad />
+        <Suspense fallback={<div className="h-32 bg-dark-900" />}>
+        <Footer />
         </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AnalyticsDemo />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <WhyLunqo />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <Testimonials />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <CTABanner />
-        </Suspense>
-      </main>
-      
-      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-      <Footer />
-      </Suspense>
-    </div>
+      </div>
+    </LanguageProvider>
   );
 }
 

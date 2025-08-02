@@ -2,8 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Check, Zap, Shield, TrendingUp, Clock, Users } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../utils/localization';
 
 const WhyLunqo = () => {
+  const { language } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -12,14 +15,14 @@ const WhyLunqo = () => {
   const benefits = [
     {
       icon: Zap,
-      title: 'Lightning Fast Setup',
-      description: 'Get your fleet online in under 24 hours with our plug-and-play installation process.',
+      title: translations[language]?.innovation || 'Innovation',
+      description: translations[language]?.innovationDesc || 'Cutting-edge technology for modern advertising',
       roi: 'Reduce setup time by 80%'
     },
     {
       icon: Shield,
-      title: 'Enterprise Security',
-      description: 'Bank-level encryption and compliance with industry standards for data protection.',
+      title: translations[language]?.reliability || 'Reliability',
+      description: translations[language]?.reliabilityDesc || '99.9% uptime guaranteed',
       roi: 'Zero security incidents'
     },
     {
@@ -42,8 +45,8 @@ const WhyLunqo = () => {
     },
     {
       icon: Zap,
-      title: 'Real-Time Control',
-      description: 'Update campaigns instantly across all screens with our unified dashboard.',
+      title: translations[language]?.support || 'Support',
+      description: translations[language]?.supportDesc || '24/7 expert support team',
       roi: 'Instant campaign updates'
     }
   ];
@@ -82,11 +85,10 @@ const WhyLunqo = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Why Choose
-            <span className="gradient-text"> Lunqo</span>
+            {translations[language]?.whyLunqoTitle || 'Why Choose Lunqo'}
           </h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-            Built for the modern digital advertising landscape with proven results and enterprise-grade reliability.
+            {translations[language]?.whyLunqoSubtitle || 'Built for the modern digital advertising landscape with proven results and enterprise-grade reliability.'}
           </p>
         </motion.div>
 
