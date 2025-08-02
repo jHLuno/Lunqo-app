@@ -1,114 +1,16 @@
 import React, {
-  useState,
   useEffect,
   useMemo,
-  useCallback,
   useRef,
 } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
-
-/*************************************************************************************************
- *  HOOK: useBodyLock
- *  — Блокирует фоновые скроллы и визуальные сдвиги (учитываем ширину скроллбара).
- *  — Сохраняет позицию, чтобы при закрытии вернуться ровно туда же.
- *************************************************************************************************/
-const useBodyLock = (locked) => {
-  useEffect(() => {
-    if (!locked) return;
-
-    const html = document.documentElement;
-    const body = document.body;
-
-    // Store current scroll position
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
-
-    // Get scrollbar width
-    const scrollbarWidth = window.innerWidth - html.clientWidth;
-
-    // Apply styles to prevent scrolling
-    body.style.cssText = `
-      position: fixed !important;
-      top: -${scrollY}px !important;
-      left: -${scrollX}px !important;
-      width: 100% !important;
-      height: 100% !important;
-      overflow: hidden !important;
-      padding-right: ${scrollbarWidth}px !important;
-    `;
-
-    html.style.cssText = `
-      overflow: hidden !important;
-      overscroll-behavior: none !important;
-    `;
-
-    // Cleanup function
-    return () => {
-      body.style.cssText = '';
-      html.style.cssText = '';
-      window.scrollTo(scrollX, scrollY);
-    };
-  }, [locked]);
-};
-
-/*************************************************************************************************
- *  COMPONENT: Portal — безопасный перенос в <body>
- *************************************************************************************************/
-const Portal = ({ children }) => {
-  if (typeof window === "undefined") return null; // SSR
-  return createPortal(children, document.body);
-};
+import { TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
 /*************************************************************************************************
  *  MAIN COMPONENT: AnalyticsDemo
  *************************************************************************************************/
 const AnalyticsDemo = () => {
-  const [open, setOpen] = useState(false);
-
-  /** Freeze background when modal is open */
-  useBodyLock(open);
-
-  /** Close on ESC and prevent all scrolling */
-  useEffect(() => {
-    const onEsc = (e) => e.key === "Escape" && setOpen(false);
-    
-    const preventScroll = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    const preventTouch = (e) => {
-      if (e.touches.length > 1) return;
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    if (open) {
-      window.addEventListener("keydown", onEsc);
-      window.addEventListener("wheel", preventScroll, { passive: false });
-      window.addEventListener("touchmove", preventTouch, { passive: false });
-      window.addEventListener("scroll", preventScroll, { passive: false });
-      document.addEventListener("wheel", preventScroll, { passive: false });
-      document.addEventListener("touchmove", preventTouch, { passive: false });
-      document.addEventListener("scroll", preventScroll, { passive: false });
-    }
-
-    return () => {
-      window.removeEventListener("keydown", onEsc);
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventTouch);
-      window.removeEventListener("scroll", preventScroll);
-      document.removeEventListener("wheel", preventScroll);
-      document.removeEventListener("touchmove", preventTouch);
-      document.removeEventListener("scroll", preventScroll);
-    };
-  }, [open]);
-
   /* ----------------- Intersection ----------------- */
   const [sectionRef, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -142,27 +44,6 @@ const AnalyticsDemo = () => {
   /* ----------------- Animations ----------------- */
   const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
   const metricAnim = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
-  const overlayAnim = { 
-    initial: { opacity: 0 }, 
-    animate: { opacity: 1, transition: { duration: 0.2 } }, 
-    exit: { opacity: 0, transition: { duration: 0.2 } } 
-  };
-  const modalAnim = { 
-    initial: { scale: 0.95, opacity: 0, y: 20 }, 
-    animate: { scale: 1, opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }, 
-    exit: { scale: 0.95, opacity: 0, y: 20, transition: { duration: 0.2 } } 
-  };
-
-  /* ----------------- Handlers ----------------- */
-  const openModal = () => {
-    console.log('Opening modal');
-    setOpen(true);
-  };
-  const closeModal = () => {
-    console.log('Closing modal');
-    setOpen(false);
-  };
-  const onBackdropClick = (e) => e.target === e.currentTarget && closeModal();
 
   /* ----------------- Render ----------------- */
   return (
@@ -178,9 +59,9 @@ const AnalyticsDemo = () => {
           </p>
         </motion.div>
 
-        {/* Dashboard preview card */}
+        {/* Static Dashboard */}
         <motion.div variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="relative">
-          <div className="card p-8 cursor-pointer" onClick={openModal}>
+          <div className="card p-8">
             {/* Card Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -241,124 +122,73 @@ const AnalyticsDemo = () => {
                 ))}
               </div>
             </div>
-          </div>
-        </motion.div>
-      </div>
 
-      {/* ---------------- Modal ---------------- */}
-      {/* Debug: Modal state is {open ? 'OPEN' : 'CLOSED'} */}
-      <Portal>
-        <AnimatePresence>
-          {open && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 99999,
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                backdropFilter: 'blur(4px)'
-              }}
-              role="dialog"
-              aria-modal="true"
-              onClick={onBackdropClick}
-            >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: 'relative',
-                  width: '90vw',
-                  maxWidth: '800px',
-                  height: '80vh',
-                  maxHeight: '600px',
-                  backgroundColor: 'rgb(31, 41, 55)',
-                  borderRadius: '24px',
-                  padding: '32px',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                  zIndex: 100000,
-                  overflow: 'hidden',
-                  border: '2px solid rgba(255, 255, 255, 0.1)'
-                }}
-              >
-                {/* TEST: Bright visibility check */}
-                <div style={{
-                  position: 'absolute',
-                  top: '10px',
-                  left: '10px',
-                  background: 'red',
-                  color: 'white',
-                  padding: '10px',
-                  fontSize: '16px',
-                  zIndex: 999999
-                }}>
-                  MODAL IS VISIBLE!
-                </div>
-
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
-                  <button
-                    onClick={closeModal}
-                    aria-label="Close modal"
-                    className="text-dark-400 hover:text-white transition-colors"
-                    style={{ background: 'red', padding: '10px' }}
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-
-                {/* Modal Metrics grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                  {metrics.map((m) => (
-                    <div key={m.label} className="bg-dark-900/50 rounded-xl p-4 border border-dark-700">
-                      <div className="flex items-center justify-between mb-2">
-                        <m.icon className="w-5 h-5 text-primary-blue" />
-                        <span className="text-xs text-primary-lime font-medium">{m.change}</span>
-                      </div>
-                      <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
-                      <span className="text-sm text-dark-400">{m.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Detailed chart */}
-                <div className="bg-dark-900/30 rounded-xl p-6 border border-dark-700 mb-8">
-                  <h4 className="text-lg font-semibold text-white mb-4">Detailed Performance Analytics</h4>
-                  <div className="h-64 flex items-end justify-between space-x-2">
-                    {chartData.map((d) => (
-                      <div key={d.day} className="flex flex-col items-center space-y-2 flex-1">
-                        <div className="flex items-end space-x-1 w-full">
-                          <span className="bg-primary-blue rounded-t flex-1" style={{ height: `${(d.impressions / maxImpressions) * 200}px` }} />
-                          <span className="bg-primary-lime rounded-t flex-1" style={{ height: `${(d.scans / maxScans) * 200}px` }} />
-                        </div>
-                        <span className="text-xs text-dark-400">{d.day}</span>
-                      </div>
-                    ))}
+            {/* Additional Analytics Section */}
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Performance Summary */}
+              <div className="bg-dark-800/30 rounded-xl p-6 border border-dark-700">
+                <h4 className="text-lg font-semibold text-white mb-4">Performance Summary</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Conversion Rate</span>
+                    <span className="text-white font-semibold">7.2%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Avg. Session Duration</span>
+                    <span className="text-white font-semibold">2m 34s</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Bounce Rate</span>
+                    <span className="text-white font-semibold">23%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">ROI</span>
+                    <span className="text-primary-lime font-semibold">+156%</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="text-center">
-                  <p className="text-dark-300 mb-4">
-                    This is a preview of our analytics dashboard. Get full access with real-time data when you sign up.
-                  </p>
-                  <motion.button
-                    className="btn-primary"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.15, ease: "easeInOut" }}
-                  >
-                    Get Full Access
-                  </motion.button>
+              {/* Top Performing Campaigns */}
+              <div className="bg-dark-800/30 rounded-xl p-6 border border-dark-700">
+                <h4 className="text-lg font-semibold text-white mb-4">Top Campaigns</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Summer Ride Campaign</span>
+                    <span className="text-primary-lime text-sm">+45%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Weekend Special</span>
+                    <span className="text-primary-lime text-sm">+32%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Student Discount</span>
+                    <span className="text-primary-lime text-sm">+28%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-dark-300">Referral Program</span>
+                    <span className="text-primary-lime text-sm">+19%</span>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
-        </AnimatePresence>
-      </Portal>
+
+            {/* Call to Action */}
+            <div className="mt-8 text-center">
+              <p className="text-dark-300 mb-4">
+                Get access to real-time analytics and advanced reporting features when you sign up.
+              </p>
+              <motion.button
+                className="btn-primary"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.15, ease: "easeInOut" }}
+              >
+                Get Full Access
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };
