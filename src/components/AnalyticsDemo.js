@@ -1,7 +1,34 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { X, TrendingUp, Users, Eye, MousePointer } from 'lucide-react';
+
+// Хук для блокировки прокрутки body
+const useLockBodyScroll = (isLocked) => {
+  useEffect(() => {
+    const original = document.body.style.overflow;   // запомним, что было
+    if (isLocked) {
+      document.body.style.overflow = 'hidden';       // блокируем прокрутку
+    } else {
+      document.body.style.overflow = original;       // возвращаем обратно
+    }
+    return () => (document.body.style.overflow = original); // на случай размонтирования
+  }, [isLocked]);
+};
+
+// Хук для обработки клавиши Esc
+const useEscapeKey = (callback) => {
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        callback();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [callback]);
+};
 
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +37,10 @@ const AnalyticsDemo = () => {
     threshold: 0.1,
     rootMargin: '50px',
   });
+
+  // Используем хуки для блокировки прокрутки и обработки Esc
+  useLockBodyScroll(isModalOpen);
+  useEscapeKey(() => setIsModalOpen(false));
 
   // Memoized data to prevent unnecessary re-renders
   const metrics = useMemo(() => [
@@ -203,6 +234,9 @@ const AnalyticsDemo = () => {
               exit="exit"
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 gpu-accelerated"
               onClick={handleModalBackdropClick}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
             >
               <motion.div
                 variants={modalContentVariants}
@@ -211,13 +245,15 @@ const AnalyticsDemo = () => {
                 exit="exit"
                 className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto gpu-accelerated"
                 onClick={(e) => e.stopPropagation()}
+                role="document"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
+                  <h3 id="modal-title" className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
                   <button
                     onClick={handleModalClose}
-                    className="text-dark-400 hover:text-white transition-colors gpu-accelerated"
+                    className="text-dark-400 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-blue rounded-lg p-1 transition-colors gpu-accelerated"
                     aria-label="Close modal"
+                    tabIndex={0}
                   >
                     <X size={24} />
                   </button>
