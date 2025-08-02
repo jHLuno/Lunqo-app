@@ -1,174 +1,127 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-// Proper body scroll lock implementation
-const useBodyScrollLock = (isLocked) => {
+/*************************************************************************************************
+ *  HOOK: useBodyLock
+ *  — Блокирует фоновые скроллы и визуальные сдвиги (учитываем ширину скроллбара).
+ *  — Сохраняет позицию, чтобы при закрытии вернуться ровно туда же.
+ *************************************************************************************************/
+const useBodyLock = (locked) => {
   useEffect(() => {
-    if (isLocked) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
-      
-      // Get scrollbar width to prevent layout shift
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      
-      // Lock the body and prevent scrolling
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
-      // Prevent touch scrolling on mobile
-      document.body.style.touchAction = 'none';
-      
-      // Return cleanup function
-      return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.left = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        document.body.style.touchAction = '';
-        window.scrollTo(0, scrollY);
-      };
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (!locked) return; // nothing to do
+
+    // 1. Вычисляем ширину скролл‑бара, чтобы не прыгали ширины при overflow hidden
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    // 2. Фиксируем позицию, чтобы убрать «качающийся» body
+    const scrollY = window.scrollY;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
+    // 3. Компенсируем исчезнувший скролл‑бар
+    if (scrollbarWidth) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
     }
-  }, [isLocked]);
-};
 
-// Custom intersection observer hook with different implementation
-const useViewportEntry = (threshold = 0.1) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // trigger only once
-        }
-      },
-      { threshold, rootMargin: '50px' }
-    );
-
-    const currentElement = elementRef.current;
-    if (currentElement) {
-      observer.observe(currentElement);
-    }
+    // 4. Блокируем прокрутку у <html> на touch‑устройствах
+    html.style.overscrollBehavior = "contain";
 
     return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
+      // Возвращаем всё назад
+      const y = Math.abs(parseInt(body.style.top || "0", 10));
+      body.removeAttribute("style");
+      html.removeAttribute("style");
+      window.scrollTo({ top: y });
     };
-  }, [threshold]);
-
-  return [elementRef, isVisible];
+  }, [locked]);
 };
 
-// Note: Modal is now implemented directly without portal for simplicity
+/*************************************************************************************************
+ *  COMPONENT: Portal — безопасный перенос в <body>
+ *************************************************************************************************/
+const Portal = ({ children }) => {
+  if (typeof window === "undefined") return null; // SSR
+  return createPortal(children, document.body);
+};
 
+/*************************************************************************************************
+ *  MAIN COMPONENT: AnalyticsDemo
+ *************************************************************************************************/
 const AnalyticsDemo = () => {
-  // State management with different approach
-  const [modalState, setModalState] = useState({ isOpen: false, animating: false });
-  
-  // Initialize data directly
-  const [metricsData] = useState([
-    { id: 'impressions', label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
-    { id: 'riders', label: "Active Riders", value: "45K", change: "+8%", icon: Users },
-    { id: 'scans', label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
-    { id: 'revenue', label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
-  ]);
+  const [open, setOpen] = useState(false);
 
-  const [chartInfo] = useState([
-    { day: "Mon", impressions: 350, scans: 120 },
-    { day: "Tue", impressions: 420, scans: 150 },
-    { day: "Wed", impressions: 380, scans: 135 },
-    { day: "Thu", impressions: 450, scans: 180 },
-    { day: "Fri", impressions: 520, scans: 220 },
-    { day: "Sat", impressions: 480, scans: 200 },
-    { day: "Sun", impressions: 390, scans: 160 },
-  ]);
+  /** Freeze background when modal is open */
+  useBodyLock(open);
 
-  // Custom body scroll lock
-  useBodyScrollLock(modalState.isOpen);
-
-  // Viewport visibility detection
-  const [containerRef, isInViewport] = useViewportEntry(0.1);
-
-  // Modal control handlers with different logic
-  const handleModalOpen = useCallback(() => {
-    setModalState(prev => ({ ...prev, animating: true }));
-    setTimeout(() => {
-      setModalState({ isOpen: true, animating: false });
-    }, 50);
-  }, []);
-
-  const handleModalClose = useCallback(() => {
-    setModalState(prev => ({ ...prev, animating: true }));
-    setTimeout(() => {
-      setModalState({ isOpen: false, animating: false });
-    }, 200);
-  }, []);
-
-  // Keyboard event handling with different approach
+  /** Close on ESC */
   useEffect(() => {
-    const handleKeyboardEvent = (event) => {
-      if (event.code === 'Escape' && modalState.isOpen) {
-        handleModalClose();
-      }
-    };
+    const onEsc = (e) => e.key === "Escape" && setOpen(false);
+    if (open) window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [open]);
 
-    if (modalState.isOpen) {
-      document.addEventListener('keydown', handleKeyboardEvent);
-    }
+  /* ----------------- Intersection ----------------- */
+  const [sectionRef, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyboardEvent);
-    };
-  }, [modalState.isOpen, handleModalClose]);
+  /* ----------------- Demo data ----------------- */
+  const metrics = useMemo(
+    () => [
+      { label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
+      { label: "Active Riders", value: "45K", change: "+8%", icon: Users },
+      { label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
+      { label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
+    ],
+    []
+  );
 
-  // Calculate chart dimensions differently
-  const chartMetrics = chartInfo ? {
-    maxImpressions: Math.max(...chartInfo.map(item => item.impressions)),
-    maxScans: Math.max(...chartInfo.map(item => item.scans))
-  } : { maxImpressions: 1, maxScans: 1 };
+  const chartData = useMemo(
+    () => [
+      { day: "Mon", impressions: 350, scans: 120 },
+      { day: "Tue", impressions: 420, scans: 150 },
+      { day: "Wed", impressions: 380, scans: 135 },
+      { day: "Thu", impressions: 450, scans: 180 },
+      { day: "Fri", impressions: 520, scans: 220 },
+      { day: "Sat", impressions: 480, scans: 200 },
+      { day: "Sun", impressions: 390, scans: 160 },
+    ],
+    []
+  );
 
-  // Animation variants with different timing
-  const containerVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
+  const maxImpressions = Math.max(...chartData.map((d) => d.impressions));
+  const maxScans = Math.max(...chartData.map((d) => d.scans));
 
-  const metricCardVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: (index) => ({
-      opacity: 1,
-      scale: 1,
-      transition: { delay: 0.2 + index * 0.1, duration: 0.4 }
-    })
-  };
+  /* ----------------- Animations ----------------- */
+  const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
+  const metricAnim = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
+  const overlayAnim = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
+  const modalAnim = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.9, opacity: 0 } };
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
-  };
+  /* ----------------- Handlers ----------------- */
+  const openModal = () => setOpen(true);
+  const closeModal = () => setOpen(false);
+  const onBackdropClick = (e) => e.target === e.currentTarget && closeModal();
 
+  /* ----------------- Render ----------------- */
   return (
     <section id="analytics" className="section-padding bg-dark-800/8">
       <div className="container-custom">
-        {/* Header Section */}
-        <motion.div 
-          ref={containerRef}
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInViewport ? "visible" : "hidden"}
-          className="text-center mb-16"
-        >
+        {/* Section Header */}
+        <motion.div ref={sectionRef} variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-6">
             Real‑Time <span className="gradient-text">Analytics</span>
           </h2>
@@ -177,76 +130,65 @@ const AnalyticsDemo = () => {
           </p>
         </motion.div>
 
-        {/* Dashboard Preview */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInViewport ? "visible" : "hidden"}
-          className="relative"
-        >
-          <div className="card p-8 cursor-pointer" onClick={handleModalOpen}>
-            {/* Dashboard Header */}
+        {/* Dashboard preview card */}
+        <motion.div variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="relative">
+          <div className="card p-8 cursor-pointer" onClick={openModal}>
+            {/* Card Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2">Campaign Overview</h3>
                 <p className="text-dark-300">Last 7 days performance</p>
               </div>
               <div className="flex items-center space-x-2 text-primary-lime">
-                <div className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" />
+                <span className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" />
                 <span className="text-sm font-medium">Live</span>
               </div>
             </div>
 
-            {/* Metrics Grid */}
+            {/* Metrics grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {metricsData.map((metric, index) => (
+              {metrics.map((m, idx) => (
                 <motion.div
-                  key={metric.id}
-                  custom={index}
-                  variants={metricCardVariants}
-                  initial="hidden"
-                  animate={isInViewport ? "visible" : "hidden"}
+                  key={m.label}
+                  variants={metricAnim}
+                  initial="initial"
+                  animate={inView ? "animate" : "initial"}
+                  transition={{ delay: 0.25 + idx * 0.05, duration: 0.5, ease: "easeOut" }}
                   className="bg-dark-800/50 rounded-xl p-4 border border-dark-700"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <metric.icon className="w-5 h-5 text-primary-blue" />
-                    <span className="text-xs text-primary-lime font-medium">{metric.change}</span>
+                    <m.icon className="w-5 h-5 text-primary-blue" />
+                    <span className="text-xs text-primary-lime font-medium">{m.change}</span>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
-                  <div className="text-sm text-dark-400">{metric.label}</div>
+                  <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
+                  <span className="text-sm text-dark-400">{m.label}</span>
                 </motion.div>
               ))}
             </div>
 
-            {/* Mini Chart */}
+            {/* Mini chart */}
             <div className="bg-dark-800/30 rounded-xl p-6 border border-dark-700">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-white">Engagement Trends</h4>
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-primary-blue rounded-full" />
+                    <span className="w-3 h-3 bg-primary-blue rounded-full" />
                     <span className="text-dark-300">Impressions</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-primary-lime rounded-full" />
+                    <span className="w-3 h-3 bg-primary-lime rounded-full" />
                     <span className="text-dark-300">QR Scans</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-end justify-between h-32 space-x-2">
-                {chartInfo.map((dataPoint) => (
-                  <div key={dataPoint.day} className="flex flex-col items-center space-y-2">
+                {chartData.map((d) => (
+                  <div key={d.day} className="flex flex-col items-center space-y-2">
                     <div className="flex items-end space-x-1">
-                      <div 
-                        className="w-4 bg-primary-blue rounded-t" 
-                        style={{ height: `${(dataPoint.impressions / chartMetrics.maxImpressions) * 80}px` }}
-                      />
-                      <div 
-                        className="w-4 bg-primary-lime rounded-t" 
-                        style={{ height: `${(dataPoint.scans / chartMetrics.maxScans) * 80}px` }}
-                      />
+                      <span className="w-4 bg-primary-blue rounded-t" style={{ height: `${(d.impressions / maxImpressions) * 80}px` }} />
+                      <span className="w-4 bg-primary-lime rounded-t" style={{ height: `${(d.scans / maxScans) * 80}px` }} />
                     </div>
-                    <span className="text-xs text-dark-400">{dataPoint.day}</span>
+                    <span className="text-xs text-dark-400">{d.day}</span>
                   </div>
                 ))}
               </div>
@@ -255,89 +197,87 @@ const AnalyticsDemo = () => {
         </motion.div>
       </div>
 
-      {/* Modal Implementation */}
-      <AnimatePresence>
-        {modalState.isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-            onClick={(e) => e.target === e.currentTarget && handleModalClose()}
-            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-          >
+      {/* ---------------- Modal ---------------- */}
+      <Portal>
+        <AnimatePresence>
+          {open && (
             <motion.div
-              variants={modalVariants}
-              initial="hidden"
-              animate="visible"
+              variants={overlayAnim}
+              initial="initial"
+              animate="animate"
               exit="exit"
-              className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
-              onClick={(e) => e.stopPropagation()}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+              role="dialog"
+              aria-modal="true"
+              onClick={onBackdropClick}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
-                <button
-                  onClick={handleModalClose}
-                  aria-label="Close modal"
-                  className="text-dark-400 hover:text-white"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+              <motion.div
+                variants={modalAnim}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
+                  <button
+                    onClick={closeModal}
+                    aria-label="Close modal"
+                    className="text-dark-400 hover:text-white transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
 
-              {/* Modal Metrics Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {metricsData.map((metric) => (
-                  <div key={metric.id} className="bg-dark-900/50 rounded-xl p-4 border border-dark-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <metric.icon className="w-5 h-5 text-primary-blue" />
-                      <span className="text-xs text-primary-lime font-medium">{metric.change}</span>
-                    </div>
-                    <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
-                    <div className="text-sm text-dark-400">{metric.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Detailed Chart */}
-              <div className="bg-dark-900/30 rounded-xl p-6 border border-dark-700 mb-8">
-                <h4 className="text-lg font-semibold text-white mb-4">Detailed Performance Analytics</h4>
-                <div className="h-64 flex items-end justify-between space-x-2">
-                  {chartInfo.map((dataPoint) => (
-                    <div key={dataPoint.day} className="flex flex-col items-center space-y-2 flex-1">
-                      <div className="flex items-end space-x-1 w-full">
-                        <div 
-                          className="bg-primary-blue rounded-t flex-1" 
-                          style={{ height: `${(dataPoint.impressions / chartMetrics.maxImpressions) * 200}px` }}
-                        />
-                        <div 
-                          className="bg-primary-lime rounded-t flex-1" 
-                          style={{ height: `${(dataPoint.scans / chartMetrics.maxScans) * 200}px` }}
-                        />
+                {/* Modal Metrics grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                  {metrics.map((m) => (
+                    <div key={m.label} className="bg-dark-900/50 rounded-xl p-4 border border-dark-700">
+                      <div className="flex items-center justify-between mb-2">
+                        <m.icon className="w-5 h-5 text-primary-blue" />
+                        <span className="text-xs text-primary-lime font-medium">{m.change}</span>
                       </div>
-                      <span className="text-xs text-dark-400">{dataPoint.day}</span>
+                      <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
+                      <span className="text-sm text-dark-400">{m.label}</span>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              <div className="text-center">
-                <p className="text-dark-300 mb-4">
-                  This is a preview of our analytics dashboard. Get full access with real-time data when you sign up.
-                </p>
-                <motion.button
-                  className="btn-primary"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.15, ease: "easeInOut" }}
-                >
-                  Get Full Access
-                </motion.button>
-              </div>
+                {/* Detailed chart */}
+                <div className="bg-dark-900/30 rounded-xl p-6 border border-dark-700 mb-8">
+                  <h4 className="text-lg font-semibold text-white mb-4">Detailed Performance Analytics</h4>
+                  <div className="h-64 flex items-end justify-between space-x-2">
+                    {chartData.map((d) => (
+                      <div key={d.day} className="flex flex-col items-center space-y-2 flex-1">
+                        <div className="flex items-end space-x-1 w-full">
+                          <span className="bg-primary-blue rounded-t flex-1" style={{ height: `${(d.impressions / maxImpressions) * 200}px` }} />
+                          <span className="bg-primary-lime rounded-t flex-1" style={{ height: `${(d.scans / maxScans) * 200}px` }} />
+                        </div>
+                        <span className="text-xs text-dark-400">{d.day}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <p className="text-dark-300 mb-4">
+                    This is a preview of our analytics dashboard. Get full access with real-time data when you sign up.
+                  </p>
+                  <motion.button
+                    className="btn-primary"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: "easeInOut" }}
+                  >
+                    Get Full Access
+                  </motion.button>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </Portal>
     </section>
   );
 };
