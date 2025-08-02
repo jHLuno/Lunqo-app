@@ -51,8 +51,6 @@ app.use(express.static('public', {
   }
 }));
 
-
-
 // Import models for public endpoints
 const Stat = require('./models/Stat');
 const Campaign = require('./models/Campaign');
@@ -135,6 +133,16 @@ app.use((error, req, res, next) => {
 // 404 handler for API routes only
 app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'API route not found' });
+});
+
+// Handle client-side routing for both languages
+app.get(['/en', '/ru', '/en/*', '/ru/*'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Redirect root to English by default
+app.get('/', (req, res) => {
+  res.redirect('/en');
 });
 
 // Start server and connect to MongoDB

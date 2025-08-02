@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
 
 // Throttle function for performance
@@ -20,15 +22,19 @@ const throttle = (func, limit) => {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  const { t, language, changeLanguage } = useLanguage();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Memoized nav items to prevent unnecessary re-renders
   const navItems = useMemo(() => [
-    { name: 'Solutions', href: '#solutions' }, 
-    { name: 'Analytics', href: '#analytics' },
-    { name: 'Advantages', href: '#advantages' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact us', href: '#footer' },
-  ], []);
+    { name: t('nav.solutions'), href: '#solutions' }, 
+    { name: t('nav.analytics'), href: '#analytics' },
+    { name: t('nav.advantages'), href: '#advantages' },
+    { name: t('nav.testimonials'), href: '#testimonials' },
+    { name: t('nav.contactUs'), href: '#footer' },
+  ], [t]);
 
   // Optimized scroll handler with throttling
   const handleScroll = useCallback(
@@ -43,6 +49,15 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  // Handle language change
+  const handleLanguageChange = (newLanguage) => {
+    changeLanguage(newLanguage);
+    const currentPath = location.pathname;
+    const newPath = currentPath.replace(/^\/(en|ru)/, `/${newLanguage}`);
+    navigate(newPath);
+    setIsLanguageMenuOpen(false);
+  };
 
   // Memoized motion variants for better performance
   const navVariants = useMemo(() => ({
@@ -119,15 +134,59 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <motion.button
-            className="hidden lg:block btn-primary gpu-accelerated"
-            variants={buttonVariants}
-            whileHover="whileHover"
-            whileTap="whileTap"
-          >
-            Book a Demo
-          </motion.button>
+          {/* Language Switcher and CTA Button */}
+          <div className="hidden lg:flex items-center space-x-4">
+            {/* Language Switcher */}
+            <div className="relative">
+              <motion.button
+                className="flex items-center space-x-2 text-white hover:text-primary-blue transition-colors duration-200 gpu-accelerated"
+                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
+                variants={buttonVariants}
+                whileHover="whileHover"
+                whileTap="whileTap"
+              >
+                <Globe className="w-5 h-5" />
+                <span className="text-sm font-medium">{language.toUpperCase()}</span>
+              </motion.button>
+
+              {/* Language Dropdown */}
+              {isLanguageMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-xl shadow-lg overflow-hidden gpu-accelerated"
+                >
+                  <button
+                    className={`w-full px-4 py-2 text-left text-sm transition-colors duration-200 ${
+                      language === 'en' ? 'bg-primary-blue/20 text-primary-blue' : 'text-white hover:bg-dark-700'
+                    }`}
+                    onClick={() => handleLanguageChange('en')}
+                  >
+                    English
+                  </button>
+                  <button
+                    className={`w-full px-4 py-2 text-left text-sm transition-colors duration-200 ${
+                      language === 'ru' ? 'bg-primary-blue/20 text-primary-blue' : 'text-white hover:bg-dark-700'
+                    }`}
+                    onClick={() => handleLanguageChange('ru')}
+                  >
+                    Русский
+                  </button>
+                </motion.div>
+              )}
+            </div>
+
+            {/* CTA Button */}
+            <motion.button
+              className="btn-primary gpu-accelerated"
+              variants={buttonVariants}
+              whileHover="whileHover"
+              whileTap="whileTap"
+            >
+              {t('nav.bookDemo')}
+            </motion.button>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -159,8 +218,30 @@ const Navbar = () => {
                   {item.name}
                 </a>
               ))}
+              
+              {/* Mobile Language Switcher */}
+              <div className="flex items-center space-x-4 py-2">
+                <span className="text-dark-300 text-sm">Language:</span>
+                <button
+                  className={`px-3 py-1 rounded-lg text-sm transition-colors duration-200 ${
+                    language === 'en' ? 'bg-primary-blue text-white' : 'bg-dark-700 text-white hover:bg-dark-600'
+                  }`}
+                  onClick={() => handleLanguageChange('en')}
+                >
+                  EN
+                </button>
+                <button
+                  className={`px-3 py-1 rounded-lg text-sm transition-colors duration-200 ${
+                    language === 'ru' ? 'bg-primary-blue text-white' : 'bg-dark-700 text-white hover:bg-dark-600'
+                  }`}
+                  onClick={() => handleLanguageChange('ru')}
+                >
+                  RU
+                </button>
+              </div>
+              
               <button className="w-full btn-primary mt-4 gpu-accelerated">
-                Book a Demo
+                {t('nav.bookDemo')}
               </button>
             </div>
           </motion.div>

@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 // Lazy load components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
@@ -23,7 +25,8 @@ const LoadingFallback = () => (
   </div>
 );
 
-function App() {
+// Main App Content Component
+const AppContent = () => {
   return (
     <div className="min-h-screen gpu-accelerated">
       <Suspense fallback={<LoadingFallback />}>
@@ -64,6 +67,20 @@ function App() {
       <Footer />
       </Suspense>
     </div>
+  );
+};
+
+function App() {
+  return (
+    <LanguageProvider>
+      <Router>
+        <Routes>
+          <Route path="/en" element={<AppContent />} />
+          <Route path="/ru" element={<AppContent />} />
+          <Route path="/" element={<Navigate to="/en" replace />} />
+        </Routes>
+      </Router>
+    </LanguageProvider>
   );
 }
 

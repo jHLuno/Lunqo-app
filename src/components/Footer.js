@@ -1,35 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
 
 const Footer = () => {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     product: [
-      { name: 'Features', href: '#features' },
-      { name: 'Analytics', href: '#analytics' },
-      { name: 'API Docs', href: '#api' },
-      { name: 'Pricing', href: '#pricing' }
+      { name: t('footer.links.product.features'), href: '#features' },
+      { name: t('footer.links.product.analytics'), href: '#analytics' },
+      { name: t('footer.links.product.apiDocs'), href: '#api' },
+      { name: t('footer.links.product.pricing'), href: '#pricing' }
     ],
     company: [
-      { name: 'About', href: '#about' },
-      { name: 'Careers', href: '#careers' },
-      { name: 'Blog', href: '#blog' },
-      { name: 'Press', href: '#press' }
+      { name: t('footer.links.company.about'), href: '#about' },
+      { name: t('footer.links.company.careers'), href: '#careers' },
+      { name: t('footer.links.company.blog'), href: '#blog' },
+      { name: t('footer.links.company.press'), href: '#press' }
     ],
     support: [
-      { name: 'Help Center', href: '#help' },
-      { name: 'Contact', href: '#contact' },
-      { name: 'Status', href: '#status' },
-      { name: 'Documentation', href: '#docs' }
+      { name: t('footer.links.support.helpCenter'), href: '#help' },
+      { name: t('footer.links.support.contact'), href: '#contact' },
+      { name: t('footer.links.support.status'), href: '#status' },
+      { name: t('footer.links.support.documentation'), href: '#docs' }
     ],
     legal: [
-      { name: 'Privacy Policy', href: '#privacy' },
-      { name: 'Terms of Service', href: '#terms' },
-      { name: 'Cookie Policy', href: '#cookies' },
-      { name: 'GDPR', href: '#gdpr' }
+      { name: t('footer.links.legal.privacyPolicy'), href: '#privacy' },
+      { name: t('footer.links.legal.termsOfService'), href: '#terms' },
+      { name: t('footer.links.legal.cookiePolicy'), href: '#cookies' },
+      { name: t('footer.links.legal.gdpr'), href: '#gdpr' }
     ]
   };
 
@@ -55,33 +57,32 @@ const Footer = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center mb-6">
-                                    <img
-                      src={lunqoLogo}
-                      alt="Lunqo Logo"
-                      className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
-                      onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
-                      onLoad={() => console.log('Footer logo loaded successfully')}
-                    />
+                <img
+                  src={lunqoLogo}
+                  alt="Lunqo Logo"
+                  className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                  onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
+                  onLoad={() => console.log('Footer logo loaded successfully')}
+                />
               </div>
               
               <p className="text-dark-300 mb-6 leading-relaxed">
-                Unified control, real-time insights, effortless scaling for in-taxi media. 
-                Transforming how fleet owners and advertisers connect with captive audiences.
+                {t('footer.description')}
               </p>
 
               {/* Contact Info */}
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Mail className="w-4 h-4 text-primary-blue" />
-                  <span>business@lunqo.app</span>
+                  <span>{t('footer.contact.email')}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Phone className="w-4 h-4 text-primary-blue" />
-                  <span>+7 (707) 212-4410</span>
+                  <span>{t('footer.contact.phone')}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <MapPin className="w-4 h-4 text-primary-blue" />
-                  <span>Almaty, Kazakhstan</span>
+                  <span>{t('footer.contact.location')}</span>
                 </div>
               </div>
             </motion.div>
@@ -99,7 +100,7 @@ const Footer = () => {
                   viewport={{ once: true }}
                 >
                   <h3 className="text-white font-semibold mb-4 capitalize">
-                    {category}
+                    {t(`footer.links.${category}.title`)}
                   </h3>
                   <ul className="space-y-3">
                     {links.map((link) => (
@@ -129,9 +130,9 @@ const Footer = () => {
         >
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="text-white font-semibold mb-2">Stay Updated</h3>
+              <h3 className="text-white font-semibold mb-2">{t('footer.newsletter.title')}</h3>
               <p className="text-dark-300 text-sm">
-                Get the latest updates on new features and industry insights.
+                {t('footer.newsletter.subtitle')}
               </p>
             </div>
             
@@ -140,11 +141,11 @@ const Footer = () => {
                 <div className="flex">
                   <input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('footer.newsletter.placeholder')}
                     className="flex-1 bg-dark-800 border border-dark-700 text-white placeholder-dark-400 px-4 py-3 rounded-l-xl focus:outline-none focus:border-primary-blue transition-colors duration-200"
                   />
                   <button className="bg-primary-blue hover:bg-blue-600 text-white px-6 py-3 rounded-r-xl transition-colors duration-200 font-medium">
-                    Subscribe
+                    {t('footer.newsletter.subscribe')}
                   </button>
                 </div>
               </div>
@@ -162,7 +163,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-dark-400 text-sm">
-              © {currentYear} Lunqo. All rights reserved.
+              {t('footer.copyright').replace('{year}', currentYear)}
             </div>
             
             {/* Social Links */}
