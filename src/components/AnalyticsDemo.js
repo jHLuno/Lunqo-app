@@ -59,42 +59,30 @@ const useViewportEntry = (threshold = 0.1) => {
 const AnalyticsDemo = () => {
   // State management with different approach
   const [modalState, setModalState] = useState({ isOpen: false, animating: false });
-  const [metricsData, setMetricsData] = useState(null);
-  const [chartInfo, setChartInfo] = useState(null);
+  
+  // Initialize data directly
+  const [metricsData] = useState([
+    { id: 'impressions', label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
+    { id: 'riders', label: "Active Riders", value: "45K", change: "+8%", icon: Users },
+    { id: 'scans', label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
+    { id: 'revenue', label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
+  ]);
+
+  const [chartInfo] = useState([
+    { day: "Mon", impressions: 350, scans: 120 },
+    { day: "Tue", impressions: 420, scans: 150 },
+    { day: "Wed", impressions: 380, scans: 135 },
+    { day: "Thu", impressions: 450, scans: 180 },
+    { day: "Fri", impressions: 520, scans: 220 },
+    { day: "Sat", impressions: 480, scans: 200 },
+    { day: "Sun", impressions: 390, scans: 160 },
+  ]);
 
   // Custom body scroll lock
   useBodyScrollLock(modalState.isOpen);
 
   // Viewport visibility detection
   const [containerRef, isInViewport] = useViewportEntry(0.1);
-
-  // Initialize data on component mount
-  useEffect(() => {
-    const initializeMetrics = () => {
-      setMetricsData([
-        { id: 'impressions', label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
-        { id: 'riders', label: "Active Riders", value: "45K", change: "+8%", icon: Users },
-        { id: 'scans', label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
-        { id: 'revenue', label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
-      ]);
-    };
-
-    const initializeChart = () => {
-      const weekData = [
-        { day: "Mon", impressions: 350, scans: 120 },
-        { day: "Tue", impressions: 420, scans: 150 },
-        { day: "Wed", impressions: 380, scans: 135 },
-        { day: "Thu", impressions: 450, scans: 180 },
-        { day: "Fri", impressions: 520, scans: 220 },
-        { day: "Sat", impressions: 480, scans: 200 },
-        { day: "Sun", impressions: 390, scans: 160 },
-      ];
-      setChartInfo(weekData);
-    };
-
-    initializeMetrics();
-    initializeChart();
-  }, []);
 
   // Modal control handlers with different logic
   const handleModalOpen = useCallback(() => {
@@ -154,10 +142,6 @@ const AnalyticsDemo = () => {
     visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
     exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
   };
-
-  if (!metricsData || !chartInfo) {
-    return <div className="section-padding bg-dark-800/8">Loading...</div>;
-  }
 
   return (
     <section id="analytics" className="section-padding bg-dark-800/8">
