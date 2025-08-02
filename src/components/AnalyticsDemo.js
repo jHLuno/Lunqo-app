@@ -6,29 +6,42 @@ import { X, TrendingUp, Users, Eye, MousePointer } from 'lucide-react';
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Lock body scroll when modal is open
+  // Lock body (and html) scroll when modal is open
   useEffect(() => {
-    if (isModalOpen) {
-      // Save current scroll position and lock
-      const scrollY = window.scrollY || window.pageYOffset;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
-      return () => {};
-    }
+    if (!isModalOpen) return;
 
-    // Restore scroll
-    const storedY = document.body.style.top;
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.overflow = '';
-    if (storedY) {
-      window.scrollTo(0, parseInt(storedY || '0') * -1);
-    }
+    const scrollY = window.scrollY || window.pageYOffset;
+    const originalBodyStyles = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      overflow: document.body.style.overflow,
+    };
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    // Cleanup – restore everything exactly as it was
+    return () => {
+      document.body.style.position = originalBodyStyles.position;
+      document.body.style.top = originalBodyStyles.top;
+      document.body.style.left = originalBodyStyles.left;
+      document.body.style.right = originalBodyStyles.right;
+      document.body.style.overflow = originalBodyStyles.overflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+
+      const storedY = originalBodyStyles.top;
+      if (storedY) {
+        const y = parseInt(storedY || '0', 10);
+        window.scrollTo(0, Math.abs(y));
+      }
+    };
   }, [isModalOpen]);
 
   const [ref, inView] = useInView({
