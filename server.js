@@ -136,7 +136,12 @@ app.use(express.static('public', {
 }));
 
 // Handle client-side routing for both languages (must be after static files)
-app.get(['/en', '/ru', '/en/*', '/ru/*'], (req, res) => {
+app.get(['/en', '/ru'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Handle nested routes for both languages
+app.get(['/en/*', '/ru/*'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
