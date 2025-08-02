@@ -106,12 +106,12 @@ const Navbar = () => {
       }`}
     >
       <div className="container-custom px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
+        <div className="flex items-center h-16 lg:h-20">
+          {/* Logo - Left Side */}
           <motion.div
             variants={logoVariants}
             whileHover="whileHover"
-            className="flex items-center gpu-accelerated"
+            className="flex items-center gpu-accelerated flex-shrink-0"
           >
             <img
               src={lunqoLogo}
@@ -123,24 +123,26 @@ const Navbar = () => {
             />
           </motion.div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <motion.a
-                key={item.name}
-                href={item.href}
-                className="nav-link gpu-accelerated"
-                variants={navLinkVariants}
-                whileHover="whileHover"
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              >
-                {item.name}
-              </motion.a>
-            ))}
+          {/* Desktop Navigation - Center */}
+          <div className="hidden lg:flex items-center justify-center flex-1">
+            <div className="flex items-center space-x-8">
+              {navItems.map((item) => (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  className="nav-link gpu-accelerated text-center"
+                  variants={navLinkVariants}
+                  whileHover="whileHover"
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+            </div>
           </div>
 
-          {/* Language Switcher and CTA Button */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Language Switcher and CTA Button - Right Side */}
+          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
             {/* Language Switcher */}
             <div className="relative">
               <motion.button
