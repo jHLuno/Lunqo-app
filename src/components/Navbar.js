@@ -99,17 +99,7 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
-      style={{ 
-        position: 'fixed !important',
-        top: '0 !important',
-        left: '0 !important',
-        right: '0 !important',
-        zIndex: 9999,
-        width: '100%',
-        height: 'auto',
-        transform: 'none !important'
-      }}
+      className="navbar-fixed transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${
