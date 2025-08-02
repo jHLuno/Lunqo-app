@@ -40,17 +40,6 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 
-// Static files with cache control for HTML files
-app.use(express.static('public', {
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-store');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
-    }
-  }
-}));
-
 // Import models for public endpoints
 const Stat = require('./models/Stat');
 const Campaign = require('./models/Campaign');
@@ -135,7 +124,18 @@ app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'API route not found' });
 });
 
-// Handle client-side routing for both languages
+// Serve static files with cache control for HTML files
+app.use(express.static('public', {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
+
+// Handle client-side routing for both languages (must be after static files)
 app.get(['/en', '/ru', '/en/*', '/ru/*'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
