@@ -28,16 +28,15 @@ const LoadingFallback = () => (
 // Main App Content Component
 const AppContent = () => {
   return (
-    <>
+    <div className="min-h-screen gpu-accelerated">
       <Suspense fallback={<LoadingFallback />}>
-        <Navbar />
+      <Navbar />
       </Suspense>
       
-      <div className="min-h-screen gpu-accelerated">
-        <main>
-          <Suspense fallback={<LoadingFallback />}>
-          <Hero />
-          </Suspense>
+      <main>
+        <Suspense fallback={<LoadingFallback />}>
+        <Hero />
+        </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
         <AudienceStrip />
@@ -64,11 +63,10 @@ const AppContent = () => {
         </Suspense>
       </main>
       
-              <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-          <Footer />
-        </Suspense>
-      </div>
-    </>
+      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
+      <Footer />
+      </Suspense>
+    </div>
   );
 };
 
