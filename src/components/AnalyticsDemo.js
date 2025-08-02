@@ -17,39 +17,14 @@ import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
  *************************************************************************************************/
 const useBodyLock = (locked) => {
   useEffect(() => {
-    if (!locked) return;
-
-    const html = document.documentElement;
-    const body = document.body;
-
-    // Store current scroll position
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
-
-    // Get scrollbar width
-    const scrollbarWidth = window.innerWidth - html.clientWidth;
-
-    // Apply styles to prevent scrolling
-    body.style.cssText = `
-      position: fixed !important;
-      top: -${scrollY}px !important;
-      left: -${scrollX}px !important;
-      width: 100% !important;
-      height: 100% !important;
-      overflow: hidden !important;
-      padding-right: ${scrollbarWidth}px !important;
-    `;
-
-    html.style.cssText = `
-      overflow: hidden !important;
-      overscroll-behavior: none !important;
-    `;
-
-    // Cleanup function
+    if (locked) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
     return () => {
-      body.style.cssText = '';
-      html.style.cssText = '';
-      window.scrollTo(scrollX, scrollY);
+      document.body.style.overflow = '';
     };
   }, [locked]);
 };
@@ -71,42 +46,11 @@ const AnalyticsDemo = () => {
   /** Freeze background when modal is open */
   useBodyLock(open);
 
-  /** Close on ESC and prevent all scrolling */
+  /** Close on ESC */
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && setOpen(false);
-    
-    const preventScroll = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    const preventTouch = (e) => {
-      if (e.touches.length > 1) return;
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    if (open) {
-      window.addEventListener("keydown", onEsc);
-      window.addEventListener("wheel", preventScroll, { passive: false });
-      window.addEventListener("touchmove", preventTouch, { passive: false });
-      window.addEventListener("scroll", preventScroll, { passive: false });
-      document.addEventListener("wheel", preventScroll, { passive: false });
-      document.addEventListener("touchmove", preventTouch, { passive: false });
-      document.addEventListener("scroll", preventScroll, { passive: false });
-    }
-
-    return () => {
-      window.removeEventListener("keydown", onEsc);
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventTouch);
-      window.removeEventListener("scroll", preventScroll);
-      document.removeEventListener("wheel", preventScroll);
-      document.removeEventListener("touchmove", preventTouch);
-      document.removeEventListener("scroll", preventScroll);
-    };
+    if (open) window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
   }, [open]);
 
   /* ----------------- Intersection ----------------- */
@@ -146,9 +90,18 @@ const AnalyticsDemo = () => {
   const modalAnim = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.9, opacity: 0 } };
 
   /* ----------------- Handlers ----------------- */
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+  const openModal = () => {
+    console.log('Opening modal...');
+    setOpen(true);
+  };
+  const closeModal = () => {
+    console.log('Closing modal...');
+    setOpen(false);
+  };
   const onBackdropClick = (e) => e.target === e.currentTarget && closeModal();
+
+  // Debug log
+  console.log('Modal open state:', open);
 
   /* ----------------- Render ----------------- */
   return (
@@ -240,37 +193,18 @@ const AnalyticsDemo = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm overscroll-none overflow-hidden p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm overscroll-none overflow-hidden p-4"
               role="dialog"
               aria-modal="true"
               onClick={onBackdropClick}
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 9999
-              }}
             >
               <motion.div
                 variants={modalAnim}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-screen overflow-hidden"
+                className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-screen overflow-hidden relative"
                 onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: 'relative',
-                  maxWidth: '64rem',
-                  width: '100%',
-                  maxHeight: '100vh',
-                  overflow: 'hidden',
-                  margin: 'auto'
-                }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
