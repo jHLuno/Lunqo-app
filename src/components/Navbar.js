@@ -99,15 +99,16 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
+      className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
+      style={{ position: 'fixed' }}
     >
       {/* Glass Effect Container */}
-      <div className={`mx-4 px-6 py-3 rounded-full transition-all duration-300 gpu-accelerated ${
+      <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
           ? 'glass-effect border border-dark-700/50 shadow-lg' 
           : 'bg-dark-800/30 backdrop-blur-sm border border-dark-700/30'
       }`}>
-        <div className="flex items-center space-x-8 lg:space-x-12">
+        <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <motion.div
             variants={logoVariants}
@@ -125,7 +126,7 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
             {navItems.map((item) => (
               <motion.a
                 key={item.name}
