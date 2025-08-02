@@ -4,28 +4,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-/***************************
- * 1. Хук блокировки прокрутки
- ***************************/
-const useLockBodyScroll = (locked) => {
+/**************** 1. Фиксируем скролл, сохраняя позицию ****************/
+const useFixBody = (locked) => {
   useEffect(() => {
     const html = document.documentElement;
-    const { overflow: htmlOv } = html.style;
-    const { overflow: bodyOv } = document.body.style;
+    const body = document.body;
+
     if (locked) {
+      const scrollY = window.scrollY;
+      // блокируем прокрутку, но запоминаем смещение
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
       html.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
+    } else {
+      // восстанавливаем
+      const y = Math.abs(parseInt(body.style.top || "0", 10));
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      html.style.overflow = "";
+      window.scrollTo({ top: y });
     }
-    return () => {
-      html.style.overflow = htmlOv;
-      document.body.style.overflow = bodyOv;
-    };
   }, [locked]);
 };
 
-/***************************
- * 2. Портал, чтобы модалка вне "transform"‑контекста
- ***************************/
+/**************** 2. Портал ****************/
 const Portal = ({ children }) => {
   if (typeof window === "undefined") return null;
   return createPortal(children, document.body);
@@ -34,17 +40,17 @@ const Portal = ({ children }) => {
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  /** Блокируем прокрутку всего документа */
-  useLockBodyScroll(isModalOpen);
+  // блокируем скролл + фиксируем позицию
+  useFixBody(isModalOpen);
 
-  /** Закрываем ESC */
+  // закрываем ESC
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && setIsModalOpen(false);
     if (isModalOpen) window.addEventListener("keydown", onEsc);
     return () => window.removeEventListener("keydown", onEsc);
   }, [isModalOpen]);
 
-  /* ------------------ ДАННЫЕ ------------------ */
+  /* ---------------- ДАННЫЕ ---------------- */
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1, rootMargin: "50px" });
 
   const metrics = useMemo(
@@ -70,38 +76,34 @@ const AnalyticsDemo = () => {
     []
   );
 
-  /* ------------------ АНИМАЦИИ ------------------ */
-  const sectionVariants = useMemo(() => ({ initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } }), []);
-  const dashboardVariants = useMemo(() => ({ initial: { opacity: 0, y: 50 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.2 } }), []);
-  const metricVariants = useMemo(() => ({ initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } }), []);
-  const modalVariants = useMemo(() => ({ initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }), []);
-  const modalContentVariants = useMemo(() => ({ initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.8, opacity: 0 } }), []);
+  /* ---------------- АНИМАЦИИ ---------------- */
+  const sectionVariants = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
+  const dashboardVariants = { initial: { opacity: 0, y: 50 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.2 } };
+  const metricVariants = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
+  const modalVariants = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
+  const modalContentVariants = { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.8, opacity: 0 } };
 
-  /* ------------------ ХЭНДЛЕРЫ ------------------ */
+  /* ---------------- ХЭНДЛЕРЫ ---------------- */
   const open = useCallback(() => setIsModalOpen(true), []);
   const close = useCallback(() => setIsModalOpen(false), []);
-  const backdropClick = useCallback((e) => {
-    if (e.target === e.currentTarget) close();
-  }, [close]);
+  const backdropClick = useCallback((e) => { if (e.target === e.currentTarget) close(); }, [close]);
 
   const maxImpressions = Math.max(...chartData.map((d) => d.impressions));
   const maxScans = Math.max(...chartData.map((d) => d.scans));
 
-  /* ------------------ RENDER ------------------ */
+  /* ---------------- RENDER ---------------- */
   return (
     <section id="analytics" className="section-padding bg-dark-800/8">
       <div className="container-custom">
         {/* Заголовок */}
-        <motion.div variants={sectionVariants} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16" ref={ref}>
-          <h2 className="text-5xl font-bold text-white mb-6">
-            Real‑Time <span className="gradient-text">Analytics</span>
-          </h2>
+        <motion.div ref={ref} variants={sectionVariants} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-white mb-6">Real‑Time <span className="gradient-text">Analytics</span></h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">Monitor your campaigns with live data, track performance metrics, and optimise for engagement.</p>
         </motion.div>
 
         {/* Превью дашборда */}
         <motion.div variants={dashboardVariants} initial="initial" animate={inView ? "animate" : "initial"} className="relative">
-          <div className="card p-8 cursor-pointer group" onClick={open}>
+          <div className="card p-8 cursor-pointer" onClick={open}>
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -133,14 +135,8 @@ const AnalyticsDemo = () => {
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-white">Engagement Trends</h4>
                 <div className="flex items-center space-x-4 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-primary-blue rounded-full" />
-                    <span className="text-dark-300">Impressions</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-primary-lime rounded-full" />
-                    <span className="text-dark-300">QR Scans</span>
-                  </div>
+                  <div className="flex items-center space-x-2"><div className="w-3 h-3 bg-primary-blue rounded-full" /><span className="text-dark-300">Impressions</span></div>
+                  <div className="flex items-center space-x-2"><div className="w-3 h-3 bg-primary-lime rounded-full" /><span className="text-dark-300">QR Scans</span></div>
                 </div>
               </div>
               <div className="flex items-end justify-between h-32 space-x-2">
