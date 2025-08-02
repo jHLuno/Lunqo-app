@@ -72,7 +72,7 @@ const WhyLunqo = () => {
   };
 
   return (
-            <section id="how-it-works" className="section-padding">
+    <section id="how-it-works" className="section-padding bg-dark-800/10">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

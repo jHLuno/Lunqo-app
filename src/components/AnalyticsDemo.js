@@ -82,7 +82,7 @@ const AnalyticsDemo = () => {
   const maxScans = Math.max(...chartData.map(d => d.scans));
 
   return (
-            <section id="analytics" className="section-padding">
+    <section id="analytics" className="section-padding bg-dark-800/8">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

@@ -93,7 +93,7 @@ const FeatureTriad = () => {
   }, []);
 
   return (
-            <section id="solutions" className="section-padding">
+    <section id="solutions" className="section-padding bg-dark-800/5">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
