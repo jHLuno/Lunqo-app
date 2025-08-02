@@ -242,18 +242,19 @@ const Hero = () => {
         variants={scrollIndicatorVariants}
         initial="initial"
         animate="animate"
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-120fps gpu-accelerated"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-120fps gpu-accelerated flex justify-center items-center"
+        style={{ transform: 'translateX(-50%)' }}
       >
         <motion.div
           variants={scrollIndicatorFloatVariants}
           animate="float"
-          className="w-6 h-10 border-2 border-dark-600 rounded-full flex justify-center gpu-accelerated"
+          className="w-6 h-10 border-2 border-dark-600 rounded-full flex justify-center items-center gpu-accelerated"
           style={{ transform: 'translateZ(0)' }}
         >
           <motion.div
             variants={scrollIndicatorFloatVariants}
             animate="innerFloat"
-            className="w-1 h-3 bg-primary-blue rounded-full mt-2 gpu-accelerated"
+            className="w-1 h-3 bg-primary-blue rounded-full gpu-accelerated"
             style={{ transform: 'translateZ(0)' }}
           />
         </motion.div>
