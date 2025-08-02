@@ -124,7 +124,7 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center justify-center flex-1">
+          <div className="hidden lg:flex items-center justify-center flex-1 absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <motion.a
@@ -142,7 +142,7 @@ const Navbar = () => {
           </div>
 
           {/* Language Switcher and CTA Button - Right Side */}
-          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
+          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0 ml-auto">
             {/* Language Switcher */}
             <div className="relative">
               <motion.button
