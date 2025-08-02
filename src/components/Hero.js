@@ -141,12 +141,12 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-custom text-center px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container-custom text-center px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-screen">
         <motion.div
           variants={containerVariants}
           initial="initial"
           animate="animate"
-          className="max-w-4xl mx-auto animate-120fps"
+          className="max-w-4xl mx-auto animate-120fps w-full"
         >
           {/* Badge */}
           <motion.div
