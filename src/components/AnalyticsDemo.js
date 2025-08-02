@@ -4,27 +4,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-/**************** 1. Блокируем прокрутку документа ****************/
-const useLockBodyScroll = (locked) => {
+/**************** 1. Надёжно фиксируем BODY ****************/
+const useFreezeBody = (freeze) => {
   useEffect(() => {
-    const html = document.documentElement;
     const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-
-    if (locked) {
-      html.style.overflow = "hidden";
-      body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    if (freeze) {
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+    } else {
+      const y = Math.abs(parseInt(body.style.top || "0", 10));
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      window.scrollTo({ top: y });
     }
-
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    };
-  }, [locked]);
+  }, [freeze]);
 };
 
-/**************** 2. Портал, чтобы рендерить модалку прямо в <body> ****************/
+/**************** 2. Портал ****************/
 const Portal = ({ children }) => {
   if (typeof window === "undefined") return null;
   return createPortal(children, document.body);
@@ -33,17 +34,17 @@ const Portal = ({ children }) => {
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Блокируем скролл
-  useLockBodyScroll(isModalOpen);
+  // Полное замораживание скролла
+  useFreezeBody(isModalOpen);
 
-  // Закрываем по ESC
+  // Закрытие ESC
   useEffect(() => {
-    const onEsc = (e) => e.key === "Escape" && setIsModalOpen(false);
-    if (isModalOpen) window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
+    const escListener = (e) => e.key === "Escape" && setIsModalOpen(false);
+    if (isModalOpen) window.addEventListener("keydown", escListener);
+    return () => window.removeEventListener("keydown", escListener);
   }, [isModalOpen]);
 
-  /* ---------------- ДАННЫЕ ---------------- */
+  /* ---------------- Данные ---------------- */
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1, rootMargin: "50px" });
 
   const metrics = useMemo(
@@ -69,63 +70,53 @@ const AnalyticsDemo = () => {
     []
   );
 
-  /* ---------------- АНИМАЦИИ ---------------- */
-  const sectionVariants = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
-  const dashboardVariants = { initial: { opacity: 0, y: 50 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.2 } };
-  const metricVariants = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
-  const modalVariants = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
-  const modalContentVariants = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.9, opacity: 0 } };
+  /* ---------------- Анимации ---------------- */
+  const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
+  const metricAnim = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
+  const overlayAnim = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
+  const cardAnim = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.9, opacity: 0 } };
 
-  /* ---------------- ХЭНДЛЕРЫ ---------------- */
-  const open = useCallback(() => setIsModalOpen(true), []);
-  const close = useCallback(() => setIsModalOpen(false), []);
-  const backdropClick = useCallback((e) => {
-    if (e.target === e.currentTarget) close();
-  }, [close]);
+  /* ---------------- Хэндлеры ---------------- */
+  const open = () => setIsModalOpen(true);
+  const close = () => setIsModalOpen(false);
+  const backdropClick = (e) => e.target === e.currentTarget && close();
 
-  const maxImpressions = Math.max(...chartData.map((d) => d.impressions));
-  const maxScans = Math.max(...chartData.map((d) => d.scans));
+  const maxImpr = Math.max(...chartData.map((d) => d.impressions));
+  const maxScan = Math.max(...chartData.map((d) => d.scans));
 
-  /* ---------------- RENDER ---------------- */
   return (
     <section id="analytics" className="section-padding bg-dark-800/8">
       <div className="container-custom">
-        {/* Заголовок */}
-        <motion.div ref={ref} variants={sectionVariants} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">
+        {/* Header */}
+        <motion.div ref={ref} variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-6">Real‑Time <span className="gradient-text">Analytics</span></h2>
           <p className="text-lg text-dark-300 max-w-3xl mx-auto">Monitor your campaigns with live data, track performance metrics, and optimise for engagement.</p>
         </motion.div>
 
-        {/* Превью дашборда */}
-        <motion.div variants={dashboardVariants} initial="initial" animate={inView ? "animate" : "initial"} className="relative">
+        {/* Dashboard preview */}
+        <motion.div variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="relative">
           <div className="card p-8 cursor-pointer" onClick={open}>
-            {/* Header */}
+            {/* Dashboard header */}
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2">Campaign Overview</h3>
                 <p className="text-dark-300">Last 7 days performance</p>
               </div>
-              <div className="flex items-center space-x-2 text-primary-lime">
-                <div className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" />
-                <span className="text-sm font-medium">Live</span>
-              </div>
+              <div className="flex items-center space-x-2 text-primary-lime"><div className="w-2 h-2 bg-primary-lime rounded-full animate-pulse" /><span className="text-sm font-medium">Live</span></div>
             </div>
 
-            {/* Метрики */}
+            {/* Metrics */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {metrics.map((m, i) => (
-                <motion.div key={m.label} variants={metricVariants} initial="initial" animate={inView ? "animate" : "initial"} transition={{ delay: 0.4 + i * 0.1 }} className="bg-dark-800/50 rounded-xl p-4 border border-dark-700">
-                  <div className="flex items-center justify-between mb-2">
-                    <m.icon className="w-5 h-5 text-primary-blue" />
-                    <span className="text-xs text-primary-lime font-medium">{m.change}</span>
-                  </div>
+                <motion.div key={m.label} variants={metricAnim} initial="initial" animate={inView ? "animate" : "initial"} transition={{ delay: 0.3 + i * 0.05 }} className="bg-dark-800/50 rounded-xl p-4 border border-dark-700">
+                  <div className="flex items-center justify-between mb-2"><m.icon className="w-5 h-5 text-primary-blue" /><span className="text-xs text-primary-lime font-medium">{m.change}</span></div>
                   <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
                   <div className="text-sm text-dark-400">{m.label}</div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Мини‑график */}
+            {/* Mini chart */}
             <div className="bg-dark-800/30 rounded-xl p-6 border border-dark-700">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-white">Engagement Trends</h4>
@@ -138,8 +129,8 @@ const AnalyticsDemo = () => {
                 {chartData.map((d) => (
                   <div key={d.day} className="flex flex-col items-center space-y-2">
                     <div className="flex items-end space-x-1">
-                      <div className="w-4 bg-primary-blue rounded-t" style={{ height: `${(d.impressions / maxImpressions) * 80}px` }} />
-                      <div className="w-4 bg-primary-lime rounded-t" style={{ height: `${(d.scans / maxScans) * 80}px` }} />
+                      <div className="w-4 bg-primary-blue rounded-t" style={{ height: `${(d.impressions / maxImpr) * 80}px` }} />
+                      <div className="w-4 bg-primary-lime rounded-t" style={{ height: `${(d.scans / maxScan) * 80}px` }} />
                     </div>
                     <span className="text-xs text-dark-400">{d.day}</span>
                   </div>
@@ -150,29 +141,15 @@ const AnalyticsDemo = () => {
         </motion.div>
       </div>
 
-      {/* ---------------- Modal через портальчик ---------------- */}
+      {/* Modal via Portal */}
       <Portal>
         <AnimatePresence>
           {isModalOpen && (
-            <motion.div
-              variants={modalVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              aria-modal="true"
-              role="dialog"
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
-              onClick={backdropClick}
-            >
-              <motion.div variants={modalContentVariants} initial="initial" animate="animate" exit="exit" className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full my-8" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
-                  <button onClick={close} aria-label="Close modal" className="text-dark-400 hover:text-white">
-                    <X size={24} />
-                  </button>
-                </div>
+            <motion.div variants={overlayAnim} initial="initial" animate="animate" exit="exit" onClick={backdropClick} className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+              <motion.div variants={cardAnim} initial="initial" animate="animate" exit="exit" className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-6"><h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3><button onClick={close} aria-label="Close modal" className="text-dark-400 hover:text-white"><X size={24} /></button></div>
 
-                {/* Метрики */}
+                {/* Metrics grid inside modal */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                   {metrics.map((m) => (
                     <div key={m.label} className="bg-dark-900/50 rounded-xl p-4 border border-dark-700">
@@ -186,15 +163,15 @@ const AnalyticsDemo = () => {
                   ))}
                 </div>
 
-                {/* Детальный график */}
+                {/* Detailed chart */}
                 <div className="bg-dark-900/30 rounded-xl p-6 border border-dark-700 mb-8">
                   <h4 className="text-lg font-semibold text-white mb-4">Detailed Performance Analytics</h4>
                   <div className="h-64 flex items-end justify-between space-x-2">
                     {chartData.map((d) => (
                       <div key={d.day} className="flex flex-col items-center space-y-2 flex-1">
                         <div className="flex items-end space-x-1 w-full">
-                          <div className="bg-primary-blue rounded-t flex-1" style={{ height: `${(d.impressions / maxImpressions) * 200}px` }} />
-                          <div className="bg-primary-lime rounded-t flex-1" style={{ height: `${(d.scans / maxScans) * 200}px` }} />
+                          <div className="bg-primary-blue rounded-t flex-1" style={{ height: `${(d.impressions / maxImpr) * 200}px` }} />
+                          <div className="bg-primary-lime rounded-t flex-1" style={{ height: `${(d.scans / maxScan) * 200}px` }} />
                         </div>
                         <span className="text-xs text-dark-400">{d.day}</span>
                       </div>
