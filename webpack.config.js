@@ -2,58 +2,21 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const fs = require('fs');
 
-// Custom plugin to remove outdated or duplicate script tags generated across builds
-class RemoveDuplicateScriptsPlugin {
+// Simplified plugin to clean up outdated assets only
+class CleanupAssetsPlugin {
   apply(compiler) {
-    compiler.hooks.afterEmit.tap('RemoveDuplicateScriptsPlugin', (compilation) => {
-      const htmlPath = path.resolve(__dirname, 'public/index.html');
-      if (!fs.existsSync(htmlPath)) return;
+    compiler.hooks.afterEmit.tap('CleanupAssetsPlugin', (compilation) => {
+      // Only clean up outdated .js and .map files
+      const publicDir = path.resolve(__dirname, 'public');
+      const preservedDirs = new Set(['favicons', 'images', 'fonts']);
+      
+      if (!fs.existsSync(publicDir)) return;
 
-      // 1. Read the current HTML output
-      let html = fs.readFileSync(htmlPath, 'utf8');
-
-      // 2. Determine which JS assets were emitted in THIS build
       const currentBuildScripts = new Set(
         Object.keys(compilation.assets)
           .filter((name) => name.endsWith('.js'))
           .map((name) => path.basename(name))
       );
-
-      // 3. Extract every script src reference from the HTML
-      const scriptRegex = /<script[^>]*src="([^"]+\.js)"[^>]*><\/script>/gi;
-      const scriptsInHtml = [];
-      let match;
-      while ((match = scriptRegex.exec(html)) !== null) {
-        scriptsInHtml.push(match[1]);
-      }
-
-      // 4. Strip ALL existing script tags from HTML (we will re-insert)
-      html = html.replace(/<script[^>]*><\/script>/gi, '');
-
-      // 5. Keep only unique script src values that belong to the current build output
-      const finalScripts = scriptsInHtml
-        .filter((src) => currentBuildScripts.has(path.basename(src)))
-        .filter((src, idx, arr) => arr.indexOf(src) === idx);
-
-      // 6. Optional: ensure predictable ordering (runtime → vendors → rest)
-      const order = ['runtime', 'vendors'];
-      finalScripts.sort((a, b) => {
-        const aIdx = order.findIndex((prefix) => path.basename(a).startsWith(prefix));
-        const bIdx = order.findIndex((prefix) => path.basename(b).startsWith(prefix));
-        return (aIdx === -1 ? order.length : aIdx) - (bIdx === -1 ? order.length : bIdx);
-      });
-
-      // 7. Re-create script tags
-      const scriptTags = finalScripts
-        .map((src) => `<script defer="defer" src="${src}"></script>`) 
-        .join('\n');
-
-      // 8. Re-insert the script tags just before the closing body tag
-      html = html.replace('</body>', `${scriptTags}\n</body>`);
-
-      // 9. Remove outdated .js and .map files that are not part of the current build
-      const publicDir = path.resolve(__dirname, 'public');
-      const preservedDirs = new Set(['favicons', 'images', 'fonts']);
 
       fs.readdirSync(publicDir).forEach((file) => {
         // Skip directories that must be preserved
@@ -68,13 +31,12 @@ class RemoveDuplicateScriptsPlugin {
         if ((isJs || isMap) && !currentBuildScripts.has(file) && file !== 'index.html') {
           try {
             fs.unlinkSync(filePath);
+            console.log(`Cleaned up outdated asset: ${file}`);
           } catch (err) {
             console.warn(`Failed to delete outdated asset ${file}:`, err);
           }
         }
       });
-
-      fs.writeFileSync(htmlPath, html);
     });
   }
 }
@@ -165,7 +127,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './public/index.html',
+        template: './src/index.html',
         filename: 'index.html',
         inject: 'body',
         scriptLoading: 'defer',
@@ -182,7 +144,7 @@ module.exports = (env, argv) => {
           minifyURLs: true,
         } : false,
       }),
-      new RemoveDuplicateScriptsPlugin(),
+      new CleanupAssetsPlugin(),
     ],
     devServer: {
       static: {
