@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { X, TrendingUp, Users, Eye, MousePointer } from 'lucide-react';
@@ -63,9 +63,7 @@ const AnalyticsDemo = () => {
   }), []);
 
   // Optimized event handlers
-  const handleModalOpen = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleModalOpen = useCallback(() => {
     setIsModalOpen(true);
   }, []);
 
@@ -78,35 +76,6 @@ const AnalyticsDemo = () => {
       setIsModalOpen(false);
     }
   }, []);
-
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isModalOpen) {
-      // Save current scroll position
-      const scrollY = window.scrollY;
-      // Prevent scrolling
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-    } else {
-      // Restore scrolling
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      // Restore scroll position
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
-
-    // Cleanup function to ensure scroll is restored if component unmounts
-    return () => {
-      if (isModalOpen) {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-      }
-    };
-  }, [isModalOpen]);
 
   // Calculate chart heights once
   const maxImpressions = Math.max(...chartData.map(d => d.impressions));
