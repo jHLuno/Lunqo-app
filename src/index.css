@@ -292,14 +292,6 @@
     overflow-x: hidden !important;
   }
 
-  /* Alternative navbar positioning */
-  .navbar-sticky {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 9999 !important;
-    width: 100% !important;
-  }
-
   /* High-performance animation classes */
   .animate-120fps {
     /* Optimized for 120fps displays */

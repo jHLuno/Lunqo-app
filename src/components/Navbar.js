@@ -4,6 +4,7 @@ import { Menu, X, Globe } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
+import { createPortal } from 'react-dom';
 
 // Throttle function for performance
 const throttle = (func, limit) => {
@@ -95,22 +96,12 @@ const Navbar = () => {
   }), []);
 
   const navbarContent = (
-    <div
-      className="navbar-sticky"
-      style={{
-        backgroundColor: 'transparent',
-        padding: '16px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start'
-      }}
+    <motion.nav
+      initial="initial"
+      animate="animate"
+      variants={navVariants}
+      className="transition-all duration-300 gpu-accelerated flex justify-center items-start py-4"
     >
-      <motion.nav
-        initial="initial"
-        animate="animate"
-        variants={navVariants}
-        className="transition-all duration-300 gpu-accelerated flex justify-center items-start"
-      >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
@@ -268,10 +259,9 @@ const Navbar = () => {
         )}
       </div>
     </motion.nav>
-    </div>
   );
 
-  return navbarContent;
+  return createPortal(navbarContent, document.body);
 };
 
 export default React.memo(Navbar); 
