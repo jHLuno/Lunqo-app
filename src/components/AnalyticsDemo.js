@@ -4,34 +4,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-/**************** 1. Фиксируем скролл, сохраняя позицию ****************/
-const useFixBody = (locked) => {
+/**************** 1. Блокируем прокрутку документа ****************/
+const useLockBodyScroll = (locked) => {
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
 
     if (locked) {
-      const scrollY = window.scrollY;
-      // блокируем прокрутку, но запоминаем смещение
-      body.style.position = "fixed";
-      body.style.top = `-${scrollY}px`;
-      body.style.left = "0";
-      body.style.right = "0";
       html.style.overflow = "hidden";
-    } else {
-      // восстанавливаем
-      const y = Math.abs(parseInt(body.style.top || "0", 10));
-      body.style.position = "";
-      body.style.top = "";
-      body.style.left = "";
-      body.style.right = "";
-      html.style.overflow = "";
-      window.scrollTo({ top: y });
+      body.style.overflow = "hidden";
     }
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+    };
   }, [locked]);
 };
 
-/**************** 2. Портал ****************/
+/**************** 2. Портал, чтобы рендерить модалку прямо в <body> ****************/
 const Portal = ({ children }) => {
   if (typeof window === "undefined") return null;
   return createPortal(children, document.body);
@@ -40,10 +33,10 @@ const Portal = ({ children }) => {
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // блокируем скролл + фиксируем позицию
-  useFixBody(isModalOpen);
+  // Блокируем скролл
+  useLockBodyScroll(isModalOpen);
 
-  // закрываем ESC
+  // Закрываем по ESC
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && setIsModalOpen(false);
     if (isModalOpen) window.addEventListener("keydown", onEsc);
@@ -81,12 +74,14 @@ const AnalyticsDemo = () => {
   const dashboardVariants = { initial: { opacity: 0, y: 50 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.2 } };
   const metricVariants = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
   const modalVariants = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
-  const modalContentVariants = { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.8, opacity: 0 } };
+  const modalContentVariants = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.9, opacity: 0 } };
 
   /* ---------------- ХЭНДЛЕРЫ ---------------- */
   const open = useCallback(() => setIsModalOpen(true), []);
   const close = useCallback(() => setIsModalOpen(false), []);
-  const backdropClick = useCallback((e) => { if (e.target === e.currentTarget) close(); }, [close]);
+  const backdropClick = useCallback((e) => {
+    if (e.target === e.currentTarget) close();
+  }, [close]);
 
   const maxImpressions = Math.max(...chartData.map((d) => d.impressions));
   const maxScans = Math.max(...chartData.map((d) => d.scans));
@@ -166,10 +161,10 @@ const AnalyticsDemo = () => {
               exit="exit"
               aria-modal="true"
               role="dialog"
-              className="fixed inset-0 z-50 grid place-items-center bg-black/80 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
               onClick={backdropClick}
             >
-              <motion.div variants={modalContentVariants} initial="initial" animate="animate" exit="exit" className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <motion.div variants={modalContentVariants} initial="initial" animate="animate" exit="exit" className="bg-dark-800 rounded-3xl p-8 max-w-4xl w-full my-8" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
                   <button onClick={close} aria-label="Close modal" className="text-dark-400 hover:text-white">
