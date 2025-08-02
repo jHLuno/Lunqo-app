@@ -62,43 +62,6 @@ const AnalyticsDemo = () => {
     transition: { duration: 0.3, ease: "easeInOut" }
   }), []);
 
-  // Scroll locking functionality
-  useEffect(() => {
-    if (isModalOpen) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
-      
-      // Lock scroll by setting body styles
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-      
-      // Handle Escape key to close modal
-      const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-          setIsModalOpen(false);
-        }
-      };
-      
-      document.addEventListener('keydown', handleEscape);
-      
-      // Cleanup function to restore scroll and remove event listener
-      return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        
-        // Restore scroll position
-        window.scrollTo(0, scrollY);
-        
-        // Remove event listener
-        document.removeEventListener('keydown', handleEscape);
-      };
-    }
-  }, [isModalOpen]);
-
   // Optimized event handlers
   const handleModalOpen = useCallback(() => {
     setIsModalOpen(true);
@@ -113,6 +76,26 @@ const AnalyticsDemo = () => {
       setIsModalOpen(false);
     }
   }, []);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      // Restore scrolling
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      // Restore scroll position
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+  }, [isModalOpen]);
 
   // Calculate chart heights once
   const maxImpressions = Math.max(...chartData.map(d => d.impressions));
