@@ -99,15 +99,16 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated ${
-        isScrolled 
-          ? 'glass-effect border-b border-dark-700/50' 
-          : 'bg-transparent'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
     >
-      <div className="container-custom px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16 lg:h-20">
-          {/* Logo - Left Side */}
+      {/* Glass Effect Container */}
+      <div className={`mx-4 px-6 py-3 rounded-full transition-all duration-300 gpu-accelerated ${
+        isScrolled 
+          ? 'glass-effect border border-dark-700/50 shadow-lg' 
+          : 'bg-dark-800/30 backdrop-blur-sm border border-dark-700/30'
+      }`}>
+        <div className="flex items-center space-x-8 lg:space-x-12">
+          {/* Logo */}
           <motion.div
             variants={logoVariants}
             whileHover="whileHover"
@@ -116,7 +117,7 @@ const Navbar = () => {
             <img
               src={lunqoLogo}
               alt="Lunqo Logo"
-              className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
+              className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
               loading="eager"
               decoding="async"
               style={{ transform: 'translateZ(0)' }}
@@ -124,25 +125,23 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center justify-center flex-1 absolute left-1/2 transform -translate-x-1/2">
-            <div className="flex items-center space-x-8">
-              {navItems.map((item) => (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  className="nav-link gpu-accelerated text-center"
-                  variants={navLinkVariants}
-                  whileHover="whileHover"
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                >
-                  {item.name}
-                </motion.a>
-              ))}
-            </div>
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                className="nav-link gpu-accelerated text-center"
+                variants={navLinkVariants}
+                whileHover="whileHover"
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                {item.name}
+              </motion.a>
+            ))}
           </div>
 
-          {/* Language Switcher and CTA Button - Right Side */}
-          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0 ml-auto">
+          {/* Language Switcher and CTA Button */}
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* Language Switcher */}
             <div className="relative">
               <motion.button
@@ -213,7 +212,7 @@ const Navbar = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="lg:hidden glass-effect rounded-xl mt-4 mb-4 gpu-accelerated"
+            className="lg:hidden glass-effect rounded-xl mt-4 gpu-accelerated"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
