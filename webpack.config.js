@@ -10,19 +10,32 @@ class RemoveDuplicateScriptsPlugin {
       if (fs.existsSync(htmlPath)) {
         let html = fs.readFileSync(htmlPath, 'utf8');
         
-        // Find all script tags
-        const scriptRegex = /<script[^>]*src="[^"]*\.js"[^>]*><\/script>/g;
-        const scripts = html.match(scriptRegex) || [];
+        // Find all script tags with src attributes
+        const scriptRegex = /<script[^>]*src="([^"]*\.js)"[^>]*><\/script>/g;
+        const scripts = [];
+        let match;
         
-        // Remove all script tags
-        html = html.replace(scriptRegex, '');
+        // Extract all script src values
+        while ((match = scriptRegex.exec(html)) !== null) {
+          scripts.push(match[1]); // Get the src value
+        }
         
-        // Add unique scripts back
+        // Remove ALL script tags (both with and without src)
+        html = html.replace(/<script[^>]*><\/script>/g, '');
+        
+        // Get unique script files
         const uniqueScripts = [...new Set(scripts)];
-        const scriptTags = uniqueScripts.join('\n');
+        
+        // Create new script tags
+        const scriptTags = uniqueScripts.map(src => 
+          `<script defer="defer" src="${src}"></script>`
+        ).join('\n');
         
         // Insert scripts before closing body tag
         html = html.replace('</body>', `${scriptTags}\n</body>`);
+        
+        // Clean up any extra whitespace
+        html = html.replace(/\n\s*\n/g, '\n');
         
         fs.writeFileSync(htmlPath, html);
       }
