@@ -1,113 +1,10 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { X, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
 
-/*************************************************************************************************
- *  HOOK: useBodyLock
- *  — Блокирует фоновые скроллы и визуальные сдвиги (учитываем ширину скроллбара).
- *  — Сохраняет позицию, чтобы при закрытии вернуться ровно туда же.
- *************************************************************************************************/
-const useBodyLock = (locked) => {
-  useEffect(() => {
-    if (!locked) return;
-
-    const html = document.documentElement;
-    const body = document.body;
-
-    // Store current scroll position
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
-
-    // Get scrollbar width
-    const scrollbarWidth = window.innerWidth - html.clientWidth;
-
-    // Apply styles to prevent scrolling
-    body.style.cssText = `
-      position: fixed !important;
-      top: -${scrollY}px !important;
-      left: -${scrollX}px !important;
-      width: 100% !important;
-      height: 100% !important;
-      overflow: hidden !important;
-      padding-right: ${scrollbarWidth}px !important;
-    `;
-
-    html.style.cssText = `
-      overflow: hidden !important;
-      overscroll-behavior: none !important;
-    `;
-
-    // Cleanup function
-    return () => {
-      body.style.cssText = '';
-      html.style.cssText = '';
-      window.scrollTo(scrollX, scrollY);
-    };
-  }, [locked]);
-};
-
-/*************************************************************************************************
- *  COMPONENT: Portal — безопасный перенос в <body>
- *************************************************************************************************/
-const Portal = ({ children }) => {
-  if (typeof window === "undefined") return null; // SSR
-  return createPortal(children, document.body);
-};
-
-/*************************************************************************************************
- *  MAIN COMPONENT: AnalyticsDemo
- *************************************************************************************************/
 const AnalyticsDemo = () => {
-  const [open, setOpen] = useState(false);
-
-  /** Freeze background when modal is open */
-  useBodyLock(open);
-
-  /** Close on ESC and prevent all scrolling */
-  useEffect(() => {
-    const onEsc = (e) => e.key === "Escape" && setOpen(false);
-    
-    const preventScroll = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    const preventTouch = (e) => {
-      if (e.touches.length > 1) return;
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    if (open) {
-      window.addEventListener("keydown", onEsc);
-      window.addEventListener("wheel", preventScroll, { passive: false });
-      window.addEventListener("touchmove", preventTouch, { passive: false });
-      window.addEventListener("scroll", preventScroll, { passive: false });
-      document.addEventListener("wheel", preventScroll, { passive: false });
-      document.addEventListener("touchmove", preventTouch, { passive: false });
-      document.addEventListener("scroll", preventScroll, { passive: false });
-    }
-
-    return () => {
-      window.removeEventListener("keydown", onEsc);
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventTouch);
-      window.removeEventListener("scroll", preventScroll);
-      document.removeEventListener("wheel", preventScroll);
-      document.removeEventListener("touchmove", preventTouch);
-      document.removeEventListener("scroll", preventScroll);
-    };
-  }, [open]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   /* ----------------- Intersection ----------------- */
   const [sectionRef, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -142,27 +39,19 @@ const AnalyticsDemo = () => {
   /* ----------------- Animations ----------------- */
   const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
   const metricAnim = { initial: { opacity: 0, scale: 0.8 }, animate: { opacity: 1, scale: 1 } };
-  const overlayAnim = { 
-    initial: { opacity: 0 }, 
-    animate: { opacity: 1, transition: { duration: 0.2 } }, 
-    exit: { opacity: 0, transition: { duration: 0.2 } } 
-  };
-  const modalAnim = { 
-    initial: { scale: 0.95, opacity: 0, y: 20 }, 
-    animate: { scale: 1, opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }, 
-    exit: { scale: 0.95, opacity: 0, y: 20, transition: { duration: 0.2 } } 
-  };
 
   /* ----------------- Handlers ----------------- */
   const openModal = () => {
     console.log('Opening modal');
-    setOpen(true);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
   };
+
   const closeModal = () => {
     console.log('Closing modal');
-    setOpen(false);
+    setIsModalOpen(false);
+    document.body.style.overflow = '';
   };
-  const onBackdropClick = (e) => e.target === e.currentTarget && closeModal();
 
   /* ----------------- Render ----------------- */
   return (
@@ -245,120 +134,126 @@ const AnalyticsDemo = () => {
         </motion.div>
       </div>
 
-      {/* ---------------- Modal ---------------- */}
-      {/* Debug: Modal state is {open ? 'OPEN' : 'CLOSED'} */}
-      <Portal>
-        <AnimatePresence>
-          {open && (
-            <div
+      {/* Simple Modal */}
+      {isModalOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+          }}
+          onClick={closeModal}
+        >
+          <div 
+            style={{
+              backgroundColor: 'rgb(31, 41, 55)',
+              padding: '32px',
+              borderRadius: '16px',
+              maxWidth: '800px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={closeModal}
               style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 99999,
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                backdropFilter: 'blur(4px)'
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: 'red',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                cursor: 'pointer',
+                fontSize: '20px'
               }}
-              role="dialog"
-              aria-modal="true"
-              onClick={onBackdropClick}
             >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: 'relative',
-                  width: '90vw',
-                  maxWidth: '800px',
-                  height: '80vh',
-                  maxHeight: '600px',
-                  backgroundColor: 'rgb(31, 41, 55)',
-                  borderRadius: '24px',
-                  padding: '32px',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                  zIndex: 100000,
-                  overflow: 'hidden',
-                  border: '2px solid rgba(255, 255, 255, 0.1)'
-                }}
-              >
-                {/* TEST: Bright visibility check */}
-                <div style={{
-                  position: 'absolute',
-                  top: '10px',
-                  left: '10px',
-                  background: 'red',
-                  color: 'white',
-                  padding: '10px',
-                  fontSize: '16px',
-                  zIndex: 999999
-                }}>
-                  MODAL IS VISIBLE!
-                </div>
+              ✕
+            </button>
 
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-white">Full Analytics Dashboard</h3>
-                  <button
-                    onClick={closeModal}
-                    aria-label="Close modal"
-                    className="text-dark-400 hover:text-white transition-colors"
-                    style={{ background: 'red', padding: '10px' }}
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
+            <h2 style={{ color: 'white', fontSize: '24px', marginBottom: '20px' }}>
+              Full Analytics Dashboard
+            </h2>
 
-                {/* Modal Metrics grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                  {metrics.map((m) => (
-                    <div key={m.label} className="bg-dark-900/50 rounded-xl p-4 border border-dark-700">
-                      <div className="flex items-center justify-between mb-2">
-                        <m.icon className="w-5 h-5 text-primary-blue" />
-                        <span className="text-xs text-primary-lime font-medium">{m.change}</span>
-                      </div>
-                      <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
-                      <span className="text-sm text-dark-400">{m.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Detailed chart */}
-                <div className="bg-dark-900/30 rounded-xl p-6 border border-dark-700 mb-8">
-                  <h4 className="text-lg font-semibold text-white mb-4">Detailed Performance Analytics</h4>
-                  <div className="h-64 flex items-end justify-between space-x-2">
-                    {chartData.map((d) => (
-                      <div key={d.day} className="flex flex-col items-center space-y-2 flex-1">
-                        <div className="flex items-end space-x-1 w-full">
-                          <span className="bg-primary-blue rounded-t flex-1" style={{ height: `${(d.impressions / maxImpressions) * 200}px` }} />
-                          <span className="bg-primary-lime rounded-t flex-1" style={{ height: `${(d.scans / maxScans) * 200}px` }} />
-                        </div>
-                        <span className="text-xs text-dark-400">{d.day}</span>
-                      </div>
-                    ))}
+            {/* Metrics grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+              {metrics.map((m) => (
+                <div key={m.label} style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)', padding: '16px', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <m.icon style={{ color: '#3B82F6', width: '20px', height: '20px' }} />
+                    <span style={{ color: '#10B981', fontSize: '12px', fontWeight: 'bold' }}>{m.change}</span>
                   </div>
+                  <div style={{ color: 'white', fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>{m.value}</div>
+                  <span style={{ color: '#9CA3AF', fontSize: '14px' }}>{m.label}</span>
                 </div>
+              ))}
+            </div>
 
-                <div className="text-center">
-                  <p className="text-dark-300 mb-4">
-                    This is a preview of our analytics dashboard. Get full access with real-time data when you sign up.
-                  </p>
-                  <motion.button
-                    className="btn-primary"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.15, ease: "easeInOut" }}
-                  >
-                    Get Full Access
-                  </motion.button>
-                </div>
+            {/* Chart */}
+            <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)', padding: '24px', borderRadius: '8px', marginBottom: '24px' }}>
+              <h3 style={{ color: 'white', fontSize: '18px', marginBottom: '16px' }}>Detailed Performance Analytics</h3>
+              <div style={{ height: '200px', display: 'flex', alignItems: 'end', justifyContent: 'space-between', gap: '8px' }}>
+                {chartData.map((d) => (
+                  <div key={d.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'end', gap: '4px', width: '100%' }}>
+                      <div 
+                        style={{ 
+                          backgroundColor: '#3B82F6', 
+                          flex: 1, 
+                          height: `${(d.impressions / maxImpressions) * 160}px`,
+                          borderRadius: '4px 4px 0 0'
+                        }} 
+                      />
+                      <div 
+                        style={{ 
+                          backgroundColor: '#10B981', 
+                          flex: 1, 
+                          height: `${(d.scans / maxScans) * 160}px`,
+                          borderRadius: '4px 4px 0 0'
+                        }} 
+                      />
+                    </div>
+                    <span style={{ color: '#9CA3AF', fontSize: '12px', marginTop: '8px' }}>{d.day}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
-        </AnimatePresence>
-      </Portal>
+
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ color: '#9CA3AF', marginBottom: '16px' }}>
+                This is a preview of our analytics dashboard. Get full access with real-time data when you sign up.
+              </p>
+              <button
+                style={{
+                  backgroundColor: '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Get Full Access
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
