@@ -283,6 +283,13 @@
     z-index: 9999 !important;
     width: 100vw !important;
     transform: none !important;
+    will-change: transform !important;
+  }
+
+  /* Ensure body and html don't interfere */
+  html, body {
+    position: relative !important;
+    overflow-x: hidden !important;
   }
 
   /* High-performance animation classes */

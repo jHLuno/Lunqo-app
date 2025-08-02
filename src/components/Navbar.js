@@ -4,6 +4,7 @@ import { Menu, X, Globe } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
+import { createPortal } from 'react-dom';
 
 // Throttle function for performance
 const throttle = (func, limit) => {
@@ -94,12 +95,22 @@ const Navbar = () => {
     transition: { duration: 0.3, ease: "easeInOut" }
   }), []);
 
-  return (
+  const navbarContent = (
     <motion.nav
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="navbar-fixed transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
+      className="transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        width: '100%',
+        height: 'auto',
+        backgroundColor: 'transparent'
+      }}
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${
@@ -259,6 +270,8 @@ const Navbar = () => {
       </div>
     </motion.nav>
   );
+
+  return createPortal(navbarContent, document.body);
 };
 
 export default React.memo(Navbar); 
