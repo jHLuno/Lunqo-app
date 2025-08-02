@@ -1,5 +1,34 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
+
+// Custom plugin to remove duplicate script tags
+class RemoveDuplicateScriptsPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('RemoveDuplicateScriptsPlugin', (compilation) => {
+      const htmlPath = path.resolve(__dirname, 'public/index.html');
+      if (fs.existsSync(htmlPath)) {
+        let html = fs.readFileSync(htmlPath, 'utf8');
+        
+        // Find all script tags
+        const scriptRegex = /<script[^>]*src="[^"]*\.js"[^>]*><\/script>/g;
+        const scripts = html.match(scriptRegex) || [];
+        
+        // Remove all script tags
+        html = html.replace(scriptRegex, '');
+        
+        // Add unique scripts back
+        const uniqueScripts = [...new Set(scripts)];
+        const scriptTags = uniqueScripts.join('\n');
+        
+        // Insert scripts before closing body tag
+        html = html.replace('</body>', `${scriptTags}\n</body>`);
+        
+        fs.writeFileSync(htmlPath, html);
+      }
+    });
+  }
+}
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -10,7 +39,9 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'public'),
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
       chunkFilename: isProduction ? '[name].[contenthash].chunk.js' : '[name].chunk.js',
-      clean: false, // Don't clean the entire public directory
+      clean: {
+        keep: /^(?!.*\.(js|css)$).*$/ // Keep everything except .js and .css files
+      },
     },
     module: {
       rules: [
@@ -87,7 +118,8 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: './public/index.html',
         filename: 'index.html',
-        inject: true,
+        inject: 'body',
+        scriptLoading: 'defer',
         minify: isProduction ? {
           removeComments: true,
           collapseWhitespace: true,
@@ -101,6 +133,7 @@ module.exports = (env, argv) => {
           minifyURLs: true,
         } : false,
       }),
+      new RemoveDuplicateScriptsPlugin(),
     ],
     devServer: {
       static: {
