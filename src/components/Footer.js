@@ -73,15 +73,15 @@ const Footer = () => {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Mail className="w-4 h-4 text-primary-blue" />
-                  <span>hello@lunqo.app</span>
+                  <span>business@lunqo.app</span>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <Phone className="w-4 h-4 text-primary-blue" />
-                  <span>+1 (555) 123-4567</span>
+                  <span>+7 (707) 212-4410</span>
                 </div>
                 <div className="flex items-center space-x-3 text-dark-300">
                   <MapPin className="w-4 h-4 text-primary-blue" />
-                  <span>San Francisco, CA</span>
+                  <span>Almaty, Kazakhstan</span>
                 </div>
               </div>
             </motion.div>
