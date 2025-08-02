@@ -40,6 +40,14 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 
+// Set proper MIME types for webmanifest files
+app.use((req, res, next) => {
+  if (req.path.endsWith('.webmanifest')) {
+    res.setHeader('Content-Type', 'application/manifest+json');
+  }
+  next();
+});
+
 // Import models for public endpoints
 const Stat = require('./models/Stat');
 const Campaign = require('./models/Campaign');
