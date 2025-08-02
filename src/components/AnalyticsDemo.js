@@ -102,7 +102,9 @@ const AnalyticsDemo = () => {
   }), []);
 
   // Optimized event handlers
-  const handleModalOpen = useCallback(() => {
+  const handleModalOpen = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsModalOpen(true);
   }, []);
 
@@ -111,6 +113,8 @@ const AnalyticsDemo = () => {
   }, []);
 
   const handleModalBackdropClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
     }
