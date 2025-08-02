@@ -1,10 +1,36 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { X, TrendingUp, Users, Eye, MousePointer } from 'lucide-react';
 
 const AnalyticsDemo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      // Save current scroll position and lock
+      const scrollY = window.scrollY || window.pageYOffset;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      return () => {};
+    }
+
+    // Restore scroll
+    const storedY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    if (storedY) {
+      window.scrollTo(0, parseInt(storedY || '0') * -1);
+    }
+  }, [isModalOpen]);
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
