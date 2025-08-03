@@ -49,6 +49,9 @@
     text-rendering: optimizeLegibility;
     /* Force font usage to prevent preload warnings */
     font-weight: 400;
+    /* Safety net for fixed positioning */
+    transform: none !important;
+    filter: none !important;
   }
   
   /* Force immediate font usage on all text elements */
@@ -60,8 +63,7 @@
     background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%) !important;
     background-attachment: fixed !important;
     min-height: 100vh;
-    /* GPU acceleration */
-    transform: translateZ(0);
+    /* GPU acceleration - removed transform to prevent fixed positioning issues */
     backface-visibility: hidden;
   }
   
@@ -216,10 +218,30 @@
 
   /* Performance optimizations for all elements */
   * {
-    /* Enable GPU acceleration for all transforms */
-    transform: translateZ(0);
+    /* Enable GPU acceleration for all transforms - EXCEPT for fixed positioned elements */
     backface-visibility: hidden;
     perspective: 1000px;
+  }
+
+  /* Exception for fixed positioned elements to prevent transform interference */
+  [style*="position: fixed"], 
+  .fixed,
+  nav[style*="position: fixed"],
+  nav.fixed {
+    transform: none !important;
+  }
+
+  /* Ensure navbar stays fixed and transparent */
+  nav.fixed,
+  nav[style*="position: fixed"],
+  .fixed[style*="position: fixed"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    background: transparent !important;
+    transform: none !important;
   }
 
   /* Optimize images for performance */
