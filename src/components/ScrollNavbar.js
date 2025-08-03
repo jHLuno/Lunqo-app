@@ -103,7 +103,8 @@ const ScrollNavbar = () => {
                   style={{
                     background: 'transparent',
                     border: '2px solid',
-                    borderImage: 'linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) 1'
+                    borderImage: 'linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) 1',
+                    borderRadius: '12px'
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
