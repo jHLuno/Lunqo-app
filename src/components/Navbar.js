@@ -66,7 +66,7 @@ const Navbar = () => {
 
   // Memoized motion variants for better performance
   const navVariants = useMemo(() => ({
-    initial: { y: -100 },
+    initial: { y: 0 },
     animate: { y: 0 },
     transition: { duration: 0.3, ease: "easeOut" }
   }), []);
@@ -99,13 +99,13 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="w-full z-[9999] top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300 fixed"
+      className="w-full z-[99999] top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300 fixed"
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
           ? 'backdrop-blur-md border border-dark-700/50 shadow-lg'   /* on scroll */
-          : 'backdrop-blur-md'                                      /* at top – absolutely transparent */
+          : 'bg-dark-900/40 backdrop-blur-md'                       /* at top – semi-transparent tint */
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
@@ -124,7 +124,7 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+          <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
             {navItems.map((item) => (
               <motion.a
                 key={item.name}
