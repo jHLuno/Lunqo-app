@@ -78,7 +78,7 @@ const AudienceStrip = () => {
   }), []);
 
   return (
-    <section className="section-padding bg-dark-800/20">
+    <section className="section-padding">
       <div className="container-custom">
         <motion.div
           ref={ref}

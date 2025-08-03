@@ -47,7 +47,7 @@ const AnalyticsDemo = () => {
 
   /* ----------------- Render ----------------- */
   return (
-    <section id="analytics" className="section-padding bg-dark-800/8">
+    <section id="analytics" className="section-padding">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div ref={sectionRef} variants={fadeUp} initial="initial" animate={inView ? "animate" : "initial"} className="text-center mb-16">

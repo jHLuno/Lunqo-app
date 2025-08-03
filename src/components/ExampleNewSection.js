@@ -25,7 +25,7 @@ const ExampleNewSection = () => {
   ];
 
   return (
-    <section className="section-padding bg-dark-800/10">
+    <section className="section-padding">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
