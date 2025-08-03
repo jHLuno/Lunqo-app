@@ -10,18 +10,13 @@ const CTABanner = () => {
   });
 
   return (
-    <section className="relative overflow-hidden bg-black">
+    <section className="relative overflow-hidden">
+      {/* Gradient Background - Blue to Lime to Orange to Black */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary-blue via-primary-lime to-primary-orange"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-black"></div>
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        {/* Put gradient INSIDE animated elements container so it's on top */}
-        <div className="absolute inset-0 pointer-events-none z-10
-          bg-[linear-gradient(
-            to_bottom,
-            theme(colors.primary.blue)   0%,
-            theme(colors.primary.lime)  30%,
-            theme(colors.primary.orange) 60%,
-            #000                            100%
-          )]" />
         <motion.div
           className="absolute top-10 left-10 w-32 h-32 bg-primary-blue/10 rounded-full blur-3xl"
           animate={{ 
