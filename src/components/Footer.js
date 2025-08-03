@@ -42,8 +42,12 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="relative">
-      <div className="container-custom py-16 px-4 sm:px-6 lg:px-8">
+    <footer id="footer" className="relative bg-black">
+      {/* Gradient transition from testimonials */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary-blue via-primary-lime to-black pointer-events-none" />
+      <div className="absolute top-16 left-0 right-0 h-32 bg-gradient-to-b from-primary-orange via-transparent to-black pointer-events-none" />
+      
+      <div className="relative z-10 container-custom py-16 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-4">
