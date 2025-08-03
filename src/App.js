@@ -78,14 +78,14 @@ function App() {
   useEffect(() => {
     // Performance monitoring
     if (process.env.NODE_ENV === 'production') {
-      // Report Core Web Vitals
-      if ('web-vital' in window) {
-        import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-          getCLS(console.log);
-          getFID(console.log);
-          getFCP(console.log);
-          getLCP(console.log);
-          getTTFB(console.log);
+      // Basic performance monitoring without external dependencies
+      if (typeof window !== 'undefined' && 'performance' in window) {
+        // Monitor page load time
+        window.addEventListener('load', () => {
+          if (performance.timing && performance.timing.loadEventEnd && performance.timing.navigationStart) {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log('Page load time:', loadTime + 'ms');
+          }
         });
       }
     }
