@@ -93,7 +93,7 @@ const ScrollNavbar = () => {
                   <TrendingUp className="w-4 h-4 text-primary-blue" />
                   <span className="text-dark-300">Live Reach:</span>
                   <span className="font-bold text-white">
-                    {formatNumber(reachCount)} impressions today
+                    {formatNumber(reachCount)} views today
                   </span>
                 </div>
 
