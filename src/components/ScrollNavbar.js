@@ -91,7 +91,7 @@ const ScrollNavbar = () => {
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
-                  <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
+                  <div className="flex items-center space-x-1">
                     <span className="text-dark-300 text-xs md:text-sm hidden md:inline">Live:</span>
                     <span className="font-bold text-white text-xs md:text-base">
                       {formatNumber(reachCount)}
@@ -124,7 +124,7 @@ const ScrollNavbar = () => {
 
                 {/* Right: Trust Badges Ticker */}
                 <div className="flex items-center space-x-2 md:space-x-4 overflow-hidden flex-shrink-0">
-                  <div className="flex items-center space-x-2 md:space-x-3 animate-scroll-left">
+                  <div className="flex items-center space-x-2 md:space-x-3">
                     {trustBadges.map((badge, index) => (
                       <div key={index} className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-dark-300 whitespace-nowrap">
                         <img
