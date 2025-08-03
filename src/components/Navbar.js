@@ -66,7 +66,7 @@ const Navbar = () => {
 
   // Memoized motion variants for better performance
   const navVariants = useMemo(() => ({
-    initial: { y: 0 },
+    initial: { y: -100 },
     animate: { y: 0 },
     transition: { duration: 0.3, ease: "easeOut" }
   }), []);
@@ -99,20 +99,21 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="w-full z-[99999] fixed top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 gpu-accelerated flex justify-center items-start pt-4"
+      style={{ position: 'fixed' }}
     >
       {/* Glass Effect Container */}
-      <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
+      <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 gpu-accelerated w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
-          ? 'backdrop-blur-md border border-dark-700/50 shadow-lg'   /* on scroll */
-          : 'bg-dark-900/40 backdrop-blur-md'                       /* at top – semi-transparent tint */
+          ? 'glass-effect border border-dark-700/50 shadow-lg' 
+          : 'bg-dark-800/30 backdrop-blur-sm border border-dark-700/30'
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <motion.div
             variants={logoVariants}
             whileHover="whileHover"
-            className="flex items-center flex-shrink-0"
+            className="flex items-center gpu-accelerated flex-shrink-0"
           >
             <img
               src={lunqoLogo}
@@ -120,16 +121,17 @@ const Navbar = () => {
               className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
               loading="eager"
               decoding="async"
+              style={{ transform: 'translateZ(0)' }}
             />
           </motion.div>
 
           {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
+          <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
             {navItems.map((item) => (
               <motion.a
                 key={item.name}
                 href={item.href}
-                className="nav-link text-center"
+                className="nav-link gpu-accelerated text-center"
                 variants={navLinkVariants}
                 whileHover="whileHover"
                 transition={{ duration: 0.2, ease: "easeInOut" }}
@@ -144,7 +146,7 @@ const Navbar = () => {
             {/* Language Switcher */}
             <div className="relative">
               <motion.button
-                className="flex items-center space-x-2 text-white hover:text-primary-blue transition-colors duration-200"
+                className="flex items-center space-x-2 text-white hover:text-primary-blue transition-colors duration-200 gpu-accelerated"
                 onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
                 variants={buttonVariants}
                 whileHover="whileHover"
@@ -160,7 +162,7 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-xl shadow-lg overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-xl shadow-lg overflow-hidden gpu-accelerated"
                 >
                   <button
                     className={`w-full px-4 py-2 text-left text-sm transition-colors duration-200 ${
@@ -184,7 +186,7 @@ const Navbar = () => {
 
             {/* CTA Button */}
             <motion.button
-              className="btn-primary"
+              className="btn-primary gpu-accelerated"
               variants={buttonVariants}
               whileHover="whileHover"
               whileTap="whileTap"
@@ -196,7 +198,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-white"
+            className="lg:hidden p-2 text-white gpu-accelerated"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
@@ -211,14 +213,14 @@ const Navbar = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="lg:hidden backdrop-blur-md border border-dark-700/50 rounded-xl mt-4"
+            className="lg:hidden glass-effect rounded-xl mt-4 gpu-accelerated"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block nav-link py-2"
+                  className="block nav-link py-2 gpu-accelerated"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
@@ -247,7 +249,7 @@ const Navbar = () => {
               </div>
               
               <button 
-                className="w-full btn-primary mt-4"
+                className="w-full btn-primary mt-4 gpu-accelerated"
                 onClick={handleDemoClick}
               >
                 {t('nav.bookDemo')}
