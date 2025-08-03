@@ -87,7 +87,7 @@ const ScrollNavbar = () => {
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
             <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 mx-auto md:mx-4">
-              <div className="flex items-center justify-between md:justify-center space-x-4 md:space-x-8 w-full md:w-auto">
+              <div className="relative flex items-center justify-between space-x-4 md:space-x-8 w-full md:w-auto">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
@@ -101,9 +101,9 @@ const ScrollNavbar = () => {
                 </div>
 
                 {/* Center: Get Early Access Button */}
-                <div className="relative w-full md:w-auto">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                   <motion.button
-                    className="relative mx-auto py-2 px-4 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 rounded-xl"
+                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 rounded-xl"
                     style={{
                       border: '2px solid transparent',
                       borderRadius: '12px',
