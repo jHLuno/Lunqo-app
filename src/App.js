@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { LanguageProvider } from './contexts/LanguageContext';
 
 // Lazy load components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
+const ScrollNavbar = lazy(() => import('./components/ScrollNavbar'));
 const Hero = lazy(() => import('./components/Hero'));
 const AudienceStrip = lazy(() => import('./components/AudienceStrip'));
 const FeatureTriad = lazy(() => import('./components/FeatureTriad'));
@@ -14,7 +14,7 @@ const Testimonials = lazy(() => import('./components/Testimonials'));
 const CTABanner = lazy(() => import('./components/CTABanner'));
 const Footer = lazy(() => import('./components/Footer'));
 
-// Loading fallback component
+// Simple loading fallback component
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-dark-900">
     <div className="flex items-center space-x-2">
@@ -28,43 +28,47 @@ const LoadingFallback = () => (
 // Main App Content Component
 const AppContent = () => {
   return (
-    <div className="min-h-screen gpu-accelerated">
+    <div className="min-h-screen">
       <Suspense fallback={<LoadingFallback />}>
-      <Navbar />
+        <Navbar />
+      </Suspense>
+      
+      <Suspense fallback={<div />}>
+        <ScrollNavbar />
       </Suspense>
       
       <main>
         <Suspense fallback={<LoadingFallback />}>
-        <Hero />
+          <Hero />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AudienceStrip />
+          <AudienceStrip />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <FeatureTriad />
+          <FeatureTriad />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AnalyticsDemo />
+          <AnalyticsDemo />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <WhyLunqo />
+          <WhyLunqo />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <Testimonials />
+          <Testimonials />
         </Suspense>
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <CTABanner />
+          <CTABanner />
         </Suspense>
       </main>
       
       <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-      <Footer />
+        <Footer />
       </Suspense>
     </div>
   );

@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* SF Pro Display Font Declarations - These reference the preloaded font files */
+/* SF Pro Display Font Declarations */
 @font-face {
   font-family: 'SF Pro Display';
   src: url('../public/fonts/SF-Pro-Display-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
-  font-display: block; /* Force immediate usage to prevent preload warnings */
+  font-display: swap;
 }
 
 @font-face {
@@ -14,7 +14,7 @@
   src: url('../public/fonts/SF-Pro-Display-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
-  font-display: block; /* Force immediate usage to prevent preload warnings */
+  font-display: swap;
 }
 
 @font-face {
@@ -22,250 +22,67 @@
   src: url('../public/fonts/SF-Pro-Display-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
-  font-display: block; /* Force immediate usage to prevent preload warnings */
+  font-display: swap;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ===== BASE STYLES ===== */
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px;
   }
   
   html, body {
-    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif !important;
-    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%) !important;
-    background-attachment: fixed !important;
+    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+    background-attachment: fixed;
     color: #ffffff;
     overflow-x: hidden;
-    position: relative;
     min-height: 100vh;
-    /* Performance optimizations */
-    will-change: scroll-position;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    /* Force font usage to prevent preload warnings */
-    font-weight: 400;
-  }
-  
-  /* Force immediate font usage on all text elements */
-  body, div, p, h1, h2, h3, h4, h5, h6, span, a, button, input, textarea, label {
-    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif !important;
   }
   
   #root {
-    background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%) !important;
-    background-attachment: fixed !important;
     min-height: 100vh;
-    /* GPU acceleration */
-    transform: translateZ(0);
-    backface-visibility: hidden;
   }
   
-  /* Smooth background transitions between sections */
-  section {
-    position: relative;
-    background: transparent !important;
-    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  /* Create smooth gradient overlays for sections */
-  section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(17, 24, 39, 0.02) 20%,
-      rgba(17, 24, 39, 0.04) 40%,
-      rgba(17, 24, 39, 0.06) 60%,
-      rgba(17, 24, 39, 0.08) 80%,
-      transparent 100%
-    );
-    opacity: 0;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    z-index: -1;
-  }
-  
-  /* Apply different overlay intensities based on section classes */
-  section.bg-dark-800\/5::before {
-    opacity: 0.05;
-  }
-  
-  section.bg-dark-800\/8::before {
-    opacity: 0.08;
-  }
-  
-  section.bg-dark-800\/10::before {
-    opacity: 0.1;
-  }
-  
-  section.bg-dark-800\/15::before {
-    opacity: 0.15;
-  }
-  
-  section.bg-dark-800\/20::before {
-    opacity: 0.2;
-  }
-  
-  /* Smooth transitions between sections */
-  section + section::before {
-    background: linear-gradient(
-      to bottom,
-      rgba(17, 24, 39, 0.02) 0%,
-      rgba(17, 24, 39, 0.04) 25%,
-      rgba(17, 24, 39, 0.06) 50%,
-      rgba(17, 24, 39, 0.04) 75%,
-      rgba(17, 24, 39, 0.02) 100%
-    );
-  }
-  
-  /* Ensure smooth transitions for all section combinations */
-  section.bg-dark-800\/5 + section.bg-dark-800\/8::before,
-  section.bg-dark-800\/8 + section.bg-dark-800\/10::before,
-  section.bg-dark-800\/10 + section.bg-dark-800\/15::before,
-  section.bg-dark-800\/15 + section.bg-dark-800\/20::before,
-  section.bg-dark-800\/20 + section.bg-dark-800\/5::before {
-    background: linear-gradient(
-      to bottom,
-      rgba(17, 24, 39, 0.03) 0%,
-      rgba(17, 24, 39, 0.05) 20%,
-      rgba(17, 24, 39, 0.07) 40%,
-      rgba(17, 24, 39, 0.09) 60%,
-      rgba(17, 24, 39, 0.07) 80%,
-      rgba(17, 24, 39, 0.03) 100%
-    );
-  }
-  
-  /* Smooth fade for section boundaries */
-  section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(17, 24, 39, 0.02) 50%,
-      transparent 100%
-    );
-    pointer-events: none;
-    z-index: -1;
-  }
-  
-  /* Remove the fade for the last section */
-  section:last-child::after {
-    display: none;
-  }
-  
-  /* Ensure smooth scrolling doesn't create visual artifacts */
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* Account for fixed navbar */
-  }
-  
-  /* Optimized animated background elements with GPU acceleration */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(24, 160, 251, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(120, 255, 214, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(255, 165, 0, 0.03) 0%, transparent 50%);
-    filter: blur(120px);
-    z-index: -1;
-    /* GPU acceleration for background animation */
-    transform: translateZ(0);
-    will-change: transform;
-    animation: backgroundShift 30s ease-in-out infinite;
-  }
-  
-  /* Optimized keyframes with GPU acceleration */
-  @keyframes backgroundShift {
-    0%, 100% { 
-      transform: translate3d(0, 0, 0) scale(1); 
-    }
-    25% { 
-      transform: translate3d(-10px, -10px, 0) scale(1.05); 
-    }
-    50% { 
-      transform: translate3d(10px, -5px, 0) scale(0.95); 
-    }
-    75% { 
-      transform: translate3d(-5px, 10px, 0) scale(1.02); 
-    }
-  }
-
   * {
     box-sizing: border-box;
   }
-
-  /* Performance optimizations for all elements */
-  * {
-    /* Enable GPU acceleration for all transforms */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-  /* Optimize images for performance */
-  img {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    transform: translateZ(0);
-  }
 }
 
+/* ===== COMPONENT STYLES ===== */
 @layer components {
+  /* Button Components */
   .btn-primary {
     @apply bg-primary-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
-    /* GPU acceleration for button animations */
-    transform: translateZ(0);
-    will-change: transform;
   }
 
   .btn-secondary {
     @apply bg-transparent border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
-    /* GPU acceleration for button animations */
-    transform: translateZ(0);
-    will-change: transform;
   }
 
+  /* Card Components */
   .card {
     @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 transition-all duration-300 hover:border-primary-blue/30 hover:shadow-glow;
-    /* GPU acceleration for card animations */
-    transform: translateZ(0);
-    will-change: transform;
   }
 
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent;
-  }
-
+  /* Glass Effect */
   .glass-effect {
     @apply bg-dark-800/20 backdrop-blur-md border border-dark-700/50;
-    /* GPU acceleration for glass effect */
-    transform: translateZ(0);
   }
 
+  /* Navigation */
   .nav-link {
     @apply text-dark-300 hover:text-white transition-colors duration-200 font-medium;
   }
 
+  /* Layout Components */
   .section-padding {
     @apply py-20 px-4 sm:px-6 lg:px-8;
   }
@@ -274,26 +91,11 @@
     @apply max-w-7xl mx-auto;
   }
 
-  /* High-performance animation classes */
-  .animate-120fps {
-    /* Optimized for 120fps displays */
-    transform: translateZ(0);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+  /* Text Effects */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent;
   }
 
-  .hover-scale {
-    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .hover-scale:hover {
-    transform: translateZ(0) scale(1.02);
-  }
-}
-
-@layer utilities {
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
@@ -301,49 +103,36 @@
   .text-glow {
     text-shadow: 0 0 20px rgba(24, 160, 251, 0.5);
   }
+}
 
-  /* Optimized float animation with GPU acceleration */
+/* ===== UTILITY STYLES ===== */
+@layer utilities {
+  /* Animation Utilities */
   .animate-float {
     animation: float 6s ease-in-out infinite;
-    transform: translateZ(0);
-    will-change: transform;
   }
 
   @keyframes float {
-    0%, 100% { 
-      transform: translate3d(0, 0, 0); 
-    }
-    50% { 
-      transform: translate3d(0, -10px, 0); 
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
-  /* Optimized pulse glow animation */
   .animate-pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite;
-    transform: translateZ(0);
-    will-change: opacity, transform;
   }
 
   @keyframes pulseGlow {
     0%, 100% { 
       opacity: 1; 
-      transform: translate3d(0, 0, 0) scale(1); 
+      transform: scale(1); 
     }
     50% { 
       opacity: 0.7; 
-      transform: translate3d(0, 0, 0) scale(1.05); 
+      transform: scale(1.05); 
     }
-}
-
-  /* Performance utility classes */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform;
   }
 
+  /* Transition Utilities */
   .smooth-transition {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -351,9 +140,18 @@
   .fast-transition {
     transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  /* Hover Effects */
+  .hover-scale {
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
 }
 
-/* Optimized scrollbar with GPU acceleration */
+/* ===== SCROLLBAR STYLES ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -365,14 +163,13 @@
 ::-webkit-scrollbar-thumb {
   background: #18A0FB;
   border-radius: 4px;
-  transform: translateZ(0);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #59FF70;
 }
 
-/* Enhanced reduced motion support */
+/* ===== ACCESSIBILITY ===== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -381,26 +178,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* Performance optimizations for different screen refresh rates */
-@media (min-resolution: 120dpi) {
-  .animate-120fps {
-    /* Optimizations for high refresh rate displays */
-    will-change: transform, opacity;
-  }
-}
-
-/* Optimize for mobile performance */
-@media (max-width: 768px) {
-  body::before {
-    /* Reduce background animation complexity on mobile */
-    filter: blur(60px);
-    animation-duration: 45s;
-  }
-  
-  .animate-float {
-    animation-duration: 8s;
   }
 } 
