@@ -18,17 +18,25 @@ const ScrollNavbar = () => {
   ];
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Show bottom rail when scrolling up
-      if (currentScrollY < lastScrollY && currentScrollY > 200) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
-        setIsVisible(false);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Show bottom rail when scrolling up
+          if (currentScrollY < lastScrollY && currentScrollY > 200) {
+            setIsVisible(true);
+          } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
+            setIsVisible(false);
+          }
+          
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
       }
-      
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

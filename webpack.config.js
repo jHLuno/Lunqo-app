@@ -178,6 +178,18 @@ module.exports = (env, argv) => {
             chunks: 'all',
             priority: 10,
           },
+          framerMotion: {
+            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+            name: 'framer-motion',
+            chunks: 'all',
+            priority: 20,
+          },
+          lucideReact: {
+            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+            name: 'lucide-react',
+            chunks: 'all',
+            priority: 20,
+          },
           common: {
             name: 'common',
             minChunks: 2,
@@ -196,6 +208,7 @@ module.exports = (env, argv) => {
             compress: {
               drop_console: true,
               drop_debugger: true,
+              pure_funcs: ['console.log', 'console.info'],
             },
             mangle: true,
           },

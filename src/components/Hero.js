@@ -14,11 +14,17 @@ const Hero = () => {
   ];
 
   const handleDemoClick = () => {
-    window.open(t('urls.demo'), '_blank', 'noopener,noreferrer');
+    const url = t('urls.demo');
+    if (url && url.startsWith('http')) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleWatchClick = () => {
-    window.open(t('urls.website') + '/overview', '_blank', 'noopener,noreferrer');
+    const url = t('urls.website') + '/overview';
+    if (url && url.startsWith('http')) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 
@@ -75,6 +75,22 @@ const AppContent = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Performance monitoring
+    if (process.env.NODE_ENV === 'production') {
+      // Report Core Web Vitals
+      if ('web-vital' in window) {
+        import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+          getCLS(console.log);
+          getFID(console.log);
+          getFCP(console.log);
+          getLCP(console.log);
+          getTTFB(console.log);
+        });
+      }
+    }
+  }, []);
+
   return (
     <Router>
       <LanguageProvider>

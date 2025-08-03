@@ -24,6 +24,11 @@ export const LanguageProvider = ({ children }) => {
   };
 
   const t = (key) => {
+    if (!key || typeof key !== 'string') {
+      console.warn('Invalid translation key provided:', key);
+      return key || '';
+    }
+    
     const keys = key.split('.');
     let value = translations[language];
     
@@ -31,12 +36,14 @@ export const LanguageProvider = ({ children }) => {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        console.warn(`Translation key not found: ${key}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Translation key not found: ${key} for language: ${language}`);
+        }
         return key;
       }
     }
     
-    return value;
+    return value || key;
   };
 
   const changeLanguage = (newLanguage) => {

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Zap, BarChart3, Rocket } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import PropTypes from 'prop-types';
 
 const FeatureTriad = () => {
   const { t } = useLanguage();
@@ -180,6 +181,10 @@ const FeatureTriad = () => {
       </div>
     </section>
   );
+};
+
+FeatureTriad.propTypes = {
+  // Add prop types if needed in the future
 };
 
 export default React.memo(FeatureTriad); 
