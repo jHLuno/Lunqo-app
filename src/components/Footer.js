@@ -43,9 +43,6 @@ const Footer = () => {
 
   return (
     <footer id="footer" className="relative">
-      {/* Smooth transition from testimonials */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/10 to-black/90 pointer-events-none" />
-      
       <div className="container-custom py-16 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Brand Section */}
