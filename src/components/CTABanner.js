@@ -10,16 +10,16 @@ const CTABanner = () => {
   });
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-black">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         {/* Put gradient INSIDE animated elements container so it's on top */}
         <div className="absolute inset-0 pointer-events-none z-10
           bg-[linear-gradient(
             to_bottom,
-            theme(colors.primary.blue)/0.4   0%,
-            theme(colors.primary.lime)/0.4  30%,
-            theme(colors.primary.orange)/0.4 60%,
+            theme(colors.primary.blue)   0%,
+            theme(colors.primary.lime)  30%,
+            theme(colors.primary.orange) 60%,
             #000                            100%
           )]" />
         <motion.div
