@@ -96,8 +96,8 @@ const ScrollNavbar = () => {
                     <span className="font-bold text-white text-xs md:text-lg">
                       {formatNumber(reachCount)}
                     </span>
+                    <span className="text-dark-300 text-xs md:text-sm">views</span> 
                   </div>
-                  <span className="text-dark-300 text-xs md:text-sm">views</span>
                 </div>
 
                 {/* Center: Get Early Access Button */}
