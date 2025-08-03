@@ -42,7 +42,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="bg-black border-t border-dark-700/50 relative" style={{ backgroundColor: '#000000' }}>
+    <footer id="footer" className="bg-black border-t border-dark-700/50 relative z-50" style={{ backgroundColor: '#000000' }}>
       {/* Smooth transition from testimonials */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/20 to-black pointer-events-none" />
       
