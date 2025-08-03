@@ -87,9 +87,9 @@ const ScrollNavbar = () => {
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
               <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 mx-auto md:mx-4">
-              <div className="flex items-center justify-center space-x-4 md:space-x-8">
+              <div className="flex items-center w-full">
                 {/* Left: Live Reach Counter */}
-                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base">
+                <div className="flex items-center gap-1 text-xs md:text-base flex-shrink-0">
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
                     <span className="text-dark-300 text-xs md:text-sm hidden md:inline">Live:</span>
@@ -101,27 +101,29 @@ const ScrollNavbar = () => {
                 </div>
 
                 {/* Center: Get Early Access Button */}
-                <motion.button
-                  className="relative py-2 px-3 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 flex-shrink-0 rounded-xl"
-                  style={{
-                    border: '2px solid transparent',
-                    borderRadius: '12px',
-                    background:
-                      'linear-gradient(rgba(13, 17, 23, 0.95), rgba(13, 17, 23, 0.95)) padding-box, ' +
-                      'linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) border-box'
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowForm(true)}
-                >
-                  <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent">
-                    <span className="hidden md:inline">Get Early Access</span>
-                    <span className="md:hidden">Get Access</span>
-                  </span>
-                </motion.button>
+                <div className="flex-1 flex justify-center">
+                  <motion.button
+                    className="relative py-2 px-4 md:px-6 text-xs md:text-sm font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 flex-shrink-0 rounded-xl"
+                    style={{
+                      border: '2px solid transparent',
+                      borderRadius: '12px',
+                      background:
+                        'linear-gradient(rgba(13, 17, 23, 0.95), rgba(13, 17, 23, 0.95)) padding-box, ' +
+                        'linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) border-box'
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowForm(true)}
+                  >
+                    <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent">
+                      <span className="hidden md:inline">Get Early Access</span>
+                      <span className="md:hidden">Get Access</span>
+                    </span>
+                  </motion.button>
+                </div>
 
                 {/* Right: Trust Badges Ticker */}
-                <div className="flex items-center space-x-2 md:space-x-4 overflow-hidden flex-shrink-0">
+                <div className="flex items-center gap-1 flex-shrink-0">
                   <div className="flex items-center space-x-2 md:space-x-3 animate-scroll-left">
                     {trustBadges.map((badge, index) => (
                       <div key={index} className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-dark-300 whitespace-nowrap">
