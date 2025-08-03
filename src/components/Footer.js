@@ -42,7 +42,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="bg-black/90 relative">
+    <footer id="footer" className="relative">
       {/* Smooth transition from testimonials */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/10 to-black/90 pointer-events-none" />
       
@@ -61,8 +61,6 @@ const Footer = () => {
                   src={lunqoLogo}
                   alt="Lunqo Logo"
                   className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
-                  onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
-                  onLoad={() => console.log('Footer logo loaded successfully')}
                 />
               </div>
               
