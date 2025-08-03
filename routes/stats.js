@@ -3,6 +3,33 @@ const router = express.Router();
 const Stat = require('../models/Stat');
 const mongoose = require('mongoose');
 
+// Get today's reach/impressions count
+router.get('/reach/today', async (req, res) => {
+  try {
+    // Get today's date range (start of day to end of day)
+    const today = new Date();
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
+
+    // Count impressions for today
+    const todayImpressions = await Stat.countDocuments({
+      event: 'impression',
+      timestamp: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    });
+
+    res.json({ 
+      count: todayImpressions,
+      date: today.toISOString().split('T')[0]
+    });
+  } catch (error) {
+    console.error('Reach stats error:', error);
+    res.status(500).json({ error: 'Failed to fetch reach stats' });
+  }
+});
+
 // Create new stat event
 router.post('/', async (req, res) => {
   try {

@@ -39,7 +39,7 @@ const ScrollNavbar = () => {
   useEffect(() => {
     const fetchReachCount = async () => {
       try {
-        const response = await fetch('/api/v1/reach/today');
+        const response = await fetch('/api/stats/reach/today');
         if (response.ok) {
           const data = await response.json();
           setReachCount(data.count || 21532);
