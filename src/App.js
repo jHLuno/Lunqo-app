@@ -5,6 +5,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 
 // Lazy load components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
+const ScrollNavbar = lazy(() => import('./components/ScrollNavbar'));
 const Hero = lazy(() => import('./components/Hero'));
 const AudienceStrip = lazy(() => import('./components/AudienceStrip'));
 const FeatureTriad = lazy(() => import('./components/FeatureTriad'));
@@ -31,6 +32,10 @@ const AppContent = () => {
     <div className="min-h-screen gpu-accelerated">
       <Suspense fallback={<LoadingFallback />}>
       <Navbar />
+      </Suspense>
+      
+      <Suspense fallback={null}>
+      <ScrollNavbar />
       </Suspense>
       
       <main>
