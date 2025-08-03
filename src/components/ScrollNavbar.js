@@ -35,23 +35,12 @@ const ScrollNavbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // Fetch reach count
+  // Auto-increment reach count every 30 seconds
   useEffect(() => {
-    const fetchReachCount = async () => {
-      try {
-        const response = await fetch('/api/stats/reach/today');
-        if (response.ok) {
-          const data = await response.json();
-          setReachCount(data.count || 21532);
-        }
-      } catch (error) {
-        console.log('Using fallback reach count');
-      }
-    };
-
-    fetchReachCount();
-    // Update every 30 seconds
-    const interval = setInterval(fetchReachCount, 30000);
+    const interval = setInterval(() => {
+      setReachCount(prev => prev + Math.floor(Math.random() * 30) + 20); // Add 20-50 views
+    }, 30000);
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -95,9 +84,9 @@ const ScrollNavbar = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex justify-center"
+            className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
-            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-6 py-4 max-w-4xl w-full mx-4">
+            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-6 py-4 max-w-4xl mx-4">
               <div className="flex items-center justify-center space-x-8">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-2 text-sm">
@@ -110,12 +99,18 @@ const ScrollNavbar = () => {
 
                 {/* Center: Get Early Access Button */}
                 <motion.button
-                  className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50 text-sm"
+                  className="relative bg-transparent border-2 border-transparent bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-border rounded-xl py-2 px-6 text-sm font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50"
+                  style={{
+                    background: 'linear-gradient(white, white) padding-box, linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) border-box',
+                    border: '2px solid transparent'
+                  }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowForm(true)}
                 >
-                  Get Early Access
+                  <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent">
+                    Get Early Access
+                  </span>
                 </motion.button>
 
                 {/* Right: Trust Badges Ticker */}
