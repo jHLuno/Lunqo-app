@@ -95,7 +95,7 @@ const ScrollNavbar = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
+            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
           >
             <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-6 py-4 max-w-4xl mx-4">
               <div className="flex items-center justify-center space-x-8">
@@ -110,7 +110,7 @@ const ScrollNavbar = () => {
 
                 {/* Center: Get Early Access Button */}
                 <motion.button
-                  className="btn-primary text-sm py-2 px-6"
+                  className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50 text-sm"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowForm(true)}
@@ -121,7 +121,7 @@ const ScrollNavbar = () => {
                 {/* Right: Trust Badges Ticker */}
                 <div className="flex items-center space-x-4 overflow-hidden">
                   <div className="flex items-center space-x-3 animate-scroll-left">
-                    {[...trustBadges, ...trustBadges].map((badge, index) => (
+                    {trustBadges.map((badge, index) => (
                       <div key={index} className="flex items-center space-x-2 text-sm text-dark-300 whitespace-nowrap">
                         <img
                           src={badge.logo}
@@ -198,7 +198,7 @@ const ScrollNavbar = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full btn-primary py-3"
+                  className="w-full bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
