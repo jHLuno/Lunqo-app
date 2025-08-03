@@ -93,7 +93,7 @@ const ScrollNavbar = () => {
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
                     <span className="text-dark-300 text-xs md:text-sm">Live:</span>
-                    <span className="font-bold text-white text-xs md:text-lg">
+                    <span className="font-bold text-white text-xs md:text-base">
                       {formatNumber(reachCount)}
                     </span>
                     <span className="text-dark-300 text-xs md:text-sm">views</span> 
