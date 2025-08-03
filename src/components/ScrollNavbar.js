@@ -6,7 +6,7 @@ const ScrollNavbar = () => {
   const { t } = useLanguage();
   const navbarRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const lastScrollTopRef = useRef(0);
 
   // Simple nav items
   const navItems = [
@@ -28,6 +28,7 @@ const ScrollNavbar = () => {
     // Scroll handler inspired by user's script
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const lastScrollTop = lastScrollTopRef.current;
       
       console.log('Scroll detected:', { scrollTop, lastScrollTop, isVisible });
       
@@ -41,7 +42,7 @@ const ScrollNavbar = () => {
         setIsVisible(false);
       }
       
-      setLastScrollTop(scrollTop);
+      lastScrollTopRef.current = scrollTop;
     };
 
     // Add scroll listener
@@ -50,9 +51,12 @@ const ScrollNavbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollTop, isVisible]);
+  }, []); // Empty dependency array to prevent re-renders
 
   console.log('ScrollNavbar rendering, isVisible:', isVisible);
+
+  // TEMPORARY: Always show for testing positioning
+  const shouldShow = true; // isVisible;
 
   return (
     <>
@@ -90,12 +94,14 @@ const ScrollNavbar = () => {
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
           minWidth: '400px',
           maxWidth: '600px',
-          display: isVisible ? 'block' : 'none',
-          opacity: isVisible ? 1 : 0,
-          visibility: isVisible ? 'visible' : 'hidden',
+          display: shouldShow ? 'block' : 'none',
+          opacity: shouldShow ? 1 : 0,
+          visibility: shouldShow ? 'visible' : 'hidden',
           color: 'white',
-          pointerEvents: isVisible ? 'auto' : 'none',
-          transition: 'opacity 0.3s ease, visibility 0.3s ease'
+          pointerEvents: shouldShow ? 'auto' : 'none',
+          transition: 'opacity 0.3s ease, visibility 0.3s ease',
+          // Force it to be above everything
+          isolation: 'isolate'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
