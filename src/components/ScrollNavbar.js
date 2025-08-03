@@ -106,7 +106,7 @@ const ScrollNavbar = () => {
                     /* mobile (default) – keep it absolutely centred */
                     absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                     /* ≥ 768 px – put it back into normal flex flow */
-                    md:static md:translate-x-0 md:translate-y-0
+                    md:static md:translate-x-0 md:translate-y-0 md:mx-8
                   "
                 >
                   <motion.button
