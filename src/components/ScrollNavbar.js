@@ -86,13 +86,13 @@ const ScrollNavbar = () => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
-            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-4 py-3 max-w-4xl mx-4">
+            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-4 py-3 max-w-4xl mx-2 md:mx-4">
               <div className="flex items-center justify-center space-x-4 md:space-x-8">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base">
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
-                    <span className="text-dark-300 text-xs md:text-sm">Live:</span>
+                    <span className="text-dark-300 text-xs md:text-sm hidden md:inline">Live:</span>
                     <span className="font-bold text-white text-xs md:text-base">
                       {formatNumber(reachCount)}
                     </span>
