@@ -3,20 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
 
-// Throttle function for performance
-const throttle = (func, limit) => {
-  let inThrottle;
-  return function() {
-    const args = arguments;
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
-    }
-  }
-};
-
 const ScrollNavbar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -31,27 +17,33 @@ const ScrollNavbar = () => {
     { name: t('nav.contactUs'), href: '#footer' },
   ], [t]);
 
-  // Optimized scroll handler with throttling
-  const handleScroll = useCallback(
-    throttle(() => {
-      const currentScrollY = window.scrollY;
-      
-      // Show navbar when scrolling up (current scroll < last scroll)
-      // Only show if we've scrolled down at least 100px first
-      if (currentScrollY < lastScrollY && currentScrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-      
-      setLastScrollY(currentScrollY);
-    }, 16), // ~60fps throttling
-    [lastScrollY]
-  );
+  // Simplified scroll handler
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    
+    // Debug logging
+    console.log('Scroll detected:', { currentScrollY, lastScrollY, isVisible });
+    
+    // Show navbar when scrolling up (current scroll < last scroll)
+    // Only show if we've scrolled down at least 50px first
+    if (currentScrollY < lastScrollY && currentScrollY > 50) {
+      console.log('Setting navbar visible');
+      setIsVisible(true);
+    } else {
+      console.log('Setting navbar hidden');
+      setIsVisible(false);
+    }
+    
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY, isVisible]);
 
   useEffect(() => {
+    console.log('ScrollNavbar mounted, adding scroll listener');
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      console.log('ScrollNavbar unmounting, removing scroll listener');
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [handleScroll]);
 
   // Handle demo button click
@@ -105,15 +97,21 @@ const ScrollNavbar = () => {
     transition: { duration: 0.15, ease: "easeInOut" }
   }), []);
 
+  console.log('ScrollNavbar rendering, isVisible:', isVisible);
+
+  // TEMPORARY: Always show for testing
+  const shouldShow = true; // isVisible;
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {shouldShow && (
         <motion.div
           variants={navbarVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999] gpu-accelerated"
+          className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[99999] gpu-accelerated"
+          style={{ zIndex: 99999 }}
         >
           {/* Glass Effect Container */}
           <div className="glass-effect px-6 py-3 rounded-full shadow-2xl border border-dark-700/50 backdrop-blur-xl">
