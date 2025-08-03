@@ -45,6 +45,7 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   
   #root {
@@ -102,6 +103,23 @@
 
   .text-glow {
     text-shadow: 0 0 20px rgba(24, 160, 251, 0.5);
+  }
+
+  /* Footer specific styles to prevent blur effects */
+  footer {
+    filter: none;
+    backdrop-filter: none;
+  }
+
+  footer * {
+    filter: none;
+    backdrop-filter: none;
+  }
+
+  footer img {
+    filter: none;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 }
 

@@ -42,9 +42,9 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="bg-black/90 border-t border-dark-700/50 relative">
+    <footer id="footer" className="bg-black border-t border-dark-700/50 relative">
       {/* Smooth transition from testimonials */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/10 to-black/90 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/20 to-black pointer-events-none" />
       
       <div className="container-custom py-16 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -60,7 +60,7 @@ const Footer = () => {
                 <img
                   src={lunqoLogo}
                   alt="Lunqo Logo"
-                  className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                  className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20 filter-none"
                   onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
                   onLoad={() => console.log('Footer logo loaded successfully')}
                 />
@@ -103,7 +103,7 @@ const Footer = () => {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <h3 className="text-white font-semibold mb-4 capitalize">
+                  <h3 className="text-white font-semibold mb-4 capitalize filter-none">
                     {t(`footer.links.${category}.title`)}
                   </h3>
                   <ul className="space-y-3">
@@ -111,7 +111,7 @@ const Footer = () => {
                       <li key={link.name}>
                         <a
                           href={link.href}
-                          className="text-dark-300 hover:text-primary-blue transition-colors duration-200 text-sm"
+                          className="text-dark-300 hover:text-primary-blue transition-colors duration-200 text-sm filter-none"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
