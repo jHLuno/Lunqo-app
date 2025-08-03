@@ -163,13 +163,15 @@ const Testimonials = () => {
             {/* Navigation Arrows */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              aria-label="Previous testimonial"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-dark-800/50 border border-dark-700 rounded-full flex items-center justify-center text-dark-300 hover:text-white hover:border-primary-blue/30 transition-all duration-300"
+              aria-label="Next testimonial"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
