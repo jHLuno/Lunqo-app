@@ -95,9 +95,9 @@ const ScrollNavbar = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-md border-t border-dark-700/50"
+            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
           >
-            <div className="container-custom px-4 py-3">
+            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-6 py-4 max-w-4xl mx-4">
               <div className="flex items-center justify-center space-x-8">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-2 text-sm">
