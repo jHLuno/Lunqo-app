@@ -17,8 +17,8 @@ const CTABanner = () => {
             bg-gradient-to-b
             from-primary-blue/30 via-primary-lime/20 via-primary-orange/30
             to-black"></div>*/}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/20 to-primary-orange/25"></div>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent from-90% to-black"></div>
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/20 to-primary-orange/25"></div>
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent from-90% to-black"></div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
