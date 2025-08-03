@@ -165,6 +165,32 @@
     filter: none !important;
     backdrop-filter: none !important;
   }
+
+  /* Nuclear option - force all footer elements to be crisp */
+  #footer {
+    background-color: #000000 !important;
+  }
+
+  #footer * {
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+  }
+
+  #footer img {
+    filter: none !important;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+  }
+
+  #footer .text-white {
+    color: #ffffff !important;
+  }
+
+  #footer .text-dark-300 {
+    color: #ced4da !important;
+  }
 }
 
 /* ===== UTILITY STYLES ===== */

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import lunqoLogo from '../Lunqo.png';
+import lunqoLogo from '../Lunqo-black.png';
 
 const Footer = () => {
   const { t } = useLanguage();
