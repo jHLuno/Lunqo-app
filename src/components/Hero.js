@@ -44,16 +44,6 @@ const Hero = () => {
         </div>
 
         {/* Floating elements */}
-        <motion.div
-          className="absolute top-20 left-10 w-2 h-2 bg-primary-blue rounded-full"
-          animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-40 right-20 w-2 h-2 bg-primary-lime rounded-full"
-          animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        />
       </div>
 
       {/* Content */}
