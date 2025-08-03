@@ -12,8 +12,13 @@ const CTABanner = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Gradient Background - Subtle Blue to Lime to Orange to Black */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/20 to-primary-orange/25"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent from-90% to-black"></div>
+      <div className="absolute inset-x-0 top-0 h-[100px] pointer-events-none bg-[linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%)]"></div>
+      {/*<div className="absolute inset-0 pointer-events-none
+            bg-gradient-to-b
+            from-primary-blue/30 via-primary-lime/20 via-primary-orange/30
+            to-black"></div>*/}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/20 to-primary-orange/25"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent from-90% to-black"></div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
@@ -30,7 +35,7 @@ const CTABanner = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-32 right-10 w-40 h-40 bg-primary-lime/10 rounded-full blur-3xl"
+          className="absolute bottom-32 right-10 w-40 h-40 bg-primary-orange/10 rounded-full blur-3xl"
           animate={{ 
             x: [0, -80, 0],
             y: [0, 60, 0],
