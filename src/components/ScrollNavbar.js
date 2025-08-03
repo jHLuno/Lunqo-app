@@ -101,9 +101,9 @@ const ScrollNavbar = () => {
                 </div>
 
                 {/* Center: Get Early Access Button */}
-                <div className="flex justify-center md:flex-none">
+                <div className="relative w-full md:w-auto">
                   <motion.button
-                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 flex-shrink-0 rounded-xl"
+                    className="relative mx-auto py-2 px-4 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 rounded-xl"
                     style={{
                       border: '2px solid transparent',
                       borderRadius: '12px',
