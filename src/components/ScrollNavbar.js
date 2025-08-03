@@ -86,20 +86,23 @@ const ScrollNavbar = () => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
-            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-6 py-4 max-w-4xl mx-4">
-              <div className="flex items-center justify-center space-x-8">
+            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-4 py-3 max-w-4xl mx-4">
+              <div className="flex items-center justify-center space-x-4 md:space-x-8">
                 {/* Left: Live Reach Counter */}
-                <div className="flex items-center space-x-2 text-sm">
-                  <TrendingUp className="w-4 h-4 text-primary-blue" />
-                  <span className="text-dark-300">Live Reach:</span>
-                  <span className="font-bold text-white">
-                    {formatNumber(reachCount)} views today
-                  </span>
+                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm">
+                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-primary-blue flex-shrink-0" />
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
+                    <span className="text-dark-300 text-xs">Live Reach:</span>
+                    <span className="font-bold text-white text-xs md:text-sm">
+                      {formatNumber(reachCount)}
+                    </span>
+                  </div>
+                  <span className="text-dark-300 text-xs hidden md:inline">views</span>
                 </div>
 
                 {/* Center: Get Early Access Button */}
                 <motion.button
-                  className="relative bg-transparent rounded-xl py-2 px-6 text-sm font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50"
+                  className="relative bg-transparent rounded-xl py-2 px-3 md:px-6 text-xs md:text-sm font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50 flex-shrink-0"
                   style={{
                     background: 'transparent',
                     border: '2px solid',
@@ -111,21 +114,23 @@ const ScrollNavbar = () => {
                   onClick={() => setShowForm(true)}
                 >
                   <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent">
-                    Get Early Access
+                    <span className="hidden md:inline">Get Early Access</span>
+                    <span className="md:hidden">Get Access</span>
                   </span>
                 </motion.button>
 
                 {/* Right: Trust Badges Ticker */}
-                <div className="flex items-center space-x-4 overflow-hidden">
-                  <div className="flex items-center space-x-3 animate-scroll-left">
+                <div className="flex items-center space-x-2 md:space-x-4 overflow-hidden flex-shrink-0">
+                  <div className="flex items-center space-x-2 md:space-x-3 animate-scroll-left">
                     {trustBadges.map((badge, index) => (
-                      <div key={index} className="flex items-center space-x-2 text-sm text-dark-300 whitespace-nowrap">
+                      <div key={index} className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-dark-300 whitespace-nowrap">
                         <img
                           src={badge.logo}
                           alt={badge.name}
-                          className="w-5 h-5 object-contain"
+                          className="w-4 h-4 md:w-5 md:h-5 object-contain flex-shrink-0"
                         />
-                        <span>{badge.name}</span>
+                        <span className="hidden md:inline">{badge.name}</span>
+                        <span className="md:hidden">Yandex</span>
                       </div>
                     ))}
                   </div>
