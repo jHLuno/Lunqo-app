@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
 
 const ScrollNavbar = () => {
   const { t } = useLanguage();
   const navbarRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
 
   // Simple nav items
   const navItems = [
@@ -23,16 +25,34 @@ const ScrollNavbar = () => {
   useEffect(() => {
     console.log('ScrollNavbar mounted, navbarRef:', navbarRef.current);
     
-    // Force the navbar to be visible for testing
-    if (navbarRef.current) {
-      navbarRef.current.style.display = 'block';
-      navbarRef.current.style.opacity = '1';
-      navbarRef.current.style.visibility = 'visible';
-      console.log('Forced navbar to be visible');
-    }
-  }, []);
+    // Scroll handler inspired by user's script
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      console.log('Scroll detected:', { scrollTop, lastScrollTop, isVisible });
+      
+      // Show navbar when scrolling up (scrollTop < lastScrollTop)
+      // Only show if we've scrolled down at least 100px first
+      if (scrollTop < lastScrollTop && scrollTop > 100) {
+        console.log('Setting navbar visible - scrolling up');
+        setIsVisible(true);
+      } else {
+        console.log('Setting navbar hidden - scrolling down or at top');
+        setIsVisible(false);
+      }
+      
+      setLastScrollTop(scrollTop);
+    };
 
-  console.log('ScrollNavbar rendering - ALWAYS VISIBLE');
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollTop, isVisible]);
+
+  console.log('ScrollNavbar rendering, isVisible:', isVisible);
 
   return (
     <>
@@ -50,7 +70,7 @@ const ScrollNavbar = () => {
           fontWeight: 'bold'
         }}
       >
-        SCROLL NAVBAR TEST
+        SCROLL NAVBAR TEST - {isVisible ? 'VISIBLE' : 'HIDDEN'}
       </div>
       
       <div 
@@ -70,11 +90,12 @@ const ScrollNavbar = () => {
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
           minWidth: '400px',
           maxWidth: '600px',
-          display: 'block',
-          opacity: 1,
-          visibility: 'visible',
+          display: isVisible ? 'block' : 'none',
+          opacity: isVisible ? 1 : 0,
+          visibility: isVisible ? 'visible' : 'hidden',
           color: 'white',
-          pointerEvents: 'auto'
+          pointerEvents: isVisible ? 'auto' : 'none',
+          transition: 'opacity 0.3s ease, visibility 0.3s ease'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
