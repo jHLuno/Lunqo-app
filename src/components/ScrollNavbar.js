@@ -73,7 +73,8 @@ const ScrollNavbar = () => {
           display: 'block',
           opacity: 1,
           visibility: 'visible',
-          color: 'white'
+          color: 'white',
+          pointerEvents: 'auto'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
@@ -86,8 +87,8 @@ const ScrollNavbar = () => {
             />
           </div>
 
-          {/* Navigation Links - Center */}
-          <div style={{ display: 'none', alignItems: 'center', gap: '24px', margin: '0 16px' }} className="md:flex">
+          {/* Navigation Links - Center - Always visible */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '0 16px' }}>
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -95,9 +96,10 @@ const ScrollNavbar = () => {
                 style={{ 
                   color: '#d1d5db', 
                   textDecoration: 'none',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontWeight: '500',
-                  transition: 'color 0.2s'
+                  transition: 'color 0.2s',
+                  whiteSpace: 'nowrap'
                 }}
                 onMouseEnter={(e) => e.target.style.color = 'white'}
                 onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
@@ -116,9 +118,10 @@ const ScrollNavbar = () => {
               padding: '8px 16px',
               borderRadius: '8px',
               border: 'none',
-              fontSize: '14px',
+              fontSize: '12px',
               cursor: 'pointer',
-              transition: 'background-color 0.2s'
+              transition: 'background-color 0.2s',
+              whiteSpace: 'nowrap'
             }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#1d4ed8'}
             onMouseLeave={(e) => e.target.style.backgroundColor = '#2563eb'}
