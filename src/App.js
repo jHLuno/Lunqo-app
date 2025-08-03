@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useMemo } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 
@@ -14,8 +14,8 @@ const Testimonials = lazy(() => import('./components/Testimonials'));
 const CTABanner = lazy(() => import('./components/CTABanner'));
 const Footer = lazy(() => import('./components/Footer'));
 
-// Simple loading fallback component - memoized to prevent unnecessary re-renders
-const LoadingFallback = React.memo(() => (
+// Simple loading fallback component
+const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-dark-900">
     <div className="flex items-center space-x-2">
       <div className="w-2 h-2 bg-primary-blue rounded-full animate-pulse"></div>
@@ -23,14 +23,10 @@ const LoadingFallback = React.memo(() => (
       <div className="w-2 h-2 bg-primary-blue rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
     </div>
   </div>
-));
+);
 
-// Main App Content Component - memoized to prevent unnecessary re-renders
-const AppContent = React.memo(() => {
-  // Memoize fallback components to prevent unnecessary re-renders
-  const sectionFallback = useMemo(() => <div className="h-32 bg-dark-800/8" />, []);
-  const footerFallback = useMemo(() => <div className="h-32 bg-dark-900" />, []);
-
+// Main App Content Component
+const AppContent = () => {
   return (
     <div className="min-h-screen">
       <Suspense fallback={<LoadingFallback />}>
@@ -46,52 +42,47 @@ const AppContent = React.memo(() => {
           <Hero />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <AudienceStrip />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <FeatureTriad />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <AnalyticsDemo />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <WhyLunqo />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <Testimonials />
         </Suspense>
         
-        <Suspense fallback={sectionFallback}>
+        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <CTABanner />
         </Suspense>
       </main>
       
-      <Suspense fallback={footerFallback}>
+      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
         <Footer />
       </Suspense>
     </div>
   );
-});
-
-// Memoize routes to prevent unnecessary re-renders
-const AppRoutes = React.memo(() => (
-  <Routes>
-    <Route path="/en" element={<AppContent />} />
-    <Route path="/ru" element={<AppContent />} />
-    <Route path="/" element={<Navigate to="/en" replace />} />
-  </Routes>
-));
+};
 
 function App() {
   return (
     <Router>
       <LanguageProvider>
-        <AppRoutes />
+        <Routes>
+          <Route path="/en" element={<AppContent />} />
+          <Route path="/ru" element={<AppContent />} />
+          <Route path="/" element={<Navigate to="/en" replace />} />
+        </Routes>
       </LanguageProvider>
     </Router>
   );

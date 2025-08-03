@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { en } from '../translations/en';
 import { ru } from '../translations/ru';
@@ -18,14 +18,12 @@ export const LanguageProvider = ({ children }) => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState('en');
 
-  // Memoize translations object to prevent unnecessary re-renders
-  const translations = useMemo(() => ({
+  const translations = {
     en,
     ru
-  }), []);
+  };
 
-  // Optimize translation function with useCallback
-  const t = useCallback((key) => {
+  const t = (key) => {
     const keys = key.split('.');
     let value = translations[language];
     
@@ -39,10 +37,9 @@ export const LanguageProvider = ({ children }) => {
     }
     
     return value;
-  }, [language, translations]);
+  };
 
-  // Optimize language change function with useCallback
-  const changeLanguage = useCallback((newLanguage) => {
+  const changeLanguage = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem('lunqo-language', newLanguage);
     
@@ -50,7 +47,7 @@ export const LanguageProvider = ({ children }) => {
     const currentPath = location.pathname;
     const newPath = currentPath.replace(/^\/(en|ru)/, `/${newLanguage}`);
     navigate(newPath);
-  }, [location.pathname, navigate]);
+  };
 
   useEffect(() => {
     // Extract language from URL path
@@ -78,13 +75,12 @@ export const LanguageProvider = ({ children }) => {
     }
   }, [location.pathname, navigate, translations]);
 
-  // Memoize context value to prevent unnecessary re-renders
-  const value = useMemo(() => ({
+  const value = {
     language,
     changeLanguage,
     t,
     translations
-  }), [language, changeLanguage, t, translations]);
+  };
 
   return (
     <LanguageContext.Provider value={value}>

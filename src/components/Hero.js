@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, ArrowRight, MapPin, Grid3X3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -6,29 +6,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 const Hero = () => {
   const { t } = useLanguage();
 
-  // Memoize stats to prevent unnecessary re-renders
-  const stats = useMemo(() => [
+  const stats = [
     { label: t('hero.stats.fleetsServed'), value: '500+' },
     { label: t('hero.stats.dailyImpressions'), value: '2.5M+' },
     { label: t('hero.stats.citiesCovered'), value: '25+' },
     { label: t('hero.stats.uptime'), value: '99.9%' }
-  ], [t]);
+  ];
 
-  // Optimize click handlers with useCallback
-  const handleDemoClick = useCallback(() => {
+  const handleDemoClick = () => {
     window.open(t('urls.demo'), '_blank', 'noopener,noreferrer');
-  }, [t]);
+  };
 
-  const handleWatchClick = useCallback(() => {
+  const handleWatchClick = () => {
     window.open(t('urls.website') + '/overview', '_blank', 'noopener,noreferrer');
-  }, [t]);
-
-  // Memoize background style to prevent unnecessary re-renders
-  const backgroundStyle = useMemo(() => ({
-    backgroundImage: `radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
-                     radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.1) 0%, transparent 50%)`,
-    backgroundSize: '100px 100px, 150px 150px'
-  }), []);
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -38,7 +29,11 @@ const Hero = () => {
         <div className="absolute inset-0 opacity-5">
           <div 
             className="absolute inset-0" 
-            style={backgroundStyle}
+            style={{
+              backgroundImage: `radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+                               radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.1) 0%, transparent 50%)`,
+              backgroundSize: '100px 100px, 150px 150px'
+            }} 
           />
         </div>
 
