@@ -87,9 +87,9 @@ const ScrollNavbar = () => {
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
             <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 md:py-4 mx-auto md:mx-4">
-              <div className="relative flex items-center justify-between w-full">
-                {/* Left: Live Reach Counter */}
-                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">
+              <div className="relative flex items-center w-full md:w-auto">
+                {/* left block gets flex-1 */}
+                <div className="flex-1 flex items-center space-x-1 md:space-x-2 text-xs md:text-base">
                   <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex items-center space-x-1">
                     <span className="text-dark-300 text-xs md:text-sm hidden md:inline">Views:</span>
@@ -100,15 +100,8 @@ const ScrollNavbar = () => {
                   </div>
                 </div>
 
-                {/* Center: Get Early Access Button */}
-                <div
-                  className="
-                    /* mobile (default) – keep it absolutely centred */
-                    absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                    /* ≥ 768 px – put it back into normal flex flow */
-                    md:static md:translate-x-0 md:translate-y-0 md:mx-8
-                  "
-                >
+                {/* centre wrapper stays static / absolute logic as before */}
+                <div className="flex-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none">
                   <motion.button
                     className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold
                                transition-transform duration-300 hover:scale-105
@@ -133,8 +126,8 @@ const ScrollNavbar = () => {
                   </motion.button>
                 </div>
 
-                {/* Right: Trust Badges Ticker */}
-                <div className="flex items-center space-x-2 md:space-x-4 overflow-hidden flex-shrink-0">
+                {/* right block also flex-1 and right-aligned text */}
+                <div className="flex-1 flex items-center justify-end space-x-2 md:space-x-4 overflow-hidden">
                   <div className="flex items-center space-x-2 md:space-x-3">
                     {trustBadges.map((badge, index) => (
                       <div key={index} className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-dark-300 whitespace-nowrap">
