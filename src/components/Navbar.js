@@ -105,8 +105,8 @@ const Navbar = () => {
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
-          ? 'backdrop-blur-md border border-dark-700/50 shadow-lg' 
-          : 'backdrop-blur-sm border border-dark-700/30'
+          ? 'glass-effect border border-dark-700/50 shadow-lg'   /* on scroll */
+          : 'backdrop-blur-md'                                   /* at top – absolutely transparent */
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
