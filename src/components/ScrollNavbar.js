@@ -97,7 +97,7 @@ const ScrollNavbar = () => {
                       {formatNumber(reachCount)}
                     </span>
                   </div>
-                  <span className="text-dark-300 text-xs hidden md:text-base">views</span>
+                  <span className="text-dark-300 text-xs md:text-sm">views</span>
                 </div>
 
                 {/* Center: Get Early Access Button */}
@@ -107,7 +107,7 @@ const ScrollNavbar = () => {
                     border: '2px solid transparent',
                     borderRadius: '12px',
                     background:
-                      'linear-gradient(#0e0e19, #0e0e19) padding-box, ' +
+                      'linear-gradient(rgba(13, 17, 23, 0.95), rgba(13, 17, 23, 0.95)) padding-box, ' +
                       'linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) border-box'
                   }}
                   whileHover={{ scale: 1.05 }}
