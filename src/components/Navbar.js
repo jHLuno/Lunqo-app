@@ -99,7 +99,7 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="w-full z-[99999] top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300 fixed"
+      className="w-full z-[99999] fixed top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300"
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
