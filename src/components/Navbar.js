@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Globe } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,34 +13,61 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const navItems = [
+  // Memoize nav items to prevent unnecessary re-renders
+  const navItems = useMemo(() => [
     { name: t('nav.solutions'), href: '#solutions' }, 
     { name: t('nav.analytics'), href: '#analytics' },
     { name: t('nav.advantages'), href: '#advantages' },
     { name: t('nav.testimonials'), href: '#testimonials' },
     { name: t('nav.contactUs'), href: '#footer' },
-  ];
+  ], [t]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Optimize scroll handler with useCallback
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 20);
   }, []);
 
-  const handleLanguageChange = (newLanguage) => {
-    changeLanguage(newLanguage);
-    const currentPath = location.pathname;
-    const newPath = currentPath.replace(/^\/(en|ru)/, `/${newLanguage}`);
-    navigate(newPath);
-    setIsLanguageMenuOpen(false);
-  };
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
-  const handleDemoClick = () => {
+  // Optimize language change handler
+  const handleLanguageChange = useCallback((newLanguage) => {
+    changeLanguage(newLanguage);
+    setIsLanguageMenuOpen(false);
+  }, [changeLanguage]);
+
+  // Optimize demo click handler
+  const handleDemoClick = useCallback(() => {
     window.open(t('urls.demo'), '_blank', 'noopener,noreferrer');
-  };
+  }, [t]);
+
+  // Optimize mobile menu toggle
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(prev => !prev);
+  }, []);
+
+  // Optimize language menu toggle
+  const toggleLanguageMenu = useCallback(() => {
+    setIsLanguageMenuOpen(prev => !prev);
+  }, []);
+
+  // Memoize logo component
+  const LogoComponent = useMemo(() => (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.2 }}
+      className="flex items-center flex-shrink-0"
+    >
+      <img
+        src={lunqoLogo}
+        alt="Lunqo Logo"
+        className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
+        loading="eager"
+      />
+    </motion.div>
+  ), []);
 
   return (
     <motion.nav
@@ -57,18 +84,7 @@ const Navbar = () => {
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center flex-shrink-0"
-          >
-            <img
-              src={lunqoLogo}
-              alt="Lunqo Logo"
-              className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
-              loading="eager"
-            />
-          </motion.div>
+          {LogoComponent}
 
           {/* Desktop Navigation - Center */}
           <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
@@ -91,7 +107,7 @@ const Navbar = () => {
             <div className="relative">
               <motion.button
                 className="flex items-center space-x-2 text-white hover:text-primary-blue transition-colors duration-200"
-                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
+                onClick={toggleLanguageMenu}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -141,7 +157,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2 text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

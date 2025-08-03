@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { X, Users, TrendingUp } from 'lucide-react';
@@ -12,37 +12,39 @@ const ScrollNavbar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
 
-  // Trust badges with actual logo
-  const trustBadges = [
+  // Trust badges with actual logo - memoized to prevent unnecessary re-renders
+  const trustBadges = useMemo(() => [
     { name: 'Yandex Taxi', logo: '/images/Yandex_Go_icon.png' },
-  ];
+  ], []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Show bottom rail when scrolling up
-      if (currentScrollY < lastScrollY && currentScrollY > 200) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
-        setIsVisible(false);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Optimized scroll handler with useCallback
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    
+    // Show bottom rail when scrolling up
+    if (currentScrollY < lastScrollY && currentScrollY > 200) {
+      setIsVisible(true);
+    } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
+      setIsVisible(false);
+    }
+    
+    setLastScrollY(currentScrollY);
   }, [lastScrollY]);
 
-  // Auto-increment reach count every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setReachCount(prev => prev + Math.floor(Math.random() * 30) + 20); // Add 20-50 views
-    }, 30000);
-    
-    return () => clearInterval(interval);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  // Auto-increment reach count every 30 seconds - optimized with useCallback
+  const incrementReachCount = useCallback(() => {
+    setReachCount(prev => prev + Math.floor(Math.random() * 30) + 20);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(incrementReachCount, 30000);
+    return () => clearInterval(interval);
+  }, [incrementReachCount]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,9 +73,36 @@ const ScrollNavbar = () => {
     }
   };
 
-  const formatNumber = (num) => {
+  const formatNumber = useCallback((num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
+  }, []);
+
+  // Memoized button component for better performance
+  const EarlyAccessButton = useMemo(() => (
+    <motion.button
+      className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold
+                 transition-transform duration-300 hover:scale-105
+                 focus:outline-none focus:ring-2 focus:ring-primary-blue/50
+                 rounded-xl"
+      style={{
+        border: '2px solid transparent',
+        borderRadius: '12px',
+        background:
+          'linear-gradient(rgba(13,17,23,.95), rgba(13,17,23,.95)) padding-box,' +
+          'linear-gradient(90deg,#18A0FB,#59FF70,#FF7A45) border-box'
+      }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => setShowForm(true)}
+      aria-label="Get Early Access"
+    >
+      <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange
+                       bg-clip-text text-transparent">
+        <span className="hidden md:inline">Get Early Access</span>
+        <span className="md:hidden">Get Access</span>
+      </span>
+    </motion.button>
+  ), []);
 
   return (
     <>
@@ -96,41 +125,21 @@ const ScrollNavbar = () => {
                     <span className="font-bold text-white text-xs md:text-base">
                       {formatNumber(reachCount)}
                     </span>
-                    {/*<span className="text-dark-300 text-xs md:text-sm">views</span>*/}
                   </div>
                 </div>
 
-                {/* Center: Get Early Access Button */}
-                <div
-                  className="
-                    /* mobile (default) – keep it absolutely centred */
-                    absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                    /* ≥ 768 px – put it back into normal flex flow */
-                    md:static md:translate-x-0 md:translate-y-0 md:mx-8
-                  "
-                >
-                  <motion.button
-                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold
-                               transition-transform duration-300 hover:scale-105
-                               focus:outline-none focus:ring-2 focus:ring-primary-blue/50
-                               rounded-xl"
-                    style={{
-                      border: '2px solid transparent',
-                      borderRadius: '12px',
-                      background:
-                        'linear-gradient(rgba(13,17,23,.95), rgba(13,17,23,.95)) padding-box,' +
-                        'linear-gradient(90deg,#18A0FB,#59FF70,#FF7A45) border-box'
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowForm(true)}
+                {/* Center: Get Early Access Button - FIXED DESKTOP CENTERING */}
+                <div className="flex-1 flex justify-center">
+                  <div
+                    className="
+                      /* mobile (default) – keep it absolutely centred */
+                      absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                      /* ≥ 768 px – put it back into normal flex flow */
+                      md:static md:translate-x-0 md:translate-y-0
+                    "
                   >
-                    <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange
-                                     bg-clip-text text-transparent">
-                      <span className="hidden md:inline">Get Early Access</span>
-                      <span className="md:hidden">Get Access</span>
-                    </span>
-                  </motion.button>
+                    {EarlyAccessButton}
+                  </div>
                 </div>
 
                 {/* Right: Trust Badges Ticker */}
@@ -142,6 +151,7 @@ const ScrollNavbar = () => {
                           src={badge.logo}
                           alt={badge.name}
                           className="w-4 h-4 md:w-6 md:h-6 object-contain flex-shrink-0"
+                          loading="lazy"
                         />
                         <span className="hidden md:inline">{badge.name}</span>
                         <span className="md:hidden">Yandex</span>
@@ -177,6 +187,7 @@ const ScrollNavbar = () => {
                 <button
                   onClick={() => setShowForm(false)}
                   className="text-dark-300 hover:text-white transition-colors"
+                  aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
                 </button>
