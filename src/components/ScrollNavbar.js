@@ -99,10 +99,13 @@ const ScrollNavbar = () => {
 
                 {/* Center: Get Early Access Button */}
                 <motion.button
-                  className="relative bg-transparent border-2 border-transparent bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-border rounded-xl py-2 px-6 text-sm font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50"
+                  className="relative bg-transparent border-2 border-transparent rounded-xl py-2 px-6 text-sm font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50"
                   style={{
-                    background: 'linear-gradient(white, white) padding-box, linear-gradient(to right, #18A0FB, #59FF70, #FF7A45) border-box',
-                    border: '2px solid transparent'
+                    background: 'transparent',
+                    border: '2px solid transparent',
+                    backgroundImage: 'linear-gradient(transparent, transparent), linear-gradient(to right, #18A0FB, #59FF70, #FF7A45)',
+                    backgroundOrigin: 'border-box',
+                    backgroundClip: 'border-box'
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
