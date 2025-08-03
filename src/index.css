@@ -40,7 +40,7 @@
     background-attachment: fixed !important;
     color: #ffffff;
     overflow-x: hidden;
-    position: relative;
+    position: static;
     min-height: 100vh;
     /* Performance optimizations */
     will-change: scroll-position;
@@ -241,6 +241,15 @@
     z-index: 9999 !important;
     background: transparent !important;
     transform: none !important;
+  }
+
+  /* Prevent any scroll containers from interfering with fixed positioning */
+  html, body, #root {
+    overflow-x: hidden;
+    overflow-y: visible;
+    position: static;
+    transform: none !important;
+    filter: none !important;
   }
 
   /* Optimize images for performance */
