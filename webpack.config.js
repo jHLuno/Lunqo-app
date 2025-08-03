@@ -177,18 +177,8 @@ module.exports = (env, argv) => {
             name: 'vendors',
             chunks: 'all',
             priority: 10,
-          },
-          framerMotion: {
-            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-            name: 'framer-motion',
-            chunks: 'all',
-            priority: 20,
-          },
-          lucideReact: {
-            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-            name: 'lucide-react',
-            chunks: 'all',
-            priority: 20,
+            minSize: 20000,
+            maxSize: 250000,
           },
           common: {
             name: 'common',
@@ -196,6 +186,7 @@ module.exports = (env, argv) => {
             chunks: 'all',
             priority: 5,
             reuseExistingChunk: true,
+            minSize: 10000,
           },
         },
       },

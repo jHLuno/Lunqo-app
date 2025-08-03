@@ -56,7 +56,7 @@ const Navbar = () => {
           : 'bg-dark-800/30 backdrop-blur-sm border border-dark-700/30'
       }`}>
         <div className="flex items-center justify-between w-full">
-          {/* Logo */}
+          {/* Logo - Left side */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
@@ -85,7 +85,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Language Switcher and CTA Button */}
+          {/* Right side: Language Switcher, CTA Button, and Mobile Menu */}
           <div className="flex items-center space-x-4 flex-shrink-0">
             {/* Language Switcher */}
             <div className="relative">
@@ -94,6 +94,7 @@ const Navbar = () => {
                 onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label={`Change language. Current: ${language.toUpperCase()}`}
               >
                 <Globe className="w-5 h-5" />
                 <span className="text-sm font-medium">{language.toUpperCase()}</span>
@@ -127,27 +128,27 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* CTA Button */}
+            {/* CTA Button - Hidden on mobile */}
             <motion.button
-              className="btn-primary"
+              className="btn-primary hidden md:block"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleDemoClick}
             >
               {t('nav.bookDemo')}
             </motion.button>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 text-white hover:text-primary-blue transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -174,27 +175,7 @@ const Navbar = () => {
                 </a>
               ))}
               
-              {/* Mobile Language Switcher */}
-              <div className="flex items-center space-x-4 py-2">
-                <span className="text-dark-300 text-sm">Language:</span>
-                <button
-                  className={`px-3 py-1 rounded-lg text-sm transition-colors duration-200 ${
-                    language === 'en' ? 'bg-primary-blue text-white' : 'bg-dark-700 text-white hover:bg-dark-600'
-                  }`}
-                  onClick={() => handleLanguageChange('en')}
-                >
-                  EN
-                </button>
-                <button
-                  className={`px-3 py-1 rounded-lg text-sm transition-colors duration-200 ${
-                    language === 'ru' ? 'bg-primary-blue text-white' : 'bg-dark-700 text-white hover:bg-dark-600'
-                  }`}
-                  onClick={() => handleLanguageChange('ru')}
-                >
-                  RU
-                </button>
-              </div>
-              
+              {/* Mobile CTA Button */}
               <button 
                 className="w-full btn-primary mt-4"
                 onClick={handleDemoClick}

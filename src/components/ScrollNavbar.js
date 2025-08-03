@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { X, Users, TrendingUp } from 'lucide-react';
@@ -17,33 +17,38 @@ const ScrollNavbar = () => {
     { name: 'Yandex Taxi', logo: '/images/Yandex_Go_icon.png' },
   ];
 
+  // Optimized scroll handler with proper throttling
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    
+    // Show bottom rail when scrolling up
+    if (currentScrollY < lastScrollY && currentScrollY > 200) {
+      setIsVisible(true);
+    } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
+      setIsVisible(false);
+    }
+    
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY]);
+
   useEffect(() => {
     let ticking = false;
     
-    const handleScroll = () => {
+    const throttledScrollHandler = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-          
-          // Show bottom rail when scrolling up
-          if (currentScrollY < lastScrollY && currentScrollY > 200) {
-            setIsVisible(true);
-          } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
-            setIsVisible(false);
-          }
-          
-          setLastScrollY(currentScrollY);
+          handleScroll();
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+    window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+    return () => window.removeEventListener('scroll', throttledScrollHandler);
+  }, [handleScroll]);
 
-  // Auto-increment reach count every 30 seconds
+  // Auto-increment reach count every 30 seconds with proper cleanup
   useEffect(() => {
     const interval = setInterval(() => {
       setReachCount(prev => prev + Math.floor(Math.random() * 30) + 20); // Add 20-50 views
@@ -70,9 +75,11 @@ const ScrollNavbar = () => {
         setShowForm(false);
         alert('Thank you! You\'ve been added to the waitlist.');
       } else {
+        console.error('Form submission failed:', response.status, response.statusText);
         alert('Something went wrong. Please try again.');
       }
     } catch (error) {
+      console.error('Network error during form submission:', error);
       alert('Network error. Please try again.');
     } finally {
       setIsSubmitting(false);

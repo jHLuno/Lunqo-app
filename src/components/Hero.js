@@ -43,11 +43,12 @@ const Hero = () => {
           />
         </div>
 
-        {/* Creative Decorative Elements */}
+        {/* Creative Decorative Elements - Optimized for Performance */}
         
-        {/* Animated Geometric Screens */}
+        {/* Animated Geometric Screens - Reduced to 2 instead of 8 */}
         <motion.div
           className="absolute top-1/4 left-1/4 w-16 h-10 bg-gradient-to-r from-primary-blue/20 to-primary-lime/20 rounded-lg border border-primary-blue/30"
+          style={{ willChange: 'transform' }}
           animate={{ 
             rotate: [0, 5, 0, -5, 0],
             scale: [1, 1.05, 1],
@@ -58,6 +59,7 @@ const Hero = () => {
         
         <motion.div
           className="absolute top-1/3 right-1/4 w-12 h-8 bg-gradient-to-l from-primary-lime/25 to-primary-blue/25 rounded-md border border-primary-lime/40"
+          style={{ willChange: 'transform' }}
           animate={{ 
             rotate: [0, -3, 0, 3, 0],
             y: [0, -10, 0, 10, 0],
@@ -66,9 +68,10 @@ const Hero = () => {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
 
-        {/* Floating Light Orbs */}
+        {/* Floating Light Orbs - Reduced to 2 instead of 8 */}
         <motion.div
           className="absolute top-1/5 right-1/3 w-3 h-3 bg-primary-lime rounded-full"
+          style={{ willChange: 'transform' }}
           animate={{ 
             x: [0, 20, -10, 0],
             y: [0, -15, 10, 0],
@@ -80,6 +83,7 @@ const Hero = () => {
         
         <motion.div
           className="absolute bottom-1/3 left-1/5 w-2 h-2 bg-primary-blue rounded-full"
+          style={{ willChange: 'transform' }}
           animate={{ 
             x: [0, -25, 15, 0],
             y: [0, 20, -15, 0],
@@ -89,9 +93,10 @@ const Hero = () => {
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
 
-        {/* Animated Connection Lines */}
+        {/* Animated Connection Lines - Optimized */}
         <motion.svg
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-10"
+          style={{ willChange: 'transform' }}
           animate={{ rotate: 360 }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
@@ -113,14 +118,15 @@ const Hero = () => {
           </defs>
         </motion.svg>
 
-        {/* Digital Particles */}
-        {[...Array(8)].map((_, i) => (
+        {/* Digital Particles - Reduced from 8 to 4 */}
+        {[...Array(4)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-gradient-to-r from-primary-blue to-primary-lime rounded-full"
             style={{
-              left: `${20 + (i * 10)}%`,
-              top: `${30 + (i * 5)}%`,
+              left: `${20 + (i * 15)}%`,
+              top: `${30 + (i * 10)}%`,
+              willChange: 'transform'
             }}
             animate={{
               y: [0, -30, 30, 0],
@@ -137,9 +143,10 @@ const Hero = () => {
           />
         ))}
 
-        {/* Holographic Grid Effect */}
+        {/* Holographic Grid Effect - Optimized */}
         <motion.div
           className="absolute bottom-1/4 right-1/5 w-20 h-20 border border-primary-lime/20 rounded-lg"
+          style={{ willChange: 'transform' }}
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 180, 270, 360],
@@ -151,9 +158,10 @@ const Hero = () => {
           <div className="absolute inset-4 border border-primary-lime/40 rounded-sm" />
         </motion.div>
 
-        {/* Pulsing Tech Rings */}
+        {/* Pulsing Tech Rings - Optimized */}
         <motion.div
           className="absolute top-1/6 left-1/6 w-24 h-24 border-2 border-primary-blue/20 rounded-full"
+          style={{ willChange: 'transform' }}
           animate={{
             scale: [1, 1.5, 1],
             opacity: [0.3, 0.7, 0.3],
@@ -163,6 +171,7 @@ const Hero = () => {
         >
           <motion.div
             className="absolute inset-4 border border-primary-lime/30 rounded-full"
+            style={{ willChange: 'transform' }}
             animate={{
               scale: [1, 0.8, 1],
               rotate: [360, 180, 0]
@@ -196,7 +205,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight mb-6"
           >
             <span className="text-white">Lunqo: </span>
             <span className="gradient-text">Light-Up Ads</span>
@@ -209,7 +218,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-            className="text-lg sm:text-xl lg:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
             {t('hero.subtitle')}
           </motion.p>
@@ -226,6 +235,7 @@ const Hero = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleDemoClick}
+              aria-label="Schedule a live demo of Lunqo platform"
             >
               <span>{t('hero.scheduleDemo')}</span>
               <ArrowRight className="w-5 h-5" />
@@ -236,6 +246,7 @@ const Hero = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleWatchClick}
+              aria-label="Watch demo video of Lunqo platform"
             >
               <Play className="w-5 h-5" />
               <span>{t('hero.watchDemo')}</span>

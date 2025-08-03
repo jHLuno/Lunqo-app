@@ -39,7 +39,6 @@ module.exports = {
         'fade-in': 'fadeIn 0.6s ease-out',
         'slide-up': 'slideUp 0.6s ease-out',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -53,10 +52,6 @@ module.exports = {
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 20px rgba(24, 160, 251, 0.3)' },
           '50%': { boxShadow: '0 0 40px rgba(24, 160, 251, 0.6)' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
         },
       },
       boxShadow: {

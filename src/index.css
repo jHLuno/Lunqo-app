@@ -79,7 +79,7 @@
 
   /* Navigation */
   .nav-link {
-    @apply text-dark-300 hover:text-white transition-colors duration-200 font-medium;
+    @apply text-dark-200 hover:text-white transition-colors duration-200 font-medium;
   }
 
   /* Layout Components */

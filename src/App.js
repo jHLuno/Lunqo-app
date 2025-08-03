@@ -2,17 +2,19 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 
-// Lazy load components for better performance
+// Lazy load only heavy components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
 const ScrollNavbar = lazy(() => import('./components/ScrollNavbar'));
 const Hero = lazy(() => import('./components/Hero'));
-const AudienceStrip = lazy(() => import('./components/AudienceStrip'));
-const FeatureTriad = lazy(() => import('./components/FeatureTriad'));
 const AnalyticsDemo = lazy(() => import('./components/AnalyticsDemo'));
 const WhyLunqo = lazy(() => import('./components/WhyLunqo'));
 const Testimonials = lazy(() => import('./components/Testimonials'));
-const CTABanner = lazy(() => import('./components/CTABanner'));
-const Footer = lazy(() => import('./components/Footer'));
+
+// Import simple components directly (no lazy loading needed)
+import AudienceStrip from './components/AudienceStrip';
+import FeatureTriad from './components/FeatureTriad';
+import CTABanner from './components/CTABanner';
+import Footer from './components/Footer';
 
 // Simple loading fallback component
 const LoadingFallback = () => (
@@ -42,13 +44,9 @@ const AppContent = () => {
           <Hero />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <AudienceStrip />
-        </Suspense>
+        <AudienceStrip />
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <FeatureTriad />
-        </Suspense>
+        <FeatureTriad />
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <AnalyticsDemo />
@@ -62,14 +60,10 @@ const AppContent = () => {
           <Testimonials />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <CTABanner />
-        </Suspense>
+        <CTABanner />
       </main>
       
-      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-        <Footer />
-      </Suspense>
+      <Footer />
     </div>
   );
 };
