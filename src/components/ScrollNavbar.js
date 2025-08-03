@@ -100,22 +100,33 @@ const ScrollNavbar = () => {
                   </div>
                 </div>
 
-                {/* Center: Get Early Access Button - Strictly Centered */}
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                {/* Center: Get Early Access Button */}
+                <div
+                  className="
+                    /* mobile (default) – keep it absolutely centred */
+                    absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                    /* ≥ 768 px – put it back into normal flex flow */
+                    md:static md:translate-x-0 md:translate-y-0
+                  "
+                >
                   <motion.button
-                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 rounded-xl"
+                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold
+                               transition-transform duration-300 hover:scale-105
+                               focus:outline-none focus:ring-2 focus:ring-primary-blue/50
+                               rounded-xl"
                     style={{
                       border: '2px solid transparent',
                       borderRadius: '12px',
                       background:
-                        'linear-gradient(rgba(13, 17, 23, 0.95), rgba(13, 17, 23, 0.95)) padding-box, ' +
-                        'linear-gradient(90deg, #18A0FB, #59FF70, #FF7A45) border-box'
+                        'linear-gradient(rgba(13,17,23,.95), rgba(13,17,23,.95)) padding-box,' +
+                        'linear-gradient(90deg,#18A0FB,#59FF70,#FF7A45) border-box'
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowForm(true)}
                   >
-                    <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-primary-blue via-primary-lime to-primary-orange
+                                     bg-clip-text text-transparent">
                       <span className="hidden md:inline">Get Early Access</span>
                       <span className="md:hidden">Get Access</span>
                     </span>
