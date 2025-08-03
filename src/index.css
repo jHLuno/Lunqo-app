@@ -191,7 +191,6 @@
     filter: blur(120px);
     z-index: -1;
     /* GPU acceleration for background animation */
-    transform: translateZ(0);
     will-change: transform;
     animation: backgroundShift 30s ease-in-out infinite;
   }
@@ -248,7 +247,7 @@
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    transform: translateZ(0);
+    will-change: transform;
   }
 }
 
@@ -256,21 +255,18 @@
   .btn-primary {
     @apply bg-primary-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
     /* GPU acceleration for button animations */
-    transform: translateZ(0);
     will-change: transform;
   }
 
   .btn-secondary {
     @apply bg-transparent border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-opacity-50;
     /* GPU acceleration for button animations */
-    transform: translateZ(0);
     will-change: transform;
   }
 
   .card {
     @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 transition-all duration-300 hover:border-primary-blue/30 hover:shadow-glow;
     /* GPU acceleration for card animations */
-    transform: translateZ(0);
     will-change: transform;
   }
 
@@ -281,7 +277,7 @@
   .glass-effect {
     @apply bg-dark-800/20 backdrop-blur-md border border-dark-700/50;
     /* GPU acceleration for glass effect */
-    transform: translateZ(0);
+    will-change: transform;
   }
 
   .nav-link {
@@ -299,19 +295,17 @@
   /* High-performance animation classes */
   .animate-120fps {
     /* Optimized for 120fps displays */
-    transform: translateZ(0);
     will-change: transform, opacity;
     backface-visibility: hidden;
   }
 
   .hover-scale {
     transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateZ(0);
     will-change: transform;
   }
 
   .hover-scale:hover {
-    transform: translateZ(0) scale(1.02);
+    transform: scale(1.02);
   }
 }
 
@@ -327,7 +321,6 @@
   /* Optimized float animation with GPU acceleration */
   .animate-float {
     animation: float 6s ease-in-out infinite;
-    transform: translateZ(0);
     will-change: transform;
   }
 
@@ -343,27 +336,25 @@
   /* Optimized pulse glow animation */
   .animate-pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite;
-    transform: translateZ(0);
     will-change: opacity, transform;
   }
 
   @keyframes pulseGlow {
     0%, 100% { 
       opacity: 1; 
-      transform: translate3d(0, 0, 0) scale(1); 
+      transform: scale(1); 
     }
     50% { 
       opacity: 0.7; 
-      transform: translate3d(0, 0, 0) scale(1.05); 
+      transform: scale(1.05); 
     }
 }
 
   /* Performance utility classes */
   .gpu-accelerated {
-    transform: translateZ(0);
+    will-change: transform;   /* keeps perf, no layout side-effects */
     backface-visibility: hidden;
     perspective: 1000px;
-    will-change: transform;
   }
 
   .smooth-transition {
@@ -387,7 +378,7 @@
 ::-webkit-scrollbar-thumb {
   background: #18A0FB;
   border-radius: 4px;
-  transform: translateZ(0);
+  will-change: transform;
 }
 
 ::-webkit-scrollbar-thumb:hover {

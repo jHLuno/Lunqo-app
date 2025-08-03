@@ -99,14 +99,13 @@ const Navbar = () => {
       initial="initial"
       animate="animate"
       variants={navVariants}
-      className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 flex justify-center items-start pt-4"
-      style={{ position: 'fixed' }}
+      className="w-full z-[9999] top-0 left-0 right-0 flex justify-center items-start pt-4 transition-all duration-300 fixed"
     >
       {/* Glass Effect Container */}
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
-          ? 'glass-effect border border-dark-700/50 shadow-lg'   /* on scroll */
-          : 'backdrop-blur-md'                                   /* at top – absolutely transparent */
+          ? 'backdrop-blur-md border border-dark-700/50 shadow-lg'   /* on scroll */
+          : 'backdrop-blur-md'                                      /* at top – absolutely transparent */
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
@@ -212,7 +211,7 @@ const Navbar = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="lg:hidden backdrop-blur-md bg-dark-800/20 border border-dark-700/50 rounded-xl mt-4"
+            className="lg:hidden backdrop-blur-md border border-dark-700/50 rounded-xl mt-4"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
