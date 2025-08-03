@@ -28,45 +28,47 @@ const LoadingFallback = () => (
 // Main App Content Component
 const AppContent = () => {
   return (
-    <div className="min-h-screen gpu-accelerated">
+    <>
       <Suspense fallback={<LoadingFallback />}>
-      <Navbar />
+        <Navbar />
       </Suspense>
       
-      <main>
-        <Suspense fallback={<LoadingFallback />}>
-        <Hero />
-        </Suspense>
+      <div className="min-h-screen gpu-accelerated">
+        <main className="pt-24">
+          <Suspense fallback={<LoadingFallback />}>
+          <Hero />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <AudienceStrip />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <FeatureTriad />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <AnalyticsDemo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <WhyLunqo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <Testimonials />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+          <CTABanner />
+          </Suspense>
+        </main>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AudienceStrip />
+        <Suspense fallback={<div className="h-32 bg-dark-900" />}>
+        <Footer />
         </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <FeatureTriad />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <AnalyticsDemo />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <WhyLunqo />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <Testimonials />
-        </Suspense>
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-        <CTABanner />
-        </Suspense>
-      </main>
-      
-      <Suspense fallback={<div className="h-32 bg-dark-900" />}>
-      <Footer />
-      </Suspense>
-    </div>
+      </div>
+    </>
   );
 };
 
