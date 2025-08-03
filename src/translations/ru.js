@@ -16,7 +16,7 @@ export const ru = {
     subtitle: 'Единое управление, аналитика в реальном времени, простое масштабирование для медиа в такси.',
     scheduleDemo: 'Запланировать живое демо',
     watchDemo: 'Смотреть демо',
-    scrollToExplore: 'Прокрутите для изучения',
+    scrollToExplore: 'Крутите вниз',
     stats: {
       fleetsServed: 'Обслуживаемых парков',
       dailyImpressions: 'Ежедневных показов',
