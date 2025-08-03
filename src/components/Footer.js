@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import lunqoLogo from '../Lunqo-white.png';
+import lunqoLogo from '../Lunqo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -42,7 +42,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="footer" className="bg-black border-t border-dark-700/50 relative">
+    <footer id="footer" className="bg-black border-t border-dark-700/50 relative" style={{ backgroundColor: '#000000' }}>
       {/* Smooth transition from testimonials */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/20 to-black pointer-events-none" />
       
@@ -56,11 +56,17 @@ const Footer = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mb-6" style={{ filter: 'none', backdropFilter: 'none' }}>
                 <img
                   src={lunqoLogo}
                   alt="Lunqo Logo"
-                  className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20 filter-none"
+                  className="w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                  style={{ 
+                    filter: 'none', 
+                    backdropFilter: 'none',
+                    mixBlendMode: 'normal',
+                    opacity: 1
+                  }}
                   onError={(e) => console.error('Footer logo failed to load:', e.target.src)}
                   onLoad={() => console.log('Footer logo loaded successfully')}
                 />
@@ -103,7 +109,15 @@ const Footer = () => {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <h3 className="text-white font-semibold mb-4 capitalize filter-none">
+                  <h3 
+                    className="text-white font-semibold mb-4 capitalize"
+                    style={{ 
+                      filter: 'none', 
+                      backdropFilter: 'none',
+                      textShadow: 'none',
+                      color: '#ffffff'
+                    }}
+                  >
                     {t(`footer.links.${category}.title`)}
                   </h3>
                   <ul className="space-y-3">
@@ -111,7 +125,13 @@ const Footer = () => {
                       <li key={link.name}>
                         <a
                           href={link.href}
-                          className="text-dark-300 hover:text-primary-blue transition-colors duration-200 text-sm filter-none"
+                          className="text-dark-300 hover:text-primary-blue transition-colors duration-200 text-sm"
+                          style={{ 
+                            filter: 'none', 
+                            backdropFilter: 'none',
+                            textShadow: 'none',
+                            color: '#ced4da'
+                          }}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
