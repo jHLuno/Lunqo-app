@@ -15,7 +15,8 @@ export const ru = {
     title: 'Lunqo: Освети свой бренд в пути',
     subtitle: 'Единое управление, аналитика в реальном времени, простое масштабирование для медиа в такси.',
     scheduleDemo: 'Запланировать живое демо',
-    watchOverview: 'Смотреть обзор',
+    watchDemo: 'Смотреть демо',
+    scrollToExplore: 'Прокрутите для изучения',
     stats: {
       fleetsServed: 'Обслуживаемых парков',
       dailyImpressions: 'Ежедневных показов',

@@ -15,7 +15,8 @@ export const en = {
     title: 'Lunqo: Light-Up Ads on the Go',
     subtitle: 'Unified control, real-time insights, effortless scaling for in-taxi media.',
     scheduleDemo: 'Schedule a Live Demo',
-    watchOverview: 'Watch Overview',
+    watchDemo: 'Watch Demo',
+    scrollToExplore: 'Scroll to explore',
     stats: {
       fleetsServed: 'Fleets Served',
       dailyImpressions: 'Daily Impressions',
