@@ -18,7 +18,7 @@ const CTABanner = () => {
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <motion.div
-          className="absolute top-10 left-10 w-32 h-32 bg-primary-blue/10 rounded-full blur-3xl"
+          className="absolute top-32 left-10 w-32 h-32 bg-primary-blue/10 rounded-full blur-3xl"
           animate={{ 
             x: [0, 100, 0],
             y: [0, -50, 0],
@@ -30,25 +30,13 @@ const CTABanner = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-10 right-10 w-40 h-40 bg-primary-lime/10 rounded-full blur-3xl"
+          className="absolute bottom-32 right-10 w-40 h-40 bg-primary-lime/10 rounded-full blur-3xl"
           animate={{ 
             x: [0, -80, 0],
             y: [0, 60, 0],
           }}
           transition={{ 
             duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-primary-orange/10 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{ 
-            duration: 15,
             repeat: Infinity,
             ease: "easeInOut"
           }}
