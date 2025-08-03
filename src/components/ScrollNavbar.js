@@ -12,9 +12,9 @@ const ScrollNavbar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
 
-  // Trust badges with icons
+  // Trust badges with actual logo
   const trustBadges = [
-    { name: 'Yandex Taxi', icon: '🚕' },
+    { name: 'Yandex Taxi', logo: '/images/Yandex_Go_icon.png' },
   ];
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const ScrollNavbar = () => {
         const response = await fetch('/api/v1/reach/today');
         if (response.ok) {
           const data = await response.json();
-          setReachCount(data.count || 14502376);
+          setReachCount(data.count || 21532);
         }
       } catch (error) {
         console.log('Using fallback reach count');
@@ -98,7 +98,7 @@ const ScrollNavbar = () => {
             className="fixed bottom-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-md border-t border-dark-700/50"
           >
             <div className="container-custom px-4 py-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-center space-x-8">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-2 text-sm">
                   <TrendingUp className="w-4 h-4 text-primary-blue" />
@@ -119,11 +119,15 @@ const ScrollNavbar = () => {
                 </motion.button>
 
                 {/* Right: Trust Badges Ticker */}
-                <div className="hidden md:flex items-center space-x-4 overflow-hidden">
+                <div className="flex items-center space-x-4 overflow-hidden">
                   <div className="flex items-center space-x-3 animate-scroll-left">
                     {[...trustBadges, ...trustBadges].map((badge, index) => (
-                      <div key={index} className="flex items-center space-x-1 text-sm text-dark-300 whitespace-nowrap">
-                        <span>{badge.icon}</span>
+                      <div key={index} className="flex items-center space-x-2 text-sm text-dark-300 whitespace-nowrap">
+                        <img
+                          src={badge.logo}
+                          alt={badge.name}
+                          className="w-5 h-5 object-contain"
+                        />
                         <span>{badge.name}</span>
                       </div>
                     ))}
