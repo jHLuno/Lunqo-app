@@ -45,7 +45,6 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
   
   #root {
@@ -103,93 +102,6 @@
 
   .text-glow {
     text-shadow: 0 0 20px rgba(24, 160, 251, 0.5);
-  }
-
-  /* Footer specific styles to prevent blur effects */
-  footer {
-    filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  footer * {
-    filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  footer img {
-    filter: none !important;
-    image-rendering: -webkit-optimize-contrast !important;
-    image-rendering: crisp-edges !important;
-  }
-
-  /* Specific fixes for footer text and logo */
-  footer .text-white {
-    color: #ffffff !important;
-    text-shadow: none !important;
-    filter: none !important;
-  }
-
-  footer .text-dark-300 {
-    color: #ced4da !important;
-    text-shadow: none !important;
-    filter: none !important;
-  }
-
-  footer img[alt="Lunqo Logo"] {
-    filter: none !important;
-    opacity: 1 !important;
-    mix-blend-mode: normal !important;
-  }
-
-  /* Force remove any backdrop-blur effects in footer */
-  footer .backdrop-blur-sm,
-  footer .backdrop-blur-md,
-  footer .backdrop-blur-lg {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  /* Ensure footer text is crisp */
-  footer h3,
-  footer a,
-  footer span,
-  footer p {
-    text-shadow: none !important;
-    filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  /* Specific fix for the logo container */
-  footer .flex.items-center.mb-6 {
-    filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  /* Nuclear option - force all footer elements to be crisp */
-  #footer {
-    background-color: #000000 !important;
-  }
-
-  #footer * {
-    filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    text-shadow: none !important;
-  }
-
-  #footer img {
-    filter: none !important;
-    opacity: 1 !important;
-    mix-blend-mode: normal !important;
-  }
-
-  #footer .text-white {
-    color: #ffffff !important;
-  }
-
-  #footer .text-dark-300 {
-    color: #ced4da !important;
   }
 }
 
