@@ -47,7 +47,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section id="testimonials" className="section-padding">
+    <section id="testimonials" className="section-padding bg-[linear-gradient(135deg,#050505_0%,#0a0a0a_25%,#0d1117_50%,#161b22_75%,#000_100%)]">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

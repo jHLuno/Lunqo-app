@@ -46,7 +46,7 @@ const Footer = () => {
       {/* Gradient transition from testimonials */}
       <div className="
     absolute inset-x-0 top-0           /* pin to top, stretch full width  */
-    h-[100px]                           /* exactly 100 px high             */
+    h-[10px]                           /* exactly 100 px high             */
     pointer-events-none                 /* never block clicks underneath   */
     bg-[linear-gradient(to_bottom,rgba(0,0,0,0.10)_0%,rgba(0,0,0,1)_100%)]" />
      
