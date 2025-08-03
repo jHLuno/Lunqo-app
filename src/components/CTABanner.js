@@ -15,9 +15,9 @@ const CTABanner = () => {
       <div className="absolute inset-0 pointer-events-none
         bg-[linear-gradient(
           to_bottom,
-          theme(colors.primary.blue)/0.2   0%,
-          theme(colors.primary.lime)/0.1  40%,
-          theme(colors.primary.orange)/0.2 70%,
+          theme(colors.primary.blue)/0.4   0%,
+          theme(colors.primary.lime)/0.4  30%,
+          theme(colors.primary.orange)/0.4 60%,
           #000                            100%
         )]" />
       
