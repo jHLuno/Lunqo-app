@@ -12,8 +12,8 @@ const CTABanner = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Gradient Background - Subtle Blue to Lime to Orange to Black */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/10 to-primary-orange/30"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent from-80% to-black"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0d1117]/20 via-primary-lime/20 to-primary-orange/30"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent from-90% to-black"></div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
