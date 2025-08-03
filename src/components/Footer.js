@@ -44,8 +44,12 @@ const Footer = () => {
   return (
     <footer id="footer" className="relative bg-black">
       {/* Gradient transition from testimonials */}
-      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none bg-gradient-to-b from-primary-blue via-primary-lime to-primary-orange" />
-      <div className="absolute inset-x-0 top-16 h-40 pointer-events-none bg-gradient-to-b from-primary-orange via-transparent to-black" />
+      <div className="
+    absolute inset-x-0 top-0           /* pin to top, stretch full width  */
+    h-[100px]                           /* exactly 100 px high             */
+    pointer-events-none                 /* never block clicks underneath   */
+    bg-[linear-gradient(to_bottom,rgba(0,0,0,0.10)_0%,rgba(0,0,0,1)_100%)]" />
+     
       
       <div className="relative z-10 container-custom py-16 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
