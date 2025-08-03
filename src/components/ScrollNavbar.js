@@ -89,11 +89,11 @@ const ScrollNavbar = () => {
             <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl px-4 py-3 max-w-4xl mx-4">
               <div className="flex items-center justify-center space-x-4 md:space-x-8">
                 {/* Left: Live Reach Counter */}
-                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm">
-                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-primary-blue flex-shrink-0" />
+                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base">
+                  <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex flex-col md:flex-row md:items-center md:space-x-1">
-                    <span className="text-dark-300 text-xs">Live Reach:</span>
-                    <span className="font-bold text-white text-xs md:text-sm">
+                    <span className="text-dark-300 text-xs md:text-sm">Live Reach:</span>
+                    <span className="font-bold text-white text-xs md:text-lg">
                       {formatNumber(reachCount)}
                     </span>
                   </div>
@@ -102,7 +102,7 @@ const ScrollNavbar = () => {
 
                 {/* Center: Get Early Access Button */}
                 <motion.button
-                  className="relative py-2 px-3 md:px-6 text-xs md:text-sm font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 flex-shrink-0 rounded-xl"
+                  className="relative py-2 px-3 md:px-6 text-xs md:text-base font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 flex-shrink-0 rounded-xl"
                   style={{
                     border: '2px solid transparent',
                     borderRadius: '12px',
@@ -128,7 +128,7 @@ const ScrollNavbar = () => {
                         <img
                           src={badge.logo}
                           alt={badge.name}
-                          className="w-4 h-4 md:w-5 md:h-5 object-contain flex-shrink-0"
+                          className="w-4 h-4 md:w-6 md:h-6 object-contain flex-shrink-0"
                         />
                         <span className="hidden md:inline">{badge.name}</span>
                         <span className="md:hidden">Yandex</span>
