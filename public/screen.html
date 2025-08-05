@@ -43,7 +43,9 @@
         index = 0;
         playVideo();
       } else {
-        console.log("Нет видео в плейлисте");
+        if (process.env.NODE_ENV !== 'production') {
+      console.log("Нет видео в плейлисте");
+    }
       }
     } catch (err) {
       console.error('Ошибка получения плейлиста:', err);
@@ -58,7 +60,9 @@
     videoEl.load();
     videoEl.play();
 
-    console.log(`▶️ Воспроизведение видео: ${playlist[index]}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`▶️ Воспроизведение видео: ${playlist[index]}`);
+    }
 
     index = (index + 1) % playlist.length;
   }
@@ -68,11 +72,15 @@
   // Отправка статистики каждые 30 секунд
   setInterval(() => {
     if (!playlist.length || !campaignId || !brandId) {
+      if (process.env.NODE_ENV !== 'production') {
       console.log('❌ Не могу отправить статистику: отсутствуют данные', { playlist: playlist.length, campaignId, brandId });
+    }
       return;
     }
 
-    console.log('📊 Отправляю статистику:', { screenId, campaignId, brandId, event: 'impression' });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('📊 Отправляю статистику:', { screenId, campaignId, brandId, event: 'impression' });
+    }
 
     fetch('/api/stats', {
       method: 'POST',
@@ -91,7 +99,9 @@
       }
       return res.json();
     }).then(data => {
+      if (process.env.NODE_ENV !== 'production') {
       console.log('✅ Импрессия отправлена:', data);
+    }
     }).catch(err => {
       console.error('❌ Ошибка отправки статистики:', err);
     });

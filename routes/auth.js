@@ -39,14 +39,23 @@ router.post('/brand', async (req, res) => {
     }
 
     const brand = await Brand.findOne({ email: sanitizedEmail });
-    if (!brand || brand.password !== sanitizedPassword) {
+    if (!brand) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Use bcrypt to compare passwords
+    const isPasswordValid = await brand.comparePassword(sanitizedPassword);
+    if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ brandId: brand._id }, SECRET_KEY, { expiresIn: '7d' });
     res.json({ token, brandId: brand._id });
   } catch (error) {
-    console.error('Brand login error:', error);
+    // Use conditional logging for production
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Brand login error:', error);
+    }
     res.status(500).json({ message: 'Internal server error' });
   }
 });
@@ -79,7 +88,10 @@ router.post('/admin', (req, res) => {
     const token = jwt.sign({ isAdmin: true }, SECRET_KEY, { expiresIn: '7d' });
     res.json({ token });
   } catch (error) {
-    console.error('Admin login error:', error);
+    // Use conditional logging for production
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Admin login error:', error);
+    }
     res.status(500).json({ message: 'Internal server error' });
   }
 });

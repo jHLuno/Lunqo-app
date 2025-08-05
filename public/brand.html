@@ -349,16 +349,34 @@ async function loadCampaigns() {
   table.innerHTML = "";
 
   campaigns.forEach(c => {
-    const vids = c.videos.map(v => `<a href="${v}" target="_blank">🎥</a>`).join(" ");
     const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('ru-RU') : '-';
     const endDate = c.endDate ? new Date(c.endDate).toLocaleDateString('ru-RU') : '-';
     
-    table.innerHTML += `
-      <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${startDate} — ${endDate}</td>
-        <td>${vids}</td>
-      </tr>`;
+    const row = document.createElement('tr');
+    
+    const nameCell = document.createElement('td');
+    const nameStrong = document.createElement('strong');
+    nameStrong.textContent = c.name;
+    nameCell.appendChild(nameStrong);
+    
+    const dateCell = document.createElement('td');
+    dateCell.textContent = `${startDate} — ${endDate}`;
+    
+    const videosCell = document.createElement('td');
+    c.videos.forEach(v => {
+      const link = document.createElement('a');
+      link.href = v;
+      link.target = '_blank';
+      link.textContent = '🎥';
+      videosCell.appendChild(link);
+      videosCell.appendChild(document.createTextNode(' '));
+    });
+    
+    row.appendChild(nameCell);
+    row.appendChild(dateCell);
+    row.appendChild(videosCell);
+    
+    table.appendChild(row);
   });
 }
 
@@ -377,15 +395,28 @@ async function loadScreens() {
   table.innerHTML = "";
 
   screens.forEach(s => {
-    const status = s.currentCampaignId ? 
-      '<span class="status-active">Активна</span>' : 
-      '<span class="status-inactive">Не активна</span>';
+    const row = document.createElement('tr');
     
-    table.innerHTML += `
-      <tr>
-        <td><strong>${s.screenId}</strong></td>
-        <td>${status}</td>
-      </tr>`;
+    const screenIdCell = document.createElement('td');
+    const screenIdStrong = document.createElement('strong');
+    screenIdStrong.textContent = s.screenId;
+    screenIdCell.appendChild(screenIdStrong);
+    
+    const statusCell = document.createElement('td');
+    const statusSpan = document.createElement('span');
+    if (s.currentCampaignId) {
+      statusSpan.className = 'status-active';
+      statusSpan.textContent = 'Активна';
+    } else {
+      statusSpan.className = 'status-inactive';
+      statusSpan.textContent = 'Не активна';
+    }
+    statusCell.appendChild(statusSpan);
+    
+    row.appendChild(screenIdCell);
+    row.appendChild(statusCell);
+    
+    table.appendChild(row);
   });
 }
 

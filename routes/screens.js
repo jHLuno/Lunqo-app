@@ -89,7 +89,9 @@ router.patch('/assign-campaign', authAdmin, async (req, res) => {
   try {
     const { screenId, campaignId } = req.body;
 
-    console.log('Assignment request:', { screenId, campaignId });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Assignment request:', { screenId, campaignId });
+    }
 
     if (!screenId || !campaignId) {
       return res.status(400).json({ error: 'Screen ID and campaign ID are required' });
@@ -100,7 +102,9 @@ router.patch('/assign-campaign', authAdmin, async (req, res) => {
     }
 
     const screen = await Screen.findOne({ screenId });
-    console.log('Found screen:', screen);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Found screen:', screen);
+    }
     
     if (!screen) {
       return res.status(404).json({ error: 'Screen not found' });

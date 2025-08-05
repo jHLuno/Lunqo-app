@@ -235,7 +235,9 @@
       const trackingId = urlParams.get('t');
       const promoUrl = urlParams.get('p');
 
+      if (process.env.NODE_ENV !== 'production') {
       console.log('Tracking parameters:', { screenId, brandId, campaignId, trackingId, promoUrl });
+    }
 
       // Проверяем наличие необходимых параметров
       if (!brandId || !campaignId || !trackingId || !promoUrl) {
@@ -245,7 +247,9 @@
 
       // Отправляем данные о клике
       try {
-        console.log('Sending click tracking data...');
+        if (process.env.NODE_ENV !== 'production') {
+      console.log('Sending click tracking data...');
+    }
         
         const response = await fetch('/api/tracking/click', {
           method: 'POST',
@@ -265,7 +269,9 @@
         }
 
         const data = await response.json();
-        console.log('Click tracked successfully:', data);
+        if (process.env.NODE_ENV !== 'production') {
+      console.log('Click tracked successfully:', data);
+    }
 
         // Создаем URL с UTM параметрами
         const utmUrl = new URL(promoUrl);
@@ -275,7 +281,9 @@
         utmUrl.searchParams.set('utm_content', screenId);
         utmUrl.searchParams.set('tracking_id', trackingId);
 
-        console.log('Redirecting to:', utmUrl.toString());
+        if (process.env.NODE_ENV !== 'production') {
+      console.log('Redirecting to:', utmUrl.toString());
+    }
 
         // Показываем успешное состояние
         document.querySelector('.container').classList.add('success');

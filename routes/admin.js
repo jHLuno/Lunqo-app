@@ -311,28 +311,38 @@ router.post('/tracking/click', authAdmin, async (req, res) => {
 // ✅ GET /api/admin/tracking/qr/:campaignId — генерация QR кода
 router.get('/tracking/qr/:campaignId', authAdmin, async (req, res) => {
   try {
-    console.log('QR generation request for campaign:', req.params.campaignId);
-    console.log('Query parameters:', req.query);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('QR generation request for campaign:', req.params.campaignId);
+      console.log('Query parameters:', req.query);
+    }
     
     const { campaignId } = req.params;
     const { screenId } = req.query; // Получаем screenId из query параметров
     const campaign = await Campaign.findById(campaignId);
     
-    console.log('Campaign found:', campaign ? 'yes' : 'no');
-    console.log('Screen ID from query:', screenId);
+          if (process.env.NODE_ENV !== 'production') {
+        console.log('Campaign found:', campaign ? 'yes' : 'no');
+        console.log('Screen ID from query:', screenId);
+      }
     
     if (!campaign) {
-      console.log('Campaign not found for ID:', campaignId);
+              if (process.env.NODE_ENV !== 'production') {
+          console.log('Campaign not found for ID:', campaignId);
+        }
       return res.status(404).json({ error: 'Кампания не найдена' });
     }
 
     // Создаем уникальный tracking ID
     const trackingId = `qr_${campaignId}_${Date.now()}`;
-    console.log('Generated tracking ID:', trackingId);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Generated tracking ID:', trackingId);
+    }
     
     // Создаем короткий URL для QR кода
     const qrUrl = `${req.protocol}://${req.get('host')}/tracking.html`;
-    console.log('QR URL:', qrUrl);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('QR URL:', qrUrl);
+    }
     
     // Данные для QR кода (параметры для tracking.html)
     const qrData = {
@@ -346,7 +356,9 @@ router.get('/tracking/qr/:campaignId', authAdmin, async (req, res) => {
       }
     };
 
-    console.log('QR data prepared:', qrData);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('QR data prepared:', qrData);
+    }
 
     res.json({
       qrData,
@@ -366,14 +378,18 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
     const { brandId } = req.params;
     const days = parseInt(req.query.days) || 7;
     
-    console.log('Received request for brandId:', brandId, 'days:', days);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Received request for brandId:', brandId, 'days:', days);
+    }
     
     // Convert brandId to ObjectId
     const mongoose = require('mongoose');
     let brandObjectId;
     try {
       brandObjectId = new mongoose.Types.ObjectId(brandId);
-      console.log('Converted to ObjectId:', brandObjectId);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Converted to ObjectId:', brandObjectId);
+      }
     } catch (err) {
       console.error('Invalid ObjectId:', brandId);
       return res.status(400).json({ error: 'Неверный ID бренда' });
@@ -382,7 +398,9 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
     
-    console.log('Start date:', startDate);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Start date:', startDate);
+    }
     
     // Get daily stats
     let dailyStats = [];
@@ -415,7 +433,9 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
           $sort: { "_id": 1 }
         }
       ]);
-      console.log('Daily stats (direct) success:', dailyStats.length);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Daily stats (direct) success:', dailyStats.length);
+      }
     } catch (err) {
       console.error('Daily stats (direct) error:', err);
       dailyStats = [];
@@ -460,14 +480,18 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
           $sort: { "_id": 1 }
         }
       ]);
-      console.log('Daily stats (lookup) success:', dailyStatsWithLookup.length);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Daily stats (lookup) success:', dailyStatsWithLookup.length);
+      }
     } catch (err) {
       console.error('Daily stats (lookup) error:', err);
       dailyStatsWithLookup = [];
     }
     
-    console.log('Daily stats (direct):', dailyStats.length);
-    console.log('Daily stats (lookup):', dailyStatsWithLookup.length);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Daily stats (direct):', dailyStats.length);
+      console.log('Daily stats (lookup):', dailyStatsWithLookup.length);
+    }
     
     // Use the lookup version if it has more data
     const finalDailyStats = dailyStatsWithLookup.length > dailyStats.length ? dailyStatsWithLookup : dailyStats;
@@ -581,7 +605,9 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
           }
         }
       ]);
-      console.log('Total stats with lookup success:', totalStatsWithLookup);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Total stats with lookup success:', totalStatsWithLookup);
+      }
     } catch (err) {
       console.error('Total stats with lookup error:', err);
       totalStatsWithLookup = [];
@@ -611,14 +637,18 @@ router.get('/stats/brand/:brandId', authAdmin, async (req, res) => {
           }
         }
       ]);
-      console.log('All-time stats with lookup success:', allTimeStatsWithLookup);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('All-time stats with lookup success:', allTimeStatsWithLookup);
+      }
     } catch (err) {
       console.error('All-time stats with lookup error:', err);
       allTimeStatsWithLookup = [];
     }
     
-    console.log('Period stats with lookup:', totalStatsWithLookup);
-    console.log('All-time stats with lookup:', allTimeStatsWithLookup);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Period stats with lookup:', totalStatsWithLookup);
+      console.log('All-time stats with lookup:', allTimeStatsWithLookup);
+    }
     
     const totalImpressions = totalStatsWithLookup.find(s => s._id === 'impression')?.count || 0;
     const totalClicks = totalStatsWithLookup.find(s => s._id === 'click')?.count || 0;

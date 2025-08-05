@@ -404,22 +404,54 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Fallback QR code generation if library fails to load
-    window.generateSimpleQR = function(text, elementId) {
-      const element = document.getElementById(elementId);
+    // Utility function to escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Utility function to safely create HTML elements
+    function createSafeElement(tag, attributes = {}, textContent = '') {
+      const element = document.createElement(tag);
+      Object.keys(attributes).forEach(key => {
+        if (key === 'onclick') {
+          // For onclick, we need to be extra careful - only allow specific patterns
+          const value = attributes[key];
+          if (typeof value === 'string' && /^[a-zA-Z0-9_]+\(['"][^'"]*['"]\)$/.test(value)) {
+            element.setAttribute(key, value);
+          }
+        } else {
+          element.setAttribute(key, escapeHtml(attributes[key]));
+        }
+      });
+      if (textContent) {
+        element.textContent = textContent;
+      }
+      return element;
+    }
+
+    function generateQRCode(text) {
+      const element = document.getElementById('qrCodeDisplay');
       if (!element) return;
       
-      // Create a simple text representation
-      element.innerHTML = `
-        <div style="border: 2px solid #333; padding: 20px; display: inline-block; background: white;">
-          <div style="font-family: monospace; font-size: 10px; line-height: 1;">
-            ${text.split('').map(char => char === ' ' ? '&nbsp;' : char).join('')}
-          </div>
-        </div>
-        <p style="margin-top: 10px; color: #666; font-size: 12px;">
-          QR Code Data: ${text.substring(0, 50)}...
-        </p>
-      `;
+      // Create a simple text representation using safe DOM manipulation
+      element.innerHTML = '';
+      
+      const qrContainer = document.createElement('div');
+      qrContainer.style.cssText = 'border: 2px solid #333; padding: 20px; display: inline-block; background: white;';
+      
+      const qrText = document.createElement('div');
+      qrText.style.cssText = 'font-family: monospace; font-size: 10px; line-height: 1;';
+      qrText.textContent = text;
+      
+      const infoText = document.createElement('p');
+      infoText.style.cssText = 'margin-top: 10px; color: #666; font-size: 12px;';
+      infoText.textContent = `QR Code Data: ${text.substring(0, 50)}...`;
+      
+      qrContainer.appendChild(qrText);
+      element.appendChild(qrContainer);
+      element.appendChild(infoText);
     };
   </script>
   <script>
@@ -687,17 +719,42 @@ async function loadBrands() {
     
     const brands = Array.isArray(data) ? data : [];
     brands.forEach(brand => {
-    table.innerHTML += `
-      <tr>
-          <td>${brand.name || 'N/A'}</td>
-          <td>${brand.email || 'N/A'}</td>
-          <td>${brand._id || 'N/A'}</td>
-          <td>${brand.password || 'N/A'}</td>
-          <td>
-            <button onclick="editBrand('${brand._id}')" class="btn-details">✏️ Изменить</button>
-            <button onclick="deleteBrand('${brand._id}')" class="btn-danger">🗑 Удалить</button>
-          </td>
-      </tr>`;
+      const row = document.createElement('tr');
+      
+      const nameCell = document.createElement('td');
+      nameCell.textContent = brand.name || 'N/A';
+      
+      const emailCell = document.createElement('td');
+      emailCell.textContent = brand.email || 'N/A';
+      
+      const idCell = document.createElement('td');
+      idCell.textContent = brand._id || 'N/A';
+      
+      const passwordCell = document.createElement('td');
+      passwordCell.textContent = brand.password || 'N/A';
+      
+      const actionsCell = document.createElement('td');
+      
+      const editBtn = createSafeElement('button', {
+        class: 'btn-details',
+        onclick: `editBrand('${escapeHtml(brand._id)}')`
+      }, '✏️ Изменить');
+      
+      const deleteBtn = createSafeElement('button', {
+        class: 'btn-danger',
+        onclick: `deleteBrand('${escapeHtml(brand._id)}')`
+      }, '🗑 Удалить');
+      
+      actionsCell.appendChild(editBtn);
+      actionsCell.appendChild(deleteBtn);
+      
+      row.appendChild(nameCell);
+      row.appendChild(emailCell);
+      row.appendChild(idCell);
+      row.appendChild(passwordCell);
+      row.appendChild(actionsCell);
+      
+      table.appendChild(row);
   });
   } catch (error) {
     alert('Ошибка загрузки брендов: ' + error.message);
@@ -808,16 +865,38 @@ async function loadScreens() {
     
     const screens = Array.isArray(data) ? data : [];
     screens.forEach(screen => {
-    table.innerHTML += `
-      <tr>
-          <td>${screen.screenId || 'N/A'}</td>
-        <td>${screen.brandId || '-'}</td>
-        <td>${screen.currentCampaignId || '-'}</td>
-          <td>
-            <button onclick="editScreen('${screen._id}')" class="btn-details">✏️ Изменить</button>
-            <button onclick="deleteScreen('${screen._id}')" class="btn-danger">🗑 Удалить</button>
-          </td>
-      </tr>`;
+      const row = document.createElement('tr');
+      
+      const screenIdCell = document.createElement('td');
+      screenIdCell.textContent = screen.screenId || 'N/A';
+      
+      const brandIdCell = document.createElement('td');
+      brandIdCell.textContent = screen.brandId || '-';
+      
+      const campaignIdCell = document.createElement('td');
+      campaignIdCell.textContent = screen.currentCampaignId || '-';
+      
+      const actionsCell = document.createElement('td');
+      
+      const editBtn = createSafeElement('button', {
+        class: 'btn-details',
+        onclick: `editScreen('${escapeHtml(screen._id)}')`
+      }, '✏️ Изменить');
+      
+      const deleteBtn = createSafeElement('button', {
+        class: 'btn-danger',
+        onclick: `deleteScreen('${escapeHtml(screen._id)}')`
+      }, '🗑 Удалить');
+      
+      actionsCell.appendChild(editBtn);
+      actionsCell.appendChild(deleteBtn);
+      
+      row.appendChild(screenIdCell);
+      row.appendChild(brandIdCell);
+      row.appendChild(campaignIdCell);
+      row.appendChild(actionsCell);
+      
+      table.appendChild(row);
   });
   } catch (error) {
     alert('Ошибка загрузки экранов: ' + error.message);
@@ -921,7 +1000,36 @@ async function loadCampaignsList() {
     const campaigns = Array.isArray(data) ? data : [];
     campaigns.forEach(c => {
       const el = document.createElement('div');
-      el.innerHTML = `<b>${c.name || 'N/A'}</b> (${c._id || 'N/A'}) <button onclick="editCampaign('${c._id}')" class="btn-details">✏️ Изменить</button> <button onclick="deleteCampaign('${c._id}')" class="btn-danger">🗑 Удалить</button> <button onclick="generateQRCode('${c._id}')" class="btn-main">📱 QR код</button>`;
+      
+      // Create safe text content
+      const nameSpan = document.createElement('b');
+      nameSpan.textContent = c.name || 'N/A';
+      
+      const idSpan = document.createElement('span');
+      idSpan.textContent = ` (${c._id || 'N/A'})`;
+      
+      // Create buttons safely
+      const editBtn = createSafeElement('button', {
+        class: 'btn-details',
+        onclick: `editCampaign('${escapeHtml(c._id)}')`
+      }, '✏️ Изменить');
+      
+      const deleteBtn = createSafeElement('button', {
+        class: 'btn-danger',
+        onclick: `deleteCampaign('${escapeHtml(c._id)}')`
+      }, '🗑 Удалить');
+      
+      const qrBtn = createSafeElement('button', {
+        class: 'btn-main',
+        onclick: `generateQRCode('${escapeHtml(c._id)}')`
+      }, '📱 QR код');
+      
+      el.appendChild(nameSpan);
+      el.appendChild(idSpan);
+      el.appendChild(editBtn);
+      el.appendChild(deleteBtn);
+      el.appendChild(qrBtn);
+      
       list.appendChild(el);
     });
   } catch (error) {
@@ -1030,7 +1138,11 @@ async function populateScreens() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   const data = await res.json();
   const select = document.getElementById('selectScreen');
-    select.innerHTML = '<option value="">Выберите экран</option>';
+    select.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Выберите экран';
+    select.appendChild(defaultOption);
     
     const screens = Array.isArray(data) ? data : [];
     screens.forEach(s => {
@@ -1050,7 +1162,11 @@ async function populateCampaigns() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   const data = await res.json();
   const select = document.getElementById('selectCampaign');
-    select.innerHTML = '<option value="">Выберите кампанию</option>';
+    select.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Выберите кампанию';
+    select.appendChild(defaultOption);
     
     const campaigns = Array.isArray(data) ? data : [];
     campaigns.forEach(c => {
@@ -1125,11 +1241,23 @@ async function loadStats() {
     });
   }
 
-  div.innerHTML = `
-    <p><b>Всего показов:</b> ${data.total.impressions}</p>
-    <p><b>Всего кликов:</b> ${data.total.clicks}</p>
-    ${detailedHtml}
-  `;
+  div.innerHTML = '';
+  
+  const totalImpressions = document.createElement('p');
+  totalImpressions.innerHTML = `<b>Всего показов:</b> ${escapeHtml(data.total.impressions)}`;
+  
+  const totalClicks = document.createElement('p');
+  totalClicks.innerHTML = `<b>Всего кликов:</b> ${escapeHtml(data.total.clicks)}`;
+  
+  div.appendChild(totalImpressions);
+  div.appendChild(totalClicks);
+  
+  // Add detailed HTML safely
+  if (detailedHtml) {
+    const detailedDiv = document.createElement('div');
+    detailedDiv.innerHTML = detailedHtml;
+    div.appendChild(detailedDiv);
+  }
 }
 
 
@@ -1285,7 +1413,9 @@ function closeBrandChartModal() {
 // ===== QR CODE FUNCTIONS =====
 async function generateQRCode(campaignId) {
   try {
-    console.log('Generating QR code for campaign:', campaignId);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Generating QR code for campaign:', campaignId);
+    }
     
     // First get campaign info to find screens
     const campaignRes = await authorizedFetch(`${API}/campaigns/${campaignId}`);
@@ -1323,28 +1453,65 @@ async function generateQRCode(campaignId) {
         z-index: 2000;
       `;
       
-      modal.innerHTML = `
-        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
-          <h3>Выберите экран для QR кода</h3>
-          <p style="color: #666; margin-bottom: 20px;">Выберите экран, для которого нужно создать QR код:</p>
-          <div style="margin-bottom: 20px;">
-            ${brandScreens.map(screen => `
-              <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;" 
-                   onclick="selectScreenForQR('${screen.screenId}', '${campaignId}', this.parentElement.parentElement.parentElement.parentElement)">
-                <strong>Экран:</strong> ${screen.screenId}
-                ${screen.currentCampaignId ? `<br><small>Текущая кампания: ${screen.currentCampaignId}</small>` : ''}
-              </div>
-            `).join('')}
-          </div>
-          <button onclick="this.parentElement.parentElement.remove()" class="btn btn-danger">Отмена</button>
-        </div>
-      `;
+      modal.innerHTML = '';
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = 'background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;';
+      
+      const title = document.createElement('h3');
+      title.textContent = 'Выберите экран для QR кода';
+      
+      const description = document.createElement('p');
+      description.style.cssText = 'color: #666; margin-bottom: 20px;';
+      description.textContent = 'Выберите экран, для которого нужно создать QR код:';
+      
+      const screensContainer = document.createElement('div');
+      screensContainer.style.cssText = 'margin-bottom: 20px;';
+      
+      brandScreens.forEach(screen => {
+        const screenDiv = document.createElement('div');
+        screenDiv.style.cssText = 'margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;';
+        screenDiv.onclick = () => selectScreenForQR(escapeHtml(screen.screenId), escapeHtml(campaignId), modal);
+        
+        const screenText = document.createElement('strong');
+        screenText.textContent = 'Экран: ';
+        
+        const screenIdSpan = document.createElement('span');
+        screenIdSpan.textContent = screen.screenId;
+        
+        screenDiv.appendChild(screenText);
+        screenDiv.appendChild(screenIdSpan);
+        
+        if (screen.currentCampaignId) {
+          const campaignInfo = document.createElement('br');
+          const campaignSmall = document.createElement('small');
+          campaignSmall.textContent = `Текущая кампания: ${screen.currentCampaignId}`;
+          screenDiv.appendChild(campaignInfo);
+          screenDiv.appendChild(campaignSmall);
+        }
+        
+        screensContainer.appendChild(screenDiv);
+      });
+      
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'btn btn-danger';
+      cancelBtn.textContent = 'Отмена';
+      cancelBtn.onclick = () => modal.remove();
+      
+      modalContent.appendChild(title);
+      modalContent.appendChild(description);
+      modalContent.appendChild(screensContainer);
+      modalContent.appendChild(cancelBtn);
+      
+      modal.appendChild(modalContent);
       
       document.body.appendChild(modal);
       return; // Exit here, let the modal handle the selection
     }
     
-    console.log('Using screen for QR:', selectedScreen.screenId);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Using screen for QR:', selectedScreen.screenId);
+    }
     
     // Generate QR code for single screen
     await generateQRForScreen(selectedScreen.screenId, campaignId);
@@ -1356,7 +1523,9 @@ async function generateQRCode(campaignId) {
 
 async function selectScreenForQR(screenId, campaignId, modalElement) {
   try {
-    console.log('Generating QR code for screen:', screenId, 'campaign:', campaignId);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Generating QR code for screen:', screenId, 'campaign:', campaignId);
+    }
     
     // Remove the selection modal
     modalElement.remove();
@@ -1372,21 +1541,29 @@ async function selectScreenForQR(screenId, campaignId, modalElement) {
 
 async function generateQRForScreen(screenId, campaignId) {
   try {
-    console.log('Starting QR generation for screen:', screenId, 'campaign:', campaignId);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Starting QR generation for screen:', screenId, 'campaign:', campaignId);
+    }
     
     // Ensure DOM is ready
     if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
+      if (process.env.NODE_ENV !== 'production') {
       console.log('DOM not ready, waiting...');
+    }
       await new Promise(resolve => {
         document.addEventListener('DOMContentLoaded', resolve, { once: true });
       });
     }
     
     // Use authorizedFetch but with error handling for extension interference
-    console.log('Making API call to:', `${API}/tracking/qr/${campaignId}?screenId=${screenId}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Making API call to:', `${API}/tracking/qr/${campaignId}?screenId=${screenId}`);
+    }
     const res = await authorizedFetch(`${API}/tracking/qr/${campaignId}?screenId=${screenId}`);
     
-    console.log('Response status:', res.status);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Response status:', res.status);
+    }
     
     if (!res.ok) {
       const errorText = await res.text();
@@ -1395,7 +1572,9 @@ async function generateQRForScreen(screenId, campaignId) {
     }
     
     const data = await res.json();
-    console.log('QR data received:', data);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('QR data received:', data);
+    }
     
     // Validate data structure
     if (!data || !data.qrData || !data.qrData.url || !data.qrData.params) {
@@ -1422,17 +1601,37 @@ async function generateQRForScreen(screenId, campaignId) {
     `;
     
     const uniqueId = 'qrcode_' + Date.now();
-    qrContainer.innerHTML = `
-      <h3>QR код для экрана: ${screenId}</h3>
-      <div id="${uniqueId}" style="margin: 20px 0;"></div>
-      <p style="margin-top: 15px; font-size: 12px; color: #666;">
-        Tracking ID: ${data.trackingId}
-      </p>
-      <p style="font-size: 11px; color: #999; margin-top: 10px;">
-        URL: ${new URL(data.qrData.url, window.location.origin).toString()}
-      </p>
-      <button onclick="this.parentElement.remove(); location.reload();" class="btn btn-danger" style="margin-top: 15px;">Закрыть</button>
-    `;
+    qrContainer.innerHTML = '';
+    
+    const title = document.createElement('h3');
+    title.textContent = `QR код для экрана: ${escapeHtml(screenId)}`;
+    
+    const qrDiv = document.createElement('div');
+    qrDiv.id = uniqueId;
+    qrDiv.style.cssText = 'margin: 20px 0;';
+    
+    const trackingIdP = document.createElement('p');
+    trackingIdP.style.cssText = 'margin-top: 15px; font-size: 12px; color: #666;';
+    trackingIdP.textContent = `Tracking ID: ${escapeHtml(data.trackingId)}`;
+    
+    const urlP = document.createElement('p');
+    urlP.style.cssText = 'font-size: 11px; color: #999; margin-top: 10px;';
+    urlP.textContent = `URL: ${escapeHtml(new URL(data.qrData.url, window.location.origin).toString())}`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'btn btn-danger';
+    closeBtn.style.cssText = 'margin-top: 15px;';
+    closeBtn.textContent = 'Закрыть';
+    closeBtn.onclick = () => {
+      qrContainer.remove();
+      location.reload();
+    };
+    
+    qrContainer.appendChild(title);
+    qrContainer.appendChild(qrDiv);
+    qrContainer.appendChild(trackingIdP);
+    qrContainer.appendChild(urlP);
+    qrContainer.appendChild(closeBtn);
     
     // Add QR modal class for proper styling
     qrContainer.classList.add('qr-modal');
@@ -1470,7 +1669,9 @@ async function generateQRForScreen(screenId, campaignId) {
           });
         } else {
           // Fallback: use simple QR generation
-          console.log('Using fallback QR generation');
+          if (process.env.NODE_ENV !== 'production') {
+      console.log('Using fallback QR generation');
+    }
           const url = new URL(data.qrData.url, window.location.origin);
           Object.keys(data.qrData.params).forEach(key => {
             url.searchParams.set(key, data.qrData.params[key]);
@@ -1484,15 +1685,34 @@ async function generateQRForScreen(screenId, campaignId) {
       console.error('QR generation error:', qrError);
       const errorElement = document.getElementById(uniqueId);
       if (errorElement) {
-        errorElement.innerHTML = `
-          <div style="color: #666; padding: 20px; background: #f9f9f9; border-radius: 8px; font-family: monospace; font-size: 12px;">
-            <h4>QR Code Data (Library not available)</h4>
-            <p><strong>URL:</strong> ${data.qrData.url}</p>
-            <p><strong>Screen:</strong> ${screenId}</p>
-            <p><strong>Data:</strong></p>
-            <pre style="background: white; padding: 10px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(data.qrData.params, null, 2)}</pre>
-          </div>
-        `;
+        errorElement.innerHTML = '';
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'color: #666; padding: 20px; background: #f9f9f9; border-radius: 8px; font-family: monospace; font-size: 12px;';
+        
+        const errorTitle = document.createElement('h4');
+        errorTitle.textContent = 'QR Code Data (Library not available)';
+        
+        const urlP = document.createElement('p');
+        urlP.innerHTML = `<strong>URL:</strong> ${escapeHtml(data.qrData.url)}`;
+        
+        const screenP = document.createElement('p');
+        screenP.innerHTML = `<strong>Screen:</strong> ${escapeHtml(screenId)}`;
+        
+        const dataP = document.createElement('p');
+        dataP.innerHTML = '<strong>Data:</strong>';
+        
+        const dataPre = document.createElement('pre');
+        dataPre.style.cssText = 'background: white; padding: 10px; border-radius: 4px; overflow-x: auto;';
+        dataPre.textContent = JSON.stringify(data.qrData.params, null, 2);
+        
+        errorDiv.appendChild(errorTitle);
+        errorDiv.appendChild(urlP);
+        errorDiv.appendChild(screenP);
+        errorDiv.appendChild(dataP);
+        errorDiv.appendChild(dataPre);
+        
+        errorElement.appendChild(errorDiv);
       }
     }
     
@@ -1515,7 +1735,11 @@ async function populateBrandsForCampaign() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const data = await res.json();
     const select = document.getElementById('campaignBrandSelect');
-    select.innerHTML = '<option value="">Выберите бренд</option>';
+    select.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Выберите бренд';
+    select.appendChild(defaultOption);
     const brands = Array.isArray(data) ? data : [];
     brands.forEach(b => {
       const option = document.createElement('option');
@@ -1536,9 +1760,17 @@ async function populateScreens() {
     
     const selectScreen = document.getElementById('selectScreen');
     if (selectScreen) {
-      selectScreen.innerHTML = '<option value="">Выберите экран</option>';
+      selectScreen.innerHTML = '';
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Выберите экран';
+      selectScreen.appendChild(defaultOption);
+      
       screens.forEach(screen => {
-        selectScreen.innerHTML += `<option value="${screen.screenId}">${screen.screenId}</option>`;
+        const option = document.createElement('option');
+        option.value = escapeHtml(screen.screenId);
+        option.textContent = screen.screenId;
+        selectScreen.appendChild(option);
       });
     }
   } catch (error) {
@@ -1554,9 +1786,17 @@ async function populateCampaigns() {
     
     const selectCampaign = document.getElementById('selectCampaign');
     if (selectCampaign) {
-      selectCampaign.innerHTML = '<option value="">Выберите кампанию</option>';
+      selectCampaign.innerHTML = '';
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Выберите кампанию';
+      selectCampaign.appendChild(defaultOption);
+      
       campaigns.forEach(campaign => {
-        selectCampaign.innerHTML += `<option value="${campaign._id}">${campaign.name}</option>`;
+        const option = document.createElement('option');
+        option.value = escapeHtml(campaign._id);
+        option.textContent = campaign.name;
+        selectCampaign.appendChild(option);
       });
     }
   } catch (error) {
@@ -1581,9 +1821,17 @@ async function populateClearStatsDropdowns() {
     if (brandsRes.ok) {
       const brands = await brandsRes.json();
       const brandSelect = document.getElementById('clearBrandSelect');
-      brandSelect.innerHTML = '<option value="">Выберите бренд...</option>';
+      brandSelect.innerHTML = '';
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Выберите бренд...';
+      brandSelect.appendChild(defaultOption);
+      
       brands.forEach(brand => {
-        brandSelect.innerHTML += `<option value="${brand._id}">${brand.name}</option>`;
+        const option = document.createElement('option');
+        option.value = escapeHtml(brand._id);
+        option.textContent = brand.name;
+        brandSelect.appendChild(option);
       });
     }
 
@@ -1592,9 +1840,17 @@ async function populateClearStatsDropdowns() {
     if (campaignsRes.ok) {
       const campaigns = await campaignsRes.json();
       const campaignSelect = document.getElementById('clearCampaignSelect');
-      campaignSelect.innerHTML = '<option value="">Выберите кампанию...</option>';
+      campaignSelect.innerHTML = '';
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Выберите кампанию...';
+      campaignSelect.appendChild(defaultOption);
+      
       campaigns.forEach(campaign => {
-        campaignSelect.innerHTML += `<option value="${campaign._id}">${campaign.name}</option>`;
+        const option = document.createElement('option');
+        option.value = escapeHtml(campaign._id);
+        option.textContent = campaign.name;
+        campaignSelect.appendChild(option);
       });
     }
   } catch (error) {

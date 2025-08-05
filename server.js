@@ -43,7 +43,9 @@ app.use(cors({
     } else {
       // Log the blocked origin for debugging (remove in production)
       if (process.env.NODE_ENV === 'development') {
-        console.log('CORS blocked origin:', origin);
+        if (process.env.NODE_ENV !== 'production') {
+      console.log('CORS blocked origin:', origin);
+    }
       }
       callback(new Error('Not allowed by CORS'));
     }
@@ -193,9 +195,13 @@ if (!MONGO_URI) {
 
 mongoose.connect(MONGO_URI)
 .then(() => {
-  console.log('✅ Connected to MongoDB');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('✅ Connected to MongoDB');
+  }
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    }
   });
 })
 .catch(err => {

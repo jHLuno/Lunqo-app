@@ -1,5 +1,6 @@
 // models/Brand.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const brandSchema = new mongoose.Schema({
   name: { 
@@ -28,6 +29,26 @@ const brandSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// Hash password before saving
+brandSchema.pre('save', async function(next) {
+  // Only hash the password if it has been modified (or is new)
+  if (!this.isModified('password')) return next();
+  
+  try {
+    // Hash password with salt rounds of 12
+    const saltRounds = 12;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Method to compare password
+brandSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 // Indexes for better performance
 brandSchema.index({ name: 1 });

@@ -91,7 +91,9 @@ const FeatureTriad = () => {
   // Optimized event handlers
   const handleExploreClick = useCallback(() => {
     // Explore click handler
-    console.log('Explore features clicked');
+    if (process.env.NODE_ENV !== 'production') {
+  console.log('Explore features clicked');
+}
   }, []);
 
   return (

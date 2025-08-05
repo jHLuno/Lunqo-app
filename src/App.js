@@ -78,7 +78,9 @@ function App() {
         window.addEventListener('load', () => {
           if (performance.timing && performance.timing.loadEventEnd && performance.timing.navigationStart) {
             const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-            console.log('Page load time:', loadTime + 'ms');
+            if (process.env.NODE_ENV !== 'production') {
+  console.log('Page load time:', loadTime + 'ms');
+}
           }
         });
       }
