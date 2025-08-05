@@ -12,7 +12,11 @@ import { TrendingUp, Users, Eye, MousePointer } from "lucide-react";
  *************************************************************************************************/
 const AnalyticsDemo = () => {
   /* ----------------- Intersection ----------------- */
-  const [sectionRef, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [sectionRef, inView] = useInView({ 
+    triggerOnce: true, 
+    threshold: 0.2,
+    rootMargin: '100px'
+  });
 
   /* ----------------- Demo data ----------------- */
   const metrics = useMemo(

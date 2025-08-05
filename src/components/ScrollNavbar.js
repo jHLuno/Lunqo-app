@@ -19,16 +19,16 @@ const ScrollNavbar = () => {
 
   // Optimized scroll handler with proper throttling
   const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY;
-    
-    // Show bottom rail when scrolling up
-    if (currentScrollY < lastScrollY && currentScrollY > 200) {
-      setIsVisible(true);
-    } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
-      setIsVisible(false);
-    }
-    
-    setLastScrollY(currentScrollY);
+          const currentScrollY = window.scrollY;
+          
+          // Show bottom rail when scrolling up
+          if (currentScrollY < lastScrollY && currentScrollY > 200) {
+            setIsVisible(true);
+          } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
+            setIsVisible(false);
+          }
+          
+          setLastScrollY(currentScrollY);
   }, [lastScrollY]);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ const ScrollNavbar = () => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
           >
-            <div className="bg-dark-900/95 backdrop-blur-md border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 md:py-4 mx-auto md:mx-4">
+            <div className="bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 md:py-4 mx-auto md:mx-4">
               <div className="relative flex items-center justify-between w-full">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">

@@ -22,8 +22,16 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -53,7 +61,7 @@ const Navbar = () => {
       <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
           ? 'glass-effect border border-dark-700/50 shadow-lg' 
-          : 'bg-dark-800/30 backdrop-blur-sm border border-dark-700/30'
+          : 'bg-dark-800/40 border border-dark-700/30'
       }`}>
         <div className="flex items-center justify-between w-full">
           {/* Logo - Left side */}
@@ -138,16 +146,16 @@ const Navbar = () => {
               {t('nav.bookDemo')}
             </motion.button>
 
-            {/* Mobile Menu Button */}
-            <button
+          {/* Mobile Menu Button */}
+          <button
               className="lg:hidden p-2 text-white hover:text-primary-blue transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
           </div>
         </div>
 

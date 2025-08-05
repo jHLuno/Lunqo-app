@@ -6,7 +6,8 @@ import { ArrowRight, Play } from 'lucide-react';
 const CTABanner = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.2,
+    rootMargin: '100px',
   });
 
   return (

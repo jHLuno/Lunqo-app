@@ -8,8 +8,8 @@ const FeatureTriad = () => {
   const { t } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: '50px',
+    threshold: 0.2,
+    rootMargin: '100px',
   });
 
   // Memoized features data

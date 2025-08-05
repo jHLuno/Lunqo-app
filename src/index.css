@@ -32,14 +32,12 @@
 /* ===== BASE STYLES ===== */
 @layer base {
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 80px;
   }
   
   html, body {
     font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
-    background-attachment: fixed;
     color: #ffffff;
     overflow-x: hidden;
     min-height: 100vh;
@@ -74,7 +72,7 @@
 
   /* Glass Effect */
   .glass-effect {
-    @apply bg-dark-800/20 backdrop-blur-md border border-dark-700/50;
+    @apply bg-dark-800/20 backdrop-blur-sm border border-dark-700/50;
   }
 
   /* Navigation */

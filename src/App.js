@@ -44,9 +44,9 @@ const AppContent = () => {
           <Hero />
         </Suspense>
         
-        <AudienceStrip />
+          <AudienceStrip />
         
-        <FeatureTriad />
+          <FeatureTriad />
         
         <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
           <AnalyticsDemo />
@@ -60,10 +60,10 @@ const AppContent = () => {
           <Testimonials />
         </Suspense>
         
-        <CTABanner />
+          <CTABanner />
       </main>
       
-      <Footer />
+        <Footer />
     </div>
   );
 };

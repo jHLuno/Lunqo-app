@@ -6,8 +6,8 @@ import { Car, Building2, Users, TrendingUp } from 'lucide-react';
 const AudienceStrip = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: '50px',
+    threshold: 0.2,
+    rootMargin: '100px',
   });
 
   // Memoized audiences data
