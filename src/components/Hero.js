@@ -208,7 +208,9 @@ const Hero = () => {
             className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight mb-6"
           >
             <span className="text-white">Lunqo: </span>
-            <span className="gradient-text">Light-Up Ads on the Go</span>
+            <span className="gradient-text">Light-Up Ads</span>
+            <br />
+            <span className="text-white">on the Go</span>
           </motion.h1>
 
           {/* Subheadline */}
