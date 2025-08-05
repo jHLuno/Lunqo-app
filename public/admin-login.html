@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход администратора</title>
+  <style>
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    body {
+      font-family: 'SF Pro Display';
+      background: linear-gradient(135deg, #181c2f 0%, #2a225a 50%, #3a1c71 100%);
+      color: #e6e6f0;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      background: rgba(28, 24, 48, 0.98);
+      border-radius: 22px;
+      box-shadow: 0 6px 32px rgba(60, 80, 180, 0.18), 0 2px 8px rgba(60, 80, 180, 0.10);
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      border: 1.5px solid #2a225a;
+      text-align: center;
+    }
+    .logo {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .logo img {
+      width: 150px;
+      height: 150px;
+    }
+    h1 {
+      font-weight: 700;
+      color: #e0d7ff;
+      margin-bottom: 30px;
+      letter-spacing: 0.01em;
+      font-size: 1.8rem;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid #3a2d6a;
+      border-radius: 9px;
+      font-size: 1rem;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin-bottom: 16px;
+      background: #23203a;
+      color: #e6e6f0;
+      transition: border 0.2s, background 0.2s;
+      outline: none;
+      box-sizing: border-box;
+    }
+    input:focus {
+      border: 1.5px solid #a084ff;
+      background: #2a225a;
+    }
+    button {
+      width: 100%;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 9px;
+      font-size: 1.08rem;
+      font-weight: 600;
+      font-family: 'SF Pro Display', -apple-system, sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 2px 16px rgba(80, 60, 180, 0.18);
+      letter-spacing: 0.05em;
+      outline: none;
+      border: 1.5px solid transparent;
+      background: linear-gradient(90deg, #3a1c71 0%, #2a225a 100%);
+      color: #fff;
+      border: 1.5px solid #a084ff;
+      font-size: 1.12rem;
+      font-weight: 700;
+      box-shadow: 0 4px 24px #3a1c7144, 0 1.5px 4px #2a225a33;
+      text-shadow: 0 1px 8px #1b2b3a44;
+    }
+    button:hover {
+      filter: brightness(1);
+      box-shadow: 0 8px 32px #a084ff55, 0 2px 8px #3a1c7133;
+      transform: translateY(-2px) scale(1.02);
+      border-color: #fff;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+        margin: 20px;
+      }
+      .logo {
+        font-size: 2.5rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="/images/Lunqo-white.59026c78beb9c7f20c86.png" alt="Lunqo Logo"> 
+    </div>
+    <h1>Вход администратора</h1>
+    
+    <form id="loginForm" autocomplete="off">
+      <!-- Невидимые ловушки -->
+      <input type="text" style="display:none">
+      <input type="password" style="display:none">
+    
+      <div class="form-group">
+        <input id="email" name="user_email" type="email" placeholder="Email" autocomplete="off" required>
+      </div>
+      
+      <div class="form-group">
+        <input id="password" name="user_pass" type="password" placeholder="Пароль" autocomplete="new-password" required>
+      </div>
+      
+      <button type="submit">Войти</button>
+    </form>
+  </div>
+  
+  <script>
+    // 🧼 Очистка полей при открытии страницы
+    window.addEventListener('pageshow', () => {
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+    });
+  
+    // 📥 Обработка отправки формы
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      login();
+    });
+  
+    // 🔐 Авторизация администратора
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+  
+      const res = await fetch('/api/auth/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        localStorage.clear(); // очищаем все токены и флаги для безопасности перед сохранением нового токена
+        localStorage.setItem('token', data.token);    // 🔐 Сохраняем токен
+        localStorage.setItem('isAdmin', 'true');      // 🔓 Флаг для защиты UI
+        location.href = '/admin.html';                // ➡️ Переход в админку
+      } else {
+        alert('❌ Ошибка входа: ' + (data.message || 'Проверьте логин и пароль'));
+      }
+    }
+  </script>
+</body>
+</html>

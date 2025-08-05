@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Панель бренда</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    body {
+      font-family: 'SF Pro Display';
+      background: linear-gradient(135deg, #181c2f 0%, #2a225a 50%, #3a1c71 100%);
+      color: #e6e6f0;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .main-wrapper {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 32px 32px 32px 32px;
+    }
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      color: #e0d7ff;
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-top: 30px;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-top: 40px;
+    }
+    .section-card {
+      background: rgba(28, 24, 48, 0.98);
+      border-radius: 22px;
+      box-shadow: 0 6px 32px rgba(60, 80, 180, 0.18), 0 2px 8px rgba(60, 80, 180, 0.10);
+      padding: 36px 36px 28px 36px;
+      margin: 40px auto 0 auto;
+      max-width: 1200px;
+      width: 100%;
+      border: 1.5px solid #2a225a;
+    }
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      margin-top: 18px;
+      background: #23203a;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(60, 80, 180, 0.10);
+    }
+    th, td {
+      padding: 16px 14px;
+      border-bottom: 1px solid #2a225a;
+      text-align: left;
+    }
+    th {
+      background: #2a225a;
+      color: #b7aaff;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    button {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 9px;
+      font-size: 1.08rem;
+      font-weight: 600;
+      font-family: 'SF Pro Display';
+      cursor: pointer;
+      margin: 8px 8px 8px 0;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 2px 16px rgba(80, 60, 180, 0.18);
+      letter-spacing: 0.01em;
+      outline: none;
+      border: 1.5px solid transparent;
+    }
+    .btn-logout {
+      background: linear-gradient(90deg, #a83279 0%, #3a1c71 100%);
+      border: 1.5px solid #a83279;
+      color: #fff;
+      font-size: 1.12rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      margin-top: 8px;
+      float: right;
+      box-shadow: 0 4px 24px #a8327944, 0 1.5px 4px #3a1c7133;
+    }
+    .btn-logout:hover {
+      filter: brightness(1);
+      box-shadow: 0 8px 32px #a8327955, 0 2px 8px #3a1c7133;
+      transform: translateY(-2px) scale(1.02);
+      border-color: #fff;
+    }
+    a {
+      color: #a084ff;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    a:hover {
+      color: #fff;
+    }
+    @media (max-width: 1100px) {
+      .main-wrapper, .section-card {
+        max-width: 98vw;
+        padding: 12px 2vw 12px 2vw;
+      }
+      table th, table td {
+        padding: 8px 4px;
+      }
+    }
+    @media (max-width: 700px) {
+      .main-wrapper, .section-card {
+        padding: 6px 1vw 6px 1vw;
+        margin: 18px auto 0 auto;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      h2 {
+        font-size: 1.2rem;
+      }
+      table th, table td {
+        padding: 5px 2px;
+        font-size: 0.92rem;
+      }
+      button, .btn-logout {
+        padding: 10px 10px;
+        font-size: 0.98rem;
+      }
+    }
+  </style>
+  <script>
+  window.onload = function () {
+    const token = localStorage.getItem('token');
+    const brandId = localStorage.getItem('brandId');
+
+    // 🛡 Проверка: есть ли токен и ID бренда
+    if (!token || !brandId) {
+      alert("🚫 Только для авторизованных брендов");
+      location.href = '/brand-login.html';
+      return;
+    } else{ 
+      loadCampaigns(); 
+      loadScreens();
+    }
+
+  };
+  </script>  
+  
+</head>
+<body>
+<div class="main-wrapper">
+
+<button onclick="logout()" class="btn-logout">Выйти</button>
+<script>
+  function logout() {       // выход из бренда
+    localStorage.clear();
+    window.location.replace('/brand-login.html');
+  }
+</script>
+
+<h1>Добро пожаловать, бренд</h1>
+
+<div class="section-card">
+  <h2>Ваши кампании</h2>
+  <table id="campaignsTable">
+    <thead>
+      <tr><th>Название</th><th>Период</th><th>Видео</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="section-card">
+  <h2>Ваши экраны</h2>
+  <table id="screensTable">
+    <thead>
+      <tr><th>ID</th><th>Текущая кампания</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+// Загрузка кампаний бренда через brandId /api/admin/brands/:brandId/campaigns
+async function loadCampaigns() {
+  const brandId = localStorage.getItem('brandId');
+  const res = await fetch(`/api/brand/${brandId}/campaigns`, {
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  });
+
+  const { campaigns } = await res.json();  
+  const table = document.querySelector("#campaignsTable tbody");
+  table.innerHTML = "";
+
+  campaigns.forEach(c => {
+    const vids = c.videos.map(v => `<a href="${v}" target="_blank">🎥</a>`).join(" ");
+    table.innerHTML += `
+      <tr>
+        <td>${c.name}</td>
+        <td>${c.startDate?.slice(0,10) || '-'} — ${c.endDate?.slice(0,10) || '-'}</td>
+        <td>${vids}</td>
+      </tr>`;
+  });
+}
+
+
+// === Экраны бренда
+async function loadScreens() {
+  const brandId = localStorage.getItem('brandId');
+  const res = await fetch(`/api/brand/${brandId}/screens`, {
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  });
+
+  const { screens } = await res.json();
+  const table = document.querySelector("#screensTable tbody");
+  table.innerHTML = "";
+
+  screens.forEach(s => {
+    table.innerHTML += `
+      <tr>
+        <td>${s.screenId}</td>
+        <td>${s.currentCampaignId || "-"}</td>
+      </tr>`;
+  });
+}
+
+
+</script>
+
+</div>
+</body>
+</html>
