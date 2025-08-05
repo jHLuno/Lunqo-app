@@ -205,12 +205,10 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight mb-6"
           >
             <span className="text-white">Lunqo: </span>
-            <span className="gradient-text">Light-Up Ads</span>
-            <br />
-            <span className="text-white">on the Go</span>
+            <span className="gradient-text">Light-Up Ads on the Go</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -218,7 +216,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-            className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg lg:text-xl xl:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
             {t('hero.subtitle')}
           </motion.p>
