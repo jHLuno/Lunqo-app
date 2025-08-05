@@ -533,12 +533,14 @@
   <button onclick="assignCampaign()" class="btn-main">Назначить</button>
 </div>
 
-<h2>📊 Статистика</h2>
-<div style="display: flex; gap: 10px; margin-bottom: 15px;">
-  <button onclick="loadStats()" class="btn btn-success">🔄 Обновить</button>
-  <button onclick="showClearStatsModal()" class="btn btn-danger">🗑️ Очистить статистику</button>
+<div class="section-card">
+  <h2>📊 Статистика</h2>
+  <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <button onclick="loadStats()" class="btn btn-success">🔄 Обновить</button>
+    <button onclick="showClearStatsModal()" class="btn btn-danger">🗑️ Очистить статистику</button>
+  </div>
+  <div id="statsSummary"></div>
 </div>
-<div id="statsSummary"></div>
 
 <!-- Clear Statistics Modal -->
 <div id="clearStatsModal" class="modal">
