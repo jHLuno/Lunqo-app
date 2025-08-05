@@ -4,134 +4,262 @@
   <meta charset="UTF-8">
   <title>Вход бренда</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
     @font-face {
       font-family: 'SF Pro Display';
       src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
     }
-    body {
+    
+    @font-face {
       font-family: 'SF Pro Display';
-      background: linear-gradient(135deg, #181c2f 0%, #2a225a 50%, #3a1c71 100%);
-      color: #e6e6f0;
+      src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      color: #ffffff;
       margin: 0;
       padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .login-container {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
     }
-    .login-container {
-      background: rgba(28, 24, 48, 0.98);
-      border-radius: 22px;
-      box-shadow: 0 6px 32px rgba(60, 80, 180, 0.18), 0 2px 8px rgba(60, 80, 180, 0.10);
-      padding: 40px;
-      max-width: 400px;
-      width: 90%;
-      border: 1.5px solid #2a225a;
+    
+    /* Background Effects */
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.1) 0%, transparent 50%);
+      background-size: 100px 100px, 150px 150px;
+      opacity: 0.05;
+      z-index: 1;
+    }
+    
+    .login-form {
+      background: rgba(33, 37, 41, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 440px;
+      width: 100%;
       text-align: center;
+      position: relative;
+      z-index: 2;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(24, 160, 251, 0.1);
+      transition: all 0.3s ease;
     }
+    
+    .login-form:hover {
+      border-color: rgba(24, 160, 251, 0.3);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(24, 160, 251, 0.2);
+    }
+    
     .logo {
-      margin-bottom: 15px;
+      margin-bottom: 32px;
       text-align: center;
     }
+    
     .logo img {
-      width: 150px;
-      height: 150px;
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 4px 12px rgba(24, 160, 251, 0.3));
     }
+    
     h1 {
       font-weight: 700;
-      color: #e0d7ff;
-      margin-bottom: 30px;
-      letter-spacing: 0.01em;
-      font-size: 1.8rem;
+      color: #ffffff;
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+    
+    .form-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #dee2e6;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
     input {
       width: 100%;
-      padding: 14px 16px;
-      border: 1.5px solid #3a2d6a;
-      border-radius: 9px;
+      padding: 16px 20px;
+      border: 2px solid rgba(52, 58, 64, 0.8);
+      border-radius: 12px;
       font-size: 1rem;
-      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin-bottom: 16px;
-      background: #23203a;
-      color: #e6e6f0;
-      transition: border 0.2s, background 0.2s;
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: rgba(33, 37, 41, 0.8);
+      color: #ffffff;
+      transition: all 0.3s ease;
       outline: none;
       box-sizing: border-box;
     }
+    
     input:focus {
-      border: 1.5px solid #a084ff;
-      background: #2a225a;
+      border-color: #18A0FB;
+      background: rgba(33, 37, 41, 0.9);
+      box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
     }
+    
+    input::placeholder {
+      color: #6c757d;
+    }
+    
     button {
       width: 100%;
-      padding: 14px 28px;
+      padding: 16px 32px;
       border: none;
-      border-radius: 9px;
-      font-size: 1.08rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
       font-weight: 600;
-      font-family: 'SF Pro Display', -apple-system, sans-serif;
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
       cursor: pointer;
       margin-top: 8px;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-      box-shadow: 0 2px 16px rgba(80, 60, 180, 0.18);
-      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
       outline: none;
-      border: 1.5px solid transparent;
-      background: linear-gradient(90deg, #3a1c71 0%, #2a225a 100%);
-      color: #fff;
-      border: 1.5px solid #a084ff;
-      font-size: 1.12rem;
-      font-weight: 700;
-      box-shadow: 0 4px 24px #3a1c7144, 0 1.5px 4px #2a225a33;
-      text-shadow: 0 1px 8px #1b2b3a44;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(24, 160, 251, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
+    
     button:hover {
-      filter: brightness(1);
-      box-shadow: 0 8px 32px #a084ff55, 0 2px 8px #3a1c7133;
       transform: translateY(-2px) scale(1.02);
-      border-color: #fff;
+      box-shadow: 0 8px 30px rgba(24, 160, 251, 0.4);
     }
-    .form-group {
-      margin-bottom: 20px;
+    
+    button:active {
+      transform: translateY(0) scale(0.98);
     }
+    
+    /* Floating Elements */
+    .floating-element {
+      position: absolute;
+      border-radius: 8px;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(24, 160, 251, 0.2), rgba(89, 255, 112, 0.2));
+      border: 1px solid rgba(24, 160, 251, 0.3);
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 60%;
+      right: 15%;
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, rgba(89, 255, 112, 0.2), rgba(255, 122, 69, 0.2));
+      border: 1px solid rgba(89, 255, 112, 0.3);
+      animation-delay: 2s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
     @media (max-width: 480px) {
-      .login-container {
-        padding: 30px 20px;
+      .login-form {
+        padding: 32px 24px;
         margin: 20px;
       }
-      .logo {
-        font-size: 2.5rem;
-      }
+      
       h1 {
         font-size: 1.5rem;
+      }
+      
+      .logo img {
+        width: 100px;
+        height: 100px;
       }
     }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="logo">
-      <img src="/images/Lunqo-white.59026c78beb9c7f20c86.png" alt="Lunqo Logo">
+    <!-- Floating Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    
+    <div class="login-form">
+      <div class="logo">
+        <img src="/images/Lunqo-white.59026c78beb9c7f20c86.png" alt="Lunqo Logo">
+      </div>
+      <h1>Вход для бренда</h1>
+
+      <form id="loginForm" autocomplete="off">
+        <!-- ловушки -->
+        <input type="text" style="display:none">
+        <input type="password" style="display:none">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="user_email" type="email" placeholder="Введите ваш email" autocomplete="off" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input id="password" name="user_pass" type="password" placeholder="Введите ваш пароль" autocomplete="new-password" required>
+        </div>
+
+        <button type="submit">Войти в систему</button>
+      </form>
     </div>
-    <h1>Вход для бренда</h1>
-
-    <form id="loginForm" autocomplete="off">
-      <!-- ловушки -->
-      <input type="text" style="display:none">
-      <input type="password" style="display:none">
-
-      <div class="form-group">
-        <input id="email" name="user_email" type="email" placeholder="Email" autocomplete="off" required>
-      </div>
-      
-      <div class="form-group">
-        <input id="password" name="user_pass" type="password" placeholder="Пароль" autocomplete="new-password" required>
-      </div>
-
-      <button type="submit">Войти</button>
-    </form>
   </div>
 
   <script>

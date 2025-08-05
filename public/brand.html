@@ -5,141 +5,275 @@
   <title>Панель бренда</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
     @font-face {
       font-family: 'SF Pro Display';
       src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
     }
-    body {
+    
+    @font-face {
       font-family: 'SF Pro Display';
-      background: linear-gradient(135deg, #181c2f 0%, #2a225a 50%, #3a1c71 100%);
-      color: #e6e6f0;
+      src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      color: #ffffff;
       margin: 0;
       padding: 0;
       min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+    
     .main-wrapper {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 32px 32px 32px 32px;
+      padding: 32px;
+      position: relative;
     }
+    
+    /* Background Effects */
+    .main-wrapper::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.05) 0%, transparent 50%);
+      background-size: 100px 100px, 150px 150px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
     h1, h2, h3, h4 {
       font-weight: 700;
-      color: #e0d7ff;
-      margin-bottom: 10px;
-      letter-spacing: 0.01em;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
     }
+    
     h1 {
-      font-size: 2.2rem;
-      margin-top: 30px;
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+    
     h2 {
       font-size: 1.8rem;
-      margin-top: 40px;
+      margin-top: 48px;
+      margin-bottom: 24px;
+      color: #dee2e6;
     }
+    
     .section-card {
-      background: rgba(28, 24, 48, 0.98);
-      border-radius: 22px;
-      box-shadow: 0 6px 32px rgba(60, 80, 180, 0.18), 0 2px 8px rgba(60, 80, 180, 0.10);
-      padding: 36px 36px 28px 36px;
+      background: rgba(33, 37, 41, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
+      border-radius: 24px;
+      padding: 40px;
       margin: 40px auto 0 auto;
       max-width: 1200px;
       width: 100%;
-      border: 1.5px solid #2a225a;
+      position: relative;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(24, 160, 251, 0.1);
+      transition: all 0.3s ease;
     }
+    
+    .section-card:hover {
+      border-color: rgba(24, 160, 251, 0.3);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(24, 160, 251, 0.2);
+    }
+    
     table {
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      margin-top: 18px;
-      background: #23203a;
-      border-radius: 14px;
+      margin-top: 24px;
+      background: rgba(33, 37, 41, 0.8);
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(60, 80, 180, 0.10);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
+    
     th, td {
-      padding: 16px 14px;
-      border-bottom: 1px solid #2a225a;
+      padding: 20px 16px;
+      border-bottom: 1px solid rgba(52, 58, 64, 0.5);
       text-align: left;
     }
+    
     th {
-      background: #2a225a;
-      color: #b7aaff;
+      background: rgba(24, 160, 251, 0.1);
+      color: #18A0FB;
       font-weight: 600;
-      font-size: 1.05rem;
+      font-size: 1rem;
       letter-spacing: 0.01em;
+      border-bottom: 2px solid rgba(24, 160, 251, 0.3);
     }
+    
     tr:last-child td {
       border-bottom: none;
     }
+    
+    tr:hover {
+      background: rgba(24, 160, 251, 0.05);
+    }
+    
     button {
-      padding: 12px 28px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 9px;
-      font-size: 1.08rem;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
-      font-family: 'SF Pro Display';
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
       cursor: pointer;
       margin: 8px 8px 8px 0;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-      box-shadow: 0 2px 16px rgba(80, 60, 180, 0.18);
-      letter-spacing: 0.01em;
+      transition: all 0.3s ease;
       outline: none;
-      border: 1.5px solid transparent;
     }
+    
     .btn-logout {
-      background: linear-gradient(90deg, #a83279 0%, #3a1c71 100%);
-      border: 1.5px solid #a83279;
-      color: #fff;
-      font-size: 1.12rem;
-      font-weight: 700;
-      margin-bottom: 18px;
-      margin-top: 8px;
+      background: linear-gradient(135deg, #FF7A45, #a83279);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      margin-top: 0;
       float: right;
-      box-shadow: 0 4px 24px #a8327944, 0 1.5px 4px #3a1c7133;
+      box-shadow: 0 4px 20px rgba(255, 122, 69, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
+    
     .btn-logout:hover {
-      filter: brightness(1);
-      box-shadow: 0 8px 32px #a8327955, 0 2px 8px #3a1c7133;
       transform: translateY(-2px) scale(1.02);
-      border-color: #fff;
+      box-shadow: 0 8px 30px rgba(255, 122, 69, 0.4);
     }
+    
     a {
-      color: #a084ff;
+      color: #18A0FB;
       text-decoration: none;
-      transition: color 0.2s;
+      transition: all 0.3s ease;
+      font-weight: 500;
     }
+    
     a:hover {
-      color: #fff;
+      color: #59FF70;
+      text-shadow: 0 0 10px rgba(89, 255, 112, 0.5);
     }
-    @media (max-width: 1100px) {
-      .main-wrapper, .section-card {
+    
+    /* Status indicators */
+    .status-active {
+      color: #59FF70;
+      font-weight: 600;
+    }
+    
+    .status-inactive {
+      color: #6c757d;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .main-wrapper {
         max-width: 98vw;
-        padding: 12px 2vw 12px 2vw;
+        padding: 24px 16px;
       }
+      
+      .section-card {
+        padding: 32px 24px;
+      }
+      
       table th, table td {
-        padding: 8px 4px;
+        padding: 16px 12px;
       }
     }
-    @media (max-width: 700px) {
-      .main-wrapper, .section-card {
-        padding: 6px 1vw 6px 1vw;
-        margin: 18px auto 0 auto;
+    
+    @media (max-width: 768px) {
+      .main-wrapper {
+        padding: 16px 12px;
       }
+      
+      .section-card {
+        padding: 24px 16px;
+        margin: 24px auto 0 auto;
+      }
+      
       h1 {
+        font-size: 2rem;
+        margin-bottom: 32px;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+        margin-top: 32px;
+      }
+      
+      table th, table td {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+      }
+      
+      button, .btn-logout {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .btn-logout {
+        float: none;
+        display: block;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-wrapper {
+        padding: 12px 8px;
+      }
+      
+      .section-card {
+        padding: 20px 12px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      h2 {
         font-size: 1.3rem;
       }
-      h2 {
-        font-size: 1.2rem;
-      }
+      
       table th, table td {
-        padding: 5px 2px;
-        font-size: 0.92rem;
-      }
-      button, .btn-logout {
-        padding: 10px 10px;
-        font-size: 0.98rem;
+        padding: 8px 6px;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -165,7 +299,7 @@
 <body>
 <div class="main-wrapper">
 
-<button onclick="logout()" class="btn-logout">Выйти</button>
+<button onclick="logout()" class="btn-logout">Выйти из системы</button>
 <script>
   function logout() {       // выход из бренда
     localStorage.clear();
@@ -173,13 +307,13 @@
   }
 </script>
 
-<h1>Добро пожаловать, бренд</h1>
+<h1>Добро пожаловать в панель бренда</h1>
 
 <div class="section-card">
   <h2>Ваши кампании</h2>
   <table id="campaignsTable">
     <thead>
-      <tr><th>Название</th><th>Период</th><th>Видео</th></tr>
+      <tr><th>Название кампании</th><th>Период активности</th><th>Медиафайлы</th></tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -189,7 +323,7 @@
   <h2>Ваши экраны</h2>
   <table id="screensTable">
     <thead>
-      <tr><th>ID</th><th>Текущая кампания</th></tr>
+      <tr><th>ID экрана</th><th>Текущая кампания</th></tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -211,10 +345,13 @@ async function loadCampaigns() {
 
   campaigns.forEach(c => {
     const vids = c.videos.map(v => `<a href="${v}" target="_blank">🎥</a>`).join(" ");
+    const startDate = c.startDate ? new Date(c.startDate).toLocaleDateString('ru-RU') : '-';
+    const endDate = c.endDate ? new Date(c.endDate).toLocaleDateString('ru-RU') : '-';
+    
     table.innerHTML += `
       <tr>
-        <td>${c.name}</td>
-        <td>${c.startDate?.slice(0,10) || '-'} — ${c.endDate?.slice(0,10) || '-'}</td>
+        <td><strong>${c.name}</strong></td>
+        <td>${startDate} — ${endDate}</td>
         <td>${vids}</td>
       </tr>`;
   });
@@ -235,10 +372,14 @@ async function loadScreens() {
   table.innerHTML = "";
 
   screens.forEach(s => {
+    const status = s.currentCampaignId ? 
+      '<span class="status-active">Активна</span>' : 
+      '<span class="status-inactive">Не активна</span>';
+    
     table.innerHTML += `
       <tr>
-        <td>${s.screenId}</td>
-        <td>${s.currentCampaignId || "-"}</td>
+        <td><strong>${s.screenId}</strong></td>
+        <td>${status}</td>
       </tr>`;
   });
 }
@@ -249,3 +390,4 @@ async function loadScreens() {
 </div>
 </body>
 </html>
+

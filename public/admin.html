@@ -5,170 +5,228 @@
   <title>Админ-панель</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
     @font-face {
       font-family: 'SF Pro Display';
       src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
     }
-    body {
+    
+    @font-face {
       font-family: 'SF Pro Display';
-      background: linear-gradient(135deg, #181c2f 0%, #2a225a 50%, #3a1c71 100%);
-      color: #e6e6f0;
+      src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      color: #ffffff;
       margin: 0;
       padding: 0;
       min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     .main-wrapper {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 32px 32px 32px 32px;
+      padding: 32px;
+      position: relative;
     }
+    
+    /* Background Effects */
+    .main-wrapper::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.05) 0%, transparent 50%);
+      background-size: 100px 100px, 150px 150px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
     h1, h3, h4 {
       font-weight: 700;
-      color: #e0d7ff;
-      margin-bottom: 10px;
-      letter-spacing: 0.01em;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
     }
+    
     h1 {
-      font-size: 2.2rem;
-      margin-top: 30px;
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+    
     .section-card {
-      background: rgba(28, 24, 48, 0.98);
-      border-radius: 22px;
-      box-shadow: 0 6px 32px rgba(60, 80, 180, 0.18), 0 2px 8px rgba(60, 80, 180, 0.10);
-      padding: 36px 36px 28px 36px;
+      background: rgba(33, 37, 41, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
+      border-radius: 24px;
+      padding: 40px;
       margin: 40px auto 0 auto;
       max-width: 1200px;
       width: 100%;
-      border: 1.5px solid #2a225a;
+      position: relative;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(24, 160, 251, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .section-card:hover {
+      border-color: rgba(24, 160, 251, 0.3);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(24, 160, 251, 0.2);
     }
     table {
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      margin-top: 18px;
-      background: #23203a;
-      border-radius: 14px;
+      margin-top: 24px;
+      background: rgba(33, 37, 41, 0.8);
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(60, 80, 180, 0.10);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
+    
     th, td {
-      padding: 16px 14px;
-      border-bottom: 1px solid #2a225a;
+      padding: 20px 16px;
+      border-bottom: 1px solid rgba(52, 58, 64, 0.5);
       text-align: left;
     }
+    
     th {
-      background: #2a225a;
-      color: #b7aaff;
+      background: rgba(24, 160, 251, 0.1);
+      color: #18A0FB;
       font-weight: 600;
-      font-size: 1.05rem;
+      font-size: 1rem;
       letter-spacing: 0.01em;
+      border-bottom: 2px solid rgba(24, 160, 251, 0.3);
     }
+    
     tr:last-child td {
       border-bottom: none;
     }
+    
+    tr:hover {
+      background: rgba(24, 160, 251, 0.05);
+    }
     input, select, textarea {
-      padding: 12px 14px;
-      border: 1.5px solid #3a2d6a;
-      border-radius: 9px;
+      padding: 16px 20px;
+      border: 2px solid rgba(52, 58, 64, 0.8);
+      border-radius: 12px;
       font-size: 1rem;
       margin: 8px 0 16px 0;
-      background: #23203a;
-      color: #e6e6f0;
-      transition: border 0.2s, background 0.2s;
+      background: rgba(33, 37, 41, 0.8);
+      color: #ffffff;
+      transition: all 0.3s ease;
       outline: none;
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
     }
+    
     input:focus, select:focus, textarea:focus {
-      border: 1.5px solid #a084ff;
-      background: #2a225a;
+      border-color: #18A0FB;
+      background: rgba(33, 37, 41, 0.9);
+      box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
+    }
+    
+    input::placeholder, textarea::placeholder {
+      color: #6c757d;
     }
     button {
-      padding: 12px 28px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 9px;
-      font-size: 1.08rem;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
       cursor: pointer;
       margin: 8px 8px 8px 0;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-      box-shadow: 0 2px 16px rgba(80, 60, 180, 0.18);
-      letter-spacing: 0.01em;
+      transition: all 0.3s ease;
       outline: none;
-      border: 1.5px solid transparent;
     }
+    
     .btn-success {
-      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-      color: #fff;
-      border: 1.5px solid #38f9d7;
-      text-shadow: 0 1px 8px #1b2b3a44;
-      box-shadow: 0 2px 16px #38f9d755;
+      background: linear-gradient(135deg, #59FF70, #38f9d7);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(89, 255, 112, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
+    
     .btn-danger {
-      background: linear-gradient(90deg, #ff5858 0%, #a83279 100%);
-      color: #fff;
-      border: 1.5px solid #a83279;
-      text-shadow: 0 1px 8px #1b2b3a44;
-      box-shadow: 0 2px 16px #a8327955;
+      background: linear-gradient(135deg, #FF7A45, #a83279);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(255, 122, 69, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-    .btn, .btn-main, .btn-logout {
-      background: linear-gradient(90deg, #3a1c71 0%, #2a225a 100%);
-      color: #fff;
-      border: 1.5px solid #a084ff;
-      font-size: 1.12rem;
-      font-weight: 700;
-      box-shadow: 0 4px 24px #3a1c7144, 0 1.5px 4px #2a225a33;
-      text-shadow: 0 1px 8px #1b2b3a44;
+    
+    .btn, .btn-main {
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(24, 160, 251, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
+    
     .btn-logout {
-      background: linear-gradient(90deg, #a83279 0%, #3a1c71 100%);
-      border: 1.5px solid #a83279;
-      color: #fff;
-      font-size: 1.12rem;
-      font-weight: 700;
-      margin-bottom: 18px;
-      margin-top: 8px;
+      background: linear-gradient(135deg, #FF7A45, #a83279);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      margin-top: 0;
       float: right;
-      box-shadow: 0 4px 24px #a8327944, 0 1.5px 4px #3a1c7133;
+      box-shadow: 0 4px 20px rgba(255, 122, 69, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     .btn-details {
-      background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
-      color: #fff;
-      border: 1.5px solid #6c70d6;
-      font-size: 1.08rem;
-      font-weight: 700;
-      text-shadow: none;
-      box-shadow: 0 1.5px 6px #23203a55;
-      transition: background 0.18s, border 0.18s, box-shadow 0.18s, transform 0.1s;
+      background: linear-gradient(135deg, #18A0FB, #4e54c8);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(24, 160, 251, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-    .btn-details:hover {
-      background: linear-gradient(90deg, #6c70d6 0%, #a5aae7 100%);
-      border-color: #a5aae7;
-      box-shadow: 0 4px 16px #23203a77;
-      filter: none;
-      transform: translateY(-1px) scale(1.02);
-    }
-    .btn-danger {
-      background: linear-gradient(90deg, #c94b4b 0%, #4b134f 100%);
-      color: #fff;
-      border: 1.5px solid #a13a3a;
-      text-shadow: none;
-      box-shadow: 0 1.5px 6px #23203a55;
-      transition: background 0.18s, border 0.18s, box-shadow 0.18s, transform 0.1s;
-    }
-    .btn-danger:hover {
-      background: linear-gradient(90deg, #a13a3a 0%, #6d2b5b 100%);
-      border-color: #a13a3a;
-      box-shadow: 0 4px 16px #23203a77;
-      filter: none;
-      transform: translateY(-1px) scale(1.02);
-    }
+    
     .btn:hover, .btn-success:hover, .btn-main:hover, .btn-logout:hover, .btn-details:hover {
-      filter: brightness(1);
-      box-shadow: 0 8px 32px #a084ff55, 0 2px 8px #3a1c7133;
       transform: translateY(-2px) scale(1.02);
-      border-color: #fff;
+      box-shadow: 0 8px 30px rgba(24, 160, 251, 0.4);
+    }
+    
+    .btn-success:hover {
+      box-shadow: 0 8px 30px rgba(89, 255, 112, 0.4);
+    }
+    
+    .btn-danger:hover, .btn-logout:hover {
+      box-shadow: 0 8px 30px rgba(255, 122, 69, 0.4);
     }
     .modal {
       display: none;
@@ -178,18 +236,23 @@
       top: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(28, 24, 48, 0.88);
+      background-color: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(20px);
     }
+    
     .modal-content {
-      background: #23203a;
+      background: rgba(33, 37, 41, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
       margin: 3% auto;
       padding: 40px 32px 32px 32px;
-      border-radius: 22px !important;
-      box-shadow: 0 8px 32px #3a1c7144;
+      border-radius: 24px !important;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(24, 160, 251, 0.2);
       max-width: 440px;
       width: 97%;
-      color: #e6e6f0;
+      color: #ffffff;
     }
     .modal-input {
       width: 100%;

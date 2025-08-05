@@ -5,48 +5,209 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Перенаправление...</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      min-height: 100vh;
+      position: relative;
     }
+    
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.1) 0%, transparent 50%);
+      background-size: 100px 100px, 150px 150px;
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
     .container {
       text-align: center;
-      background: rgba(255,255,255,0.1);
-      padding: 40px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      background: rgba(33, 37, 41, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(24, 160, 251, 0.1);
+      transition: all 0.3s ease;
     }
+    
+    .container:hover {
+      border-color: rgba(24, 160, 251, 0.3);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(24, 160, 251, 0.2);
+    }
+    
+    h2 {
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p {
+      color: #dee2e6;
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+    
     .spinner {
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top: 4px solid white;
+      border: 4px solid rgba(24, 160, 251, 0.2);
+      border-top: 4px solid #18A0FB;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       animation: spin 1s linear infinite;
-      margin: 20px auto;
+      margin: 24px auto;
+      box-shadow: 0 0 20px rgba(24, 160, 251, 0.3);
     }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
     .error {
-      background: rgba(255,0,0,0.2);
-      padding: 15px;
+      background: rgba(255, 122, 69, 0.1);
+      border: 1px solid rgba(255, 122, 69, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 24px;
+      color: #FF7A45;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Floating Elements */
+    .floating-element {
+      position: absolute;
       border-radius: 8px;
-      margin-top: 20px;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(24, 160, 251, 0.2), rgba(89, 255, 112, 0.2));
+      border: 1px solid rgba(24, 160, 251, 0.3);
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 60%;
+      right: 15%;
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, rgba(89, 255, 112, 0.2), rgba(255, 122, 69, 0.2));
+      border: 1px solid rgba(89, 255, 112, 0.3);
+      animation-delay: 2s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    /* Success state */
+    .success {
+      color: #59FF70;
+    }
+    
+    .success .spinner {
+      border-top-color: #59FF70;
+      box-shadow: 0 0 20px rgba(89, 255, 112, 0.3);
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 32px 24px;
+        margin: 20px;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+      
+      .spinner {
+        width: 40px;
+        height: 40px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Floating Elements -->
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  
   <div class="container">
-    <h2>📱 Обработка QR кода...</h2>
+    <h2>📱 Обработка QR кода</h2>
     <div class="spinner"></div>
     <p>Пожалуйста, подождите...</p>
     <div id="error" class="error" style="display: none;"></div>
@@ -59,7 +220,7 @@
       document.getElementById('error').style.display = 'block';
     }
 
-        // Основная функция инициализации
+    // Основная функция инициализации
     async function initTracking() {
       // Получаем параметры из URL (используем сокращенные имена)
       const urlParams = new URLSearchParams(window.location.search);
@@ -111,10 +272,15 @@
 
         console.log('Redirecting to:', utmUrl.toString());
 
+        // Показываем успешное состояние
+        document.querySelector('.container').classList.add('success');
+        document.querySelector('h2').textContent = '✅ Успешно!';
+        document.querySelector('p').textContent = 'Перенаправление...';
+
         // Перенаправляем на промо страницу
         setTimeout(() => {
           window.location.href = utmUrl.toString();
-        }, 1000);
+        }, 1500);
 
       } catch (error) {
         console.error('Tracking error:', error);
