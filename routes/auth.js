@@ -7,6 +7,16 @@ const SECRET_KEY = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
+// Input validation helper
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function sanitizeInput(input) {
+  return String(input).trim().replace(/[<>]/g, '');
+}
+
 // Brand login
 router.post('/brand', async (req, res) => {
   try {
@@ -16,8 +26,20 @@ router.post('/brand', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const brand = await Brand.findOne({ email });
-    if (!brand || brand.password !== password) {
+    // Validate and sanitize inputs
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedPassword = sanitizeInput(password);
+
+    if (!validateEmail(sanitizedEmail)) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    if (sanitizedPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const brand = await Brand.findOne({ email: sanitizedEmail });
+    if (!brand || brand.password !== sanitizedPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
@@ -38,7 +60,19 @@ router.post('/admin', (req, res) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+    // Validate and sanitize inputs
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedPassword = sanitizeInput(password);
+
+    if (!validateEmail(sanitizedEmail)) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    if (sanitizedPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    if (sanitizedEmail !== ADMIN_EMAIL || sanitizedPassword !== ADMIN_PASSWORD) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 

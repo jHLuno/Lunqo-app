@@ -7,6 +7,12 @@ if (!SECRET_KEY) {
   process.exit(1);
 }
 
+// Validate JWT secret strength
+if (SECRET_KEY.length < 32) {
+  console.error('❌ JWT_SECRET must be at least 32 characters long');
+  process.exit(1);
+}
+
 // Generic token verification function
 function verifyToken(token) {
   try {

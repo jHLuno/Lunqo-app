@@ -10,6 +10,18 @@ dotenv.config({ silent: true, debug: false });
 
 const app = express();
 
+// Import security middleware
+const { 
+  authLimiter, 
+  apiLimiter, 
+  trackingLimiter, 
+  securityHeaders, 
+  sanitizeInput 
+} = require('./middleware/securityMiddleware');
+
+// Apply security headers globally
+app.use(securityHeaders);
+
 // CORS configuration - more permissive for development
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
@@ -30,15 +42,21 @@ app.use(cors({
       callback(null, true);
     } else {
       // Log the blocked origin for debugging (remove in production)
-      console.log('CORS blocked origin:', origin);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('CORS blocked origin:', origin);
+      }
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  maxAge: 86400 // 24 hours
 }));
 
 // Middleware
 app.use(express.json());
+app.use(sanitizeInput);
 
 // Import models for public endpoints
 const Stat = require('./models/Stat');
@@ -54,15 +72,15 @@ const adminRoutes = require('./routes/admin');
 // Import middleware
 const { authBrand, authAdmin } = require('./middleware/authMiddleware');
 
-// Route registration
-app.use('/api/screens', screenRoutes);
-app.use('/api/stats', statRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/brand', authBrand, brandRoutes);
-app.use('/api/admin', authAdmin, adminRoutes);
+// Apply rate limiting to routes
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/screens', apiLimiter, screenRoutes);
+app.use('/api/stats', apiLimiter, statRoutes);
+app.use('/api/brand', authBrand, apiLimiter, brandRoutes);
+app.use('/api/admin', authAdmin, apiLimiter, adminRoutes);
 
-// Public tracking endpoint (no authentication required)
-app.post('/api/tracking/click', async (req, res) => {
+// Public tracking endpoint (no authentication required) with rate limiting
+app.post('/api/tracking/click', trackingLimiter, async (req, res) => {
   try {
     const { screenId, brandId, campaignId, trackingId } = req.body;
     
@@ -73,6 +91,10 @@ app.post('/api/tracking/click', async (req, res) => {
       });
     }
 
+    // Sanitize inputs
+    const sanitizedScreenId = String(screenId).trim().replace(/[^a-zA-Z0-9_-]/g, '');
+    const sanitizedTrackingId = String(trackingId).trim().replace(/[^a-zA-Z0-9_-]/g, '');
+
     // Validate ObjectIds
     if (!mongoose.Types.ObjectId.isValid(brandId) || !mongoose.Types.ObjectId.isValid(campaignId)) {
       return res.status(400).json({ error: 'Invalid brandId or campaignId format' });
@@ -80,12 +102,12 @@ app.post('/api/tracking/click', async (req, res) => {
 
     // Save click event to statistics
     await Stat.create({
-      screenId,
+      screenId: sanitizedScreenId,
       brandId,
       campaignId,
       event: 'click',
       timestamp: new Date(),
-      trackingId
+      trackingId: sanitizedTrackingId
     });
 
     // Get campaign information for redirect
@@ -99,8 +121,8 @@ app.post('/api/tracking/click', async (req, res) => {
     utmUrl.searchParams.set('utm_source', 'taxi_ads');
     utmUrl.searchParams.set('utm_medium', 'qr_code');
     utmUrl.searchParams.set('utm_campaign', campaign.name);
-    utmUrl.searchParams.set('utm_content', screenId);
-    utmUrl.searchParams.set('tracking_id', trackingId);
+    utmUrl.searchParams.set('utm_content', sanitizedScreenId);
+    utmUrl.searchParams.set('tracking_id', sanitizedTrackingId);
 
     res.json({ 
       redirectUrl: utmUrl.toString(),

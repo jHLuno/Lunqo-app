@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Админ-панель</title>
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" href="/favicons/favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -330,6 +335,29 @@
       border-radius: 4px;
       border: 1.5px solid #3a2d6a;
     }
+    
+    /* QR Code Modal Specific Styles */
+    .qr-modal {
+      background: #ffffff !important;
+      color: #333333 !important;
+    }
+    
+    .qr-modal h3 {
+      color: #333333 !important;
+      background: none !important;
+      -webkit-background-clip: unset !important;
+      -webkit-text-fill-color: unset !important;
+    }
+    
+    .qr-modal p {
+      color: #666666 !important;
+    }
+    
+    .qr-modal .btn {
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      color: #ffffff !important;
+    }
+    
     @media (max-width: 1100px) {
       .main-wrapper, .section-card {
         max-width: 98vw;
@@ -1399,6 +1427,9 @@ async function generateQRForScreen(screenId, campaignId) {
       </p>
       <button onclick="this.parentElement.remove(); location.reload();" class="btn btn-danger" style="margin-top: 15px;">Закрыть</button>
     `;
+    
+    // Add QR modal class for proper styling
+    qrContainer.classList.add('qr-modal');
     
     // Ensure document.body exists before appending
     let container = document.body;
