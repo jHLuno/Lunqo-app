@@ -153,6 +153,16 @@ app.use(express.static('public', {
       res.setHeader('Cache-Control', 'no-store');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
+    } else if (filePath.endsWith('.otf') || filePath.endsWith('.woff') || filePath.endsWith('.woff2') || filePath.endsWith('.ttf')) {
+      // Font files - cache for 1 year
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    } else if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      // CSS and JS files - cache for 1 month
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
+    } else if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.jpeg') || filePath.endsWith('.gif') || filePath.endsWith('.ico')) {
+      // Image files - cache for 1 month
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
     }
   }
 }));

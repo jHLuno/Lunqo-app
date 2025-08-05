@@ -29,7 +29,7 @@ module.exports = {
         'near-black': '#0a0a0a',
       },
       fontFamily: {
-        sans: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif'],
       },
       fontSize: {
         'hero': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
