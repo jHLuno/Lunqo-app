@@ -18,7 +18,7 @@ const Navbar = () => {
     { name: t('nav.analytics'), href: '#analytics' },
     { name: t('nav.advantages'), href: '#advantages' },
     { name: t('nav.testimonials'), href: '#testimonials' },
-    { name: t('nav.contactUs'), href: '#footer' },
+    { name: t('nav.contactUs'), href: '#cta-banner' },
   ];
 
   useEffect(() => {

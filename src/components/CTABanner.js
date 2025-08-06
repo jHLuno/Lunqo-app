@@ -11,7 +11,7 @@ const CTABanner = () => {
   });
 
   return (
-    <section className="relative overflow-hidden">
+    <section id="cta-banner" className="relative overflow-hidden">
       {/* Gradient Background - Subtle Blue to Lime to Orange to Black */}
       <div className="absolute inset-x-0 top-0 h-[100px] pointer-events-none bg-[linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%)]"></div>
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(0deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%)]"></div>
