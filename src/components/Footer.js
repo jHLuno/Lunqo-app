@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Linkedin, Github } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import lunqoLogo from '../Lunqo-white.png';
 
@@ -36,7 +36,7 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Twitter, href: 'https://twitter.com/lunqoapp', label: 'Twitter' },
+    { icon: Instagram, href: 'https://instagram.com/lunqoapp', label: 'Instagram' },
     { icon: Linkedin, href: 'https://linkedin.com/company/lunqo', label: 'LinkedIn' },
     { icon: Github, href: 'https://github.com/lunqo', label: 'GitHub' }
   ];
