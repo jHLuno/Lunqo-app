@@ -364,6 +364,27 @@
       color: #ffffff !important;
     }
     
+    /* Additional styles for QR modal content to ensure text visibility */
+    .qr-modal div,
+    .qr-modal span,
+    .qr-modal strong {
+      color: #333333 !important;
+    }
+    
+    /* Style for screen selection items in QR modal */
+    .qr-modal div[style*="border: 1px solid #ddd"] {
+      background: #f8f9fa !important;
+      color: #333333 !important;
+    }
+    
+    .qr-modal div[style*="border: 1px solid #ddd"]:hover {
+      background: #e9ecef !important;
+    }
+    
+    .qr-modal small {
+      color: #666666 !important;
+    }
+    
     @media (max-width: 1100px) {
       .main-wrapper, .section-card {
         max-width: 98vw;
@@ -1464,6 +1485,7 @@ async function generateQRCode(campaignId) {
       
       const modalContent = document.createElement('div');
       modalContent.style.cssText = 'background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;';
+      modalContent.classList.add('qr-modal');
       
       const title = document.createElement('h3');
       title.textContent = 'Выберите экран для QR кода';
