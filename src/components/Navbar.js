@@ -58,7 +58,7 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center items-start pt-4"
     >
       {/* Glass Effect Container */}
-      <div className={`mx-4 px-8 py-4 rounded-full transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
+      <div className={`mx-4 px-8 py-4 rounded-2xl transition-all duration-300 w-full max-w-[1200px] lg:min-w-[800px] ${
         isScrolled 
           ? 'glass-effect border border-dark-700/50 shadow-lg' 
           : 'bg-dark-800/40 border border-dark-700/30'
