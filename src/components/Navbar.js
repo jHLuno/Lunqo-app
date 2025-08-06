@@ -124,7 +124,7 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-xl shadow-lg overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-xl shadow-lg overflow-hidden z-50"
                 >
                   <button
                     className={`w-full px-4 py-2 text-left text-sm transition-colors duration-200 ${
