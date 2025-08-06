@@ -76,6 +76,57 @@
       z-index: -1;
     }
     
+    /* Floating Elements */
+    .floating-element {
+      position: fixed;
+      border-radius: 8px;
+      opacity: 0.05;
+      animation: float 8s ease-in-out infinite;
+      z-index: -1;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 15%;
+      left: 5%;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(24, 160, 251, 0.2), rgba(89, 255, 112, 0.2));
+      border: 1px solid rgba(24, 160, 251, 0.3);
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 70%;
+      right: 10%;
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, rgba(89, 255, 112, 0.2), rgba(255, 122, 69, 0.2));
+      border: 1px solid rgba(89, 255, 112, 0.3);
+      animation-delay: 3s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+    
+    /* Enhanced table styling */
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      margin-top: 24px;
+      background: rgba(33, 37, 41, 0.8);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    table:hover {
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+    
     h1, h2, h3, h4 {
       font-weight: 700;
       color: #ffffff;
@@ -238,15 +289,15 @@
     
     .btn:hover, .btn-success:hover, .btn-main:hover, .btn-logout:hover, .btn-details:hover {
       transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 30px rgba(24, 160, 251, 0.4);
+      box-shadow: 0 6px 25px rgba(24, 160, 251, 0.3);
     }
     
     .btn-success:hover {
-      box-shadow: 0 8px 30px rgba(89, 255, 112, 0.4);
+      box-shadow: 0 6px 25px rgba(89, 255, 112, 0.3);
     }
     
     .btn-danger:hover, .btn-logout:hover {
-      box-shadow: 0 8px 30px rgba(255, 122, 69, 0.4);
+      box-shadow: 0 6px 25px rgba(255, 122, 69, 0.3);
     }
     .modal {
       display: none;
@@ -295,9 +346,18 @@
       margin: 40px 0 28px 0;
     }
     .stat-block {
-      background: #23203a;
-      border-radius: 12px;
-      padding: 22px 28px;
+      background: rgba(33, 37, 41, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(52, 58, 64, 0.3);
+      border-radius: 16px;
+      padding: 24px 32px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-block:hover {
+      border-color: rgba(24, 160, 251, 0.2);
+      transform: translateY(-2px);
+    }
       margin: 22px 0;
       color: #b7aaff;
       font-size: 1.13rem;
@@ -485,6 +545,10 @@
   </script>
 </head>
 <body>
+<!-- Floating Elements -->
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+
 <div class="main-wrapper">
 
 <button onclick="logout()" class="btn-logout">Выйти</button>

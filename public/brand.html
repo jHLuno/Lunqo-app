@@ -72,6 +72,57 @@
       z-index: -1;
     }
     
+    /* Floating Elements */
+    .floating-element {
+      position: fixed;
+      border-radius: 8px;
+      opacity: 0.05;
+      animation: float 8s ease-in-out infinite;
+      z-index: -1;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 20%;
+      left: 8%;
+      width: 50px;
+      height: 35px;
+      background: linear-gradient(135deg, rgba(24, 160, 251, 0.2), rgba(89, 255, 112, 0.2));
+      border: 1px solid rgba(24, 160, 251, 0.3);
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 65%;
+      right: 8%;
+      width: 35px;
+      height: 25px;
+      background: linear-gradient(135deg, rgba(89, 255, 112, 0.2), rgba(255, 122, 69, 0.2));
+      border: 1px solid rgba(89, 255, 112, 0.3);
+      animation-delay: 4s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+    
+    /* Enhanced table styling */
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      margin-top: 24px;
+      background: rgba(33, 37, 41, 0.8);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    table:hover {
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+    
     h1, h2, h3, h4 {
       font-weight: 700;
       color: #ffffff;
@@ -180,7 +231,7 @@
     
     .btn-logout:hover {
       transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 30px rgba(255, 122, 69, 0.4);
+      box-shadow: 0 6px 25px rgba(255, 122, 69, 0.3);
     }
     
     a {
@@ -302,6 +353,10 @@
   
 </head>
 <body>
+<!-- Floating Elements -->
+<div class="floating-element"></div>
+<div class="floating-element"></div>
+
 <div class="main-wrapper">
 
 <button onclick="logout()" class="btn-logout">Выйти из системы</button>
