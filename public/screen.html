@@ -23,6 +23,13 @@
 <video id="videoPlayer" autoplay muted playsinline></video>
 
 <script>
+  // ===== ENVIRONMENT DETECTION =====
+  // Browser-compatible environment detection
+  const isProduction = window.location.hostname !== 'localhost' && 
+                      window.location.hostname !== '127.0.0.1' && 
+                      !window.location.hostname.includes('dev') &&
+                      !window.location.hostname.includes('test');
+
   const screenId = new URLSearchParams(window.location.search).get('screenId') || 'TEST';
   const videoEl = document.getElementById('videoPlayer');
   let playlist = [];
@@ -43,7 +50,7 @@
         index = 0;
         playVideo();
       } else {
-        if (process.env.NODE_ENV !== 'production') {
+        if (!isProduction) {
       console.log("Нет видео в плейлисте");
     }
       }
@@ -60,7 +67,7 @@
     videoEl.load();
     videoEl.play();
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (!isProduction) {
       console.log(`▶️ Воспроизведение видео: ${playlist[index]}`);
     }
 
@@ -72,13 +79,13 @@
   // Отправка статистики каждые 30 секунд
   setInterval(() => {
     if (!playlist.length || !campaignId || !brandId) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (!isProduction) {
       console.log('❌ Не могу отправить статистику: отсутствуют данные', { playlist: playlist.length, campaignId, brandId });
     }
       return;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (!isProduction) {
       console.log('📊 Отправляю статистику:', { screenId, campaignId, brandId, event: 'impression' });
     }
 
@@ -99,7 +106,7 @@
       }
       return res.json();
     }).then(data => {
-      if (process.env.NODE_ENV !== 'production') {
+      if (!isProduction) {
       console.log('✅ Импрессия отправлена:', data);
     }
     }).catch(err => {

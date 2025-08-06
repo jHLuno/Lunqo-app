@@ -219,6 +219,13 @@
   </div>
 
   <script>
+    // ===== ENVIRONMENT DETECTION =====
+    // Browser-compatible environment detection
+    const isProduction = window.location.hostname !== 'localhost' && 
+                        window.location.hostname !== '127.0.0.1' && 
+                        !window.location.hostname.includes('dev') &&
+                        !window.location.hostname.includes('test');
+
     // Функция для отображения ошибок
     function showError(message) {
       document.getElementById('error').textContent = message;
@@ -235,7 +242,7 @@
       const trackingId = urlParams.get('t');
       const promoUrl = urlParams.get('p');
 
-      if (process.env.NODE_ENV !== 'production') {
+      if (!isProduction) {
       console.log('Tracking parameters:', { screenId, brandId, campaignId, trackingId, promoUrl });
     }
 
@@ -247,7 +254,7 @@
 
       // Отправляем данные о клике
       try {
-        if (process.env.NODE_ENV !== 'production') {
+        if (!isProduction) {
       console.log('Sending click tracking data...');
     }
         
@@ -269,7 +276,7 @@
         }
 
         const data = await response.json();
-        if (process.env.NODE_ENV !== 'production') {
+        if (!isProduction) {
       console.log('Click tracked successfully:', data);
     }
 
@@ -281,7 +288,7 @@
         utmUrl.searchParams.set('utm_content', screenId);
         utmUrl.searchParams.set('tracking_id', trackingId);
 
-        if (process.env.NODE_ENV !== 'production') {
+        if (!isProduction) {
       console.log('Redirecting to:', utmUrl.toString());
     }
 
