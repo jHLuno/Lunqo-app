@@ -3,22 +3,266 @@
 <head>
   <meta charset="UTF-8">
   <title>Реклама в такси</title>
+  <!-- Font Preloading for Performance -->
+  <link rel="preload" href="/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="/fonts/SF-Pro-Display-Medium.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="/fonts/SF-Pro-Display-Bold.otf" as="font" type="font/otf" crossorigin>
   <style>
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display';
+      src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
     html, body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 0;
-      background: black;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
       height: 100%;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+    
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(24, 160, 251, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(89, 255, 112, 0.05) 0%, transparent 50%);
+      background-size: 100px 100px, 150px 150px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    
     video {
       width: 100vw;
       height: 100vh;
       object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+    }
+    
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .loading-logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 32px;
+      filter: drop-shadow(0 4px 12px rgba(24, 160, 251, 0.3));
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .loading-text {
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #18A0FB, #59FF70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(24, 160, 251, 0.3);
+      border-top: 3px solid #18A0FB;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .error-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #050505 0%, #0a0a0a 25%, #0d1117 50%, #161b22 75%, #1a1a2e 100%);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .error-screen.show {
+      display: flex;
+    }
+    
+    .error-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+      color: #FF7A45;
+      filter: drop-shadow(0 4px 12px rgba(255, 122, 69, 0.3));
+    }
+    
+    .error-text {
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      max-width: 400px;
+      margin-bottom: 16px;
+    }
+    
+    .error-subtext {
+      color: #6c757d;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    
+    /* Status Indicator */
+    .status-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(33, 37, 41, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 58, 64, 0.5);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 5;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    
+    .status-indicator:hover {
+      opacity: 1;
+    }
+    
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #59FF70;
+      margin-right: 8px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Floating Elements */
+    .floating-element {
+      position: fixed;
+      border-radius: 8px;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+      z-index: 0;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(24, 160, 251, 0.2), rgba(89, 255, 112, 0.2));
+      border: 1px solid rgba(24, 160, 251, 0.3);
+      animation-delay: 0s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 60%;
+      right: 15%;
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, rgba(89, 255, 112, 0.2), rgba(255, 122, 69, 0.2));
+      border: 1px solid rgba(89, 255, 112, 0.3);
+      animation-delay: 2s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
     }
   </style>
 </head>
 <body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <img src="/images/Lunqo-white.59026c78beb9c7f20c86.png" alt="Lunqo Logo" class="loading-logo">
+  <div class="loading-text">Загрузка рекламы...</div>
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Error Screen -->
+<div class="error-screen" id="errorScreen">
+  <div class="error-icon">⚠️</div>
+  <div class="error-text">Нет доступной рекламы</div>
+  <div class="error-subtext">Попробуйте позже</div>
+</div>
+
+<!-- Status Indicator -->
+<div class="status-indicator" id="statusIndicator">
+  <span class="status-dot"></span>
+  <span id="statusText">Подключение...</span>
+</div>
+
+<!-- Floating Elements -->
+<div class="floating-element"></div>
+<div class="floating-element"></div>
 
 <video id="videoPlayer" autoplay muted playsinline></video>
 
@@ -32,14 +276,41 @@
 
   const screenId = new URLSearchParams(window.location.search).get('screenId') || 'TEST';
   const videoEl = document.getElementById('videoPlayer');
+  const loadingScreen = document.getElementById('loadingScreen');
+  const errorScreen = document.getElementById('errorScreen');
+  const statusIndicator = document.getElementById('statusIndicator');
+  const statusText = document.getElementById('statusText');
+  
   let playlist = [];
   let index = 0;
   let campaignId = '';
   let brandId = '';
 
+  // Update status indicator
+  function updateStatus(text) {
+    statusText.textContent = text;
+    if (!isProduction) {
+      console.log('📊 Status:', text);
+    }
+  }
+
+  // Show error screen
+  function showError() {
+    loadingScreen.classList.add('hidden');
+    errorScreen.classList.add('show');
+    updateStatus('Ошибка загрузки');
+  }
+
+  // Hide loading screen
+  function hideLoading() {
+    loadingScreen.classList.add('hidden');
+    updateStatus('Воспроизведение');
+  }
+
   // Получаем плейлист с сервера
   async function fetchPlaylist() {
     try {
+      updateStatus('Загрузка плейлиста...');
       const res = await fetch(`/api/screens/${screenId}/playlist`);
       const data = await res.json();
 
@@ -48,14 +319,17 @@
         campaignId = data.campaignId || '';
         brandId = data.brandId || '';
         index = 0;
+        updateStatus('Плейлист загружен');
         playVideo();
       } else {
         if (!isProduction) {
-      console.log("Нет видео в плейлисте");
-    }
+          console.log("Нет видео в плейлисте");
+        }
+        showError();
       }
     } catch (err) {
       console.error('Ошибка получения плейлиста:', err);
+      showError();
     }
   }
 
@@ -65,7 +339,12 @@
 
     videoEl.src = playlist[index];
     videoEl.load();
-    videoEl.play();
+    
+    videoEl.onloadeddata = () => {
+      hideLoading();
+      videoEl.play();
+      updateStatus(`Видео ${index + 1}/${playlist.length}`);
+    };
 
     if (!isProduction) {
       console.log(`▶️ Воспроизведение видео: ${playlist[index]}`);
@@ -80,8 +359,8 @@
   setInterval(() => {
     if (!playlist.length || !campaignId || !brandId) {
       if (!isProduction) {
-      console.log('❌ Не могу отправить статистику: отсутствуют данные', { playlist: playlist.length, campaignId, brandId });
-    }
+        console.log('❌ Не могу отправить статистику: отсутствуют данные', { playlist: playlist.length, campaignId, brandId });
+      }
       return;
     }
 
@@ -107,13 +386,14 @@
       return res.json();
     }).then(data => {
       if (!isProduction) {
-      console.log('✅ Импрессия отправлена:', data);
-    }
+        console.log('✅ Импрессия отправлена:', data);
+      }
     }).catch(err => {
       console.error('❌ Ошибка отправки статистики:', err);
     });
   }, 30000);
 
+  // Initialize
   fetchPlaylist();
 </script>
 
