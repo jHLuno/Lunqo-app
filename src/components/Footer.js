@@ -121,38 +121,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Newsletter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-12 pt-8"
-        >
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-white font-semibold mb-2">{t('footer.newsletter.title')}</h3>
-              <p className="text-dark-300 text-sm">
-                {t('footer.newsletter.subtitle')}
-              </p>
-            </div>
-            
-            <div className="flex w-full lg:w-auto">
-              <div className="flex-1 lg:flex-none">
-                <div className="flex">
-                  <input
-                    type="email"
-                    placeholder={t('footer.newsletter.placeholder')}
-                    className="flex-1 bg-dark-800 border border-dark-700 text-white placeholder-dark-400 px-4 py-3 rounded-l-xl focus:outline-none focus:border-primary-blue transition-colors duration-200"
-                  />
-                  <button className="bg-primary-blue hover:bg-blue-600 text-white px-6 py-3 rounded-r-xl transition-colors duration-200 font-medium">
-                    {t('footer.newsletter.subscribe')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+
 
         {/* Bottom Section */}
         <motion.div
