@@ -68,7 +68,17 @@ const Navbar = () => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center flex-shrink-0"
+            className="flex items-center flex-shrink-0 cursor-pointer"
+            onClick={() => navigate(`/${language}`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate(`/${language}`);
+              }
+            }}
+            aria-label="Go to home page"
           >
             <img
               src={lunqoLogo}
