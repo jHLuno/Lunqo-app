@@ -373,7 +373,10 @@
     
     if (!isFullscreen && isKioskMode) {
       if (!isProduction) console.log('🔒 Forcing fullscreen mode');
+      // Force fullscreen immediately multiple times for reliability
       enterFullscreen();
+      setTimeout(enterFullscreen, 10);
+      setTimeout(enterFullscreen, 50);
     }
   }
 
@@ -383,25 +386,38 @@
 
     document.body.classList.add('kiosk-mode');
     
-    // Force fullscreen on load
-    setTimeout(() => {
-      enterFullscreen();
-    }, 1000);
+    // Force fullscreen immediately
+    enterFullscreen();
 
-    // Check fullscreen every 2 seconds
-    fullscreenCheckInterval = setInterval(checkFullscreen, 2000);
+    // Check fullscreen every 100ms for immediate response
+    fullscreenCheckInterval = setInterval(checkFullscreen, 100);
 
-    // Block common keyboard shortcuts
+    // Block common keyboard shortcuts with immediate fullscreen enforcement
     document.addEventListener('keydown', (e) => {
       const blockedKeys = [
         'F11', 'F12', 'F1', 'F2', 'F3', 'F4', 'F5',
         'Tab', 'Alt', 'Meta', 'Control'
       ];
       
+      // Special handling for F11 - immediately re-enter fullscreen
+      if (e.key === 'F11' || e.keyCode === 122) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        // Force fullscreen immediately and repeatedly
+        enterFullscreen();
+        setTimeout(enterFullscreen, 1);
+        setTimeout(enterFullscreen, 10);
+        setTimeout(enterFullscreen, 50);
+        setTimeout(enterFullscreen, 100);
+        return false;
+      }
+      
       // Block Ctrl+key combinations
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         return false;
       }
       
@@ -409,6 +425,7 @@
       if (e.altKey) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         return false;
       }
       
@@ -416,6 +433,7 @@
       if (blockedKeys.includes(e.key) || blockedKeys.includes(e.code)) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         return false;
       }
       
@@ -423,6 +441,10 @@
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
+        // Force fullscreen back immediately
+        enterFullscreen();
+        setTimeout(enterFullscreen, 1);
         return false;
       }
     }, true);
@@ -487,18 +509,49 @@
     }
   }
 
-  // Handle fullscreen change events
+  // Handle fullscreen change events with immediate re-enforcement
   document.addEventListener('fullscreenchange', () => {
+    const isFullscreen = !!document.fullscreenElement;
     if (!isProduction) {
-      const isFullscreen = !!document.fullscreenElement;
       console.log('📺 Fullscreen changed:', isFullscreen);
+    }
+    
+    // If fullscreen was exited and kiosk mode is on, immediately re-enter
+    if (!isFullscreen && isKioskMode) {
+      enterFullscreen();
+      setTimeout(enterFullscreen, 1);
+      setTimeout(enterFullscreen, 10);
     }
   });
 
   document.addEventListener('webkitfullscreenchange', () => {
+    const isFullscreen = !!document.webkitFullscreenElement;
     if (!isProduction) {
-      const isFullscreen = !!document.webkitFullscreenElement;
       console.log('📺 Webkit fullscreen changed:', isFullscreen);
+    }
+    
+    // If fullscreen was exited and kiosk mode is on, immediately re-enter
+    if (!isFullscreen && isKioskMode) {
+      enterFullscreen();
+      setTimeout(enterFullscreen, 1);
+      setTimeout(enterFullscreen, 10);
+    }
+  });
+
+  // Add additional fullscreen change listeners for other browsers
+  document.addEventListener('mozfullscreenchange', () => {
+    const isFullscreen = !!document.mozFullScreenElement;
+    if (!isFullscreen && isKioskMode) {
+      enterFullscreen();
+      setTimeout(enterFullscreen, 1);
+    }
+  });
+
+  document.addEventListener('msfullscreenchange', () => {
+    const isFullscreen = !!document.msFullscreenElement;
+    if (!isFullscreen && isKioskMode) {
+      enterFullscreen();
+      setTimeout(enterFullscreen, 1);
     }
   });
 
@@ -698,6 +751,38 @@
   if (window.top !== window.self) {
     window.top.location = window.self.location;
   }
+
+  // Add multiple F11 blockers at different event phases
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'F11' || e.keyCode === 122) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      enterFullscreen();
+      return false;
+    }
+  }, true);
+
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'F11' || e.keyCode === 122) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      enterFullscreen();
+      return false;
+    }
+  }, true);
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'F11' || e.keyCode === 122) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      enterFullscreen();
+      setTimeout(enterFullscreen, 1);
+      return false;
+    }
+  }, true);
   
   // Block common developer tools shortcuts
   document.addEventListener('keydown', (e) => {
