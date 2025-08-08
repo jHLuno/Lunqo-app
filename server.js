@@ -10,6 +10,10 @@ dotenv.config({ silent: true, debug: false });
 
 const app = express();
 
+// Trust proxy headers - essential for Railway and other cloud providers
+// This allows express-rate-limit to correctly identify client IPs
+app.set('trust proxy', true);
+
 // Import security middleware
 const { 
   authLimiter, 
