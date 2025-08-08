@@ -2,6 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
   <title>Реклама в такси</title>
   <!-- Font Preloading for Performance -->
   <link rel="preload" href="/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin>
@@ -236,6 +239,56 @@
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-20px) rotate(5deg); }
     }
+
+    /* Touch Blocker Overlay */
+    .touch-blocker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      background: transparent;
+      touch-action: none;
+      pointer-events: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .touch-blocker.disabled {
+      pointer-events: none;
+    }
+
+    /* Prevent text selection and context menus */
+    * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Hide scrollbars */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Kiosk mode styles */
+    body.kiosk-mode {
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
   </style>
 </head>
 <body>
@@ -260,6 +313,9 @@
   <span id="statusText">Подключение...</span>
 </div>
 
+<!-- Touch Blocker -->
+<div class="touch-blocker" id="touchBlocker"></div>
+
 <!-- Floating Elements -->
 <div class="floating-element"></div>
 <div class="floating-element"></div>
@@ -280,11 +336,194 @@
   const errorScreen = document.getElementById('errorScreen');
   const statusIndicator = document.getElementById('statusIndicator');
   const statusText = document.getElementById('statusText');
+  const touchBlocker = document.getElementById('touchBlocker');
   
   let playlist = [];
   let index = 0;
   let campaignId = '';
   let brandId = '';
+  let isKioskMode = true; // Enable kiosk mode by default
+  let fullscreenCheckInterval;
+
+  // ===== KIOSK MODE & SECURITY FUNCTIONS =====
+  
+  // Force fullscreen mode
+  function enterFullscreen() {
+    const element = document.documentElement;
+    
+    if (element.requestFullscreen) {
+      element.requestFullscreen().catch(err => {
+        if (!isProduction) console.log('Fullscreen request failed:', err);
+      });
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }
+
+  // Check if we're in fullscreen and force it if not
+  function checkFullscreen() {
+    const isFullscreen = !!(document.fullscreenElement || 
+                           document.webkitFullscreenElement || 
+                           document.mozFullScreenElement || 
+                           document.msFullscreenElement);
+    
+    if (!isFullscreen && isKioskMode) {
+      if (!isProduction) console.log('🔒 Forcing fullscreen mode');
+      enterFullscreen();
+    }
+  }
+
+  // Initialize kiosk mode
+  function initKioskMode() {
+    if (!isKioskMode) return;
+
+    document.body.classList.add('kiosk-mode');
+    
+    // Force fullscreen on load
+    setTimeout(() => {
+      enterFullscreen();
+    }, 1000);
+
+    // Check fullscreen every 2 seconds
+    fullscreenCheckInterval = setInterval(checkFullscreen, 2000);
+
+    // Block common keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      const blockedKeys = [
+        'F11', 'F12', 'F1', 'F2', 'F3', 'F4', 'F5',
+        'Tab', 'Alt', 'Meta', 'Control'
+      ];
+      
+      // Block Ctrl+key combinations
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+      
+      // Block Alt+key combinations
+      if (e.altKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+      
+      // Block specific keys
+      if (blockedKeys.includes(e.key) || blockedKeys.includes(e.code)) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+      
+      // Block Escape key (exits fullscreen)
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    }, true);
+
+    // Block right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Block text selection
+    document.addEventListener('selectstart', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Block drag and drop
+    document.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      return false;
+    });
+  }
+
+  // Initialize touch blocker
+  function initTouchBlocker() {
+    if (!touchBlocker) return;
+
+    // Block all touch events
+    const blockEvents = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
+    
+    blockEvents.forEach(eventType => {
+      touchBlocker.addEventListener(eventType, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isProduction) {
+          console.log('🚫 Touch blocked:', eventType);
+        }
+        
+        return false;
+      }, { passive: false, capture: true });
+    });
+
+    // Also block mouse events for desktop testing
+    const mouseEvents = ['mousedown', 'mouseup', 'mousemove', 'click', 'dblclick'];
+    
+    mouseEvents.forEach(eventType => {
+      touchBlocker.addEventListener(eventType, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!isProduction) {
+          console.log('🚫 Mouse blocked:', eventType);
+        }
+        
+        return false;
+      }, { passive: false, capture: true });
+    });
+
+    if (!isProduction) {
+      console.log('🔒 Touch blocker initialized');
+    }
+  }
+
+  // Handle fullscreen change events
+  document.addEventListener('fullscreenchange', () => {
+    if (!isProduction) {
+      const isFullscreen = !!document.fullscreenElement;
+      console.log('📺 Fullscreen changed:', isFullscreen);
+    }
+  });
+
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (!isProduction) {
+      const isFullscreen = !!document.webkitFullscreenElement;
+      console.log('📺 Webkit fullscreen changed:', isFullscreen);
+    }
+  });
+
+  // Handle visibility change (detect when user switches tabs/apps)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isKioskMode) {
+      if (!isProduction) console.log('🔒 Tab hidden, attempting to regain focus');
+      
+      // Try to bring back focus
+      setTimeout(() => {
+        window.focus();
+        enterFullscreen();
+      }, 100);
+    }
+  });
+
+  // Handle window focus events
+  window.addEventListener('blur', () => {
+    if (isKioskMode) {
+      if (!isProduction) console.log('🔒 Window lost focus, regaining...');
+      setTimeout(() => {
+        window.focus();
+      }, 100);
+    }
+  });
 
   // Update status indicator
   function updateStatus(text) {
@@ -393,7 +632,142 @@
     });
   }, 30000);
 
-  // Initialize
+  // ===== ADMIN UNLOCK SEQUENCE =====
+  let unlockSequence = [];
+  const unlockCode = ['KeyK', 'KeyI', 'KeyO', 'KeyS', 'KeyK']; // K-I-O-S-K sequence
+  
+  function handleUnlockSequence(e) {
+    if (!isKioskMode) return;
+    
+    unlockSequence.push(e.code);
+    
+    // Keep only last 5 keys
+    if (unlockSequence.length > unlockCode.length) {
+      unlockSequence.shift();
+    }
+    
+    // Check if sequence matches
+    if (unlockSequence.length === unlockCode.length && 
+        unlockSequence.every((key, index) => key === unlockCode[index])) {
+      
+      disableKioskMode();
+      unlockSequence = [];
+      
+      if (!isProduction) {
+        console.log('🔓 Kiosk mode disabled by admin sequence');
+      }
+    }
+  }
+  
+  // Disable kiosk mode (for admin access)
+  function disableKioskMode() {
+    isKioskMode = false;
+    
+    if (fullscreenCheckInterval) {
+      clearInterval(fullscreenCheckInterval);
+    }
+    
+    document.body.classList.remove('kiosk-mode');
+    touchBlocker.classList.add('disabled');
+    
+    // Exit fullscreen
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    
+    updateStatus('Kiosk mode отключен');
+    
+    // Show unlock notification
+    setTimeout(() => {
+      alert('🔓 Kiosk mode disabled.\nRefresh page to re-enable.');
+    }, 500);
+  }
+  
+  // Add unlock sequence listener
+  document.addEventListener('keydown', handleUnlockSequence);
+
+  // ===== ADDITIONAL SECURITY MEASURES =====
+  
+  // Prevent iframe embedding at runtime
+  if (window.top !== window.self) {
+    window.top.location = window.self.location;
+  }
+  
+  // Block common developer tools shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Block F12 (DevTools)
+    if (e.keyCode === 123) {
+      e.preventDefault();
+      return false;
+    }
+    
+    // Block Ctrl+Shift+I (DevTools)
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+      e.preventDefault();
+      return false;
+    }
+    
+    // Block Ctrl+Shift+J (Console)
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+      e.preventDefault();
+      return false;
+    }
+    
+    // Block Ctrl+U (View Source)
+    if (e.ctrlKey && e.keyCode === 85) {
+      e.preventDefault();
+      return false;
+    }
+    
+    // Block Ctrl+Shift+C (Element Inspector)
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  
+  // Detect developer tools (basic detection)
+  setInterval(() => {
+    if (isKioskMode) {
+      const threshold = 160;
+      if (window.outerHeight - window.innerHeight > threshold || 
+          window.outerWidth - window.innerWidth > threshold) {
+        if (!isProduction) {
+          console.log('🔒 Potential developer tools detected');
+        }
+        // Could add additional actions here like reloading or alerting
+      }
+    }
+  }, 5000);
+
+  // Prevent page zoom
+  document.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      return false;
+    }
+  }, { passive: false });
+
+  // Block pinch-to-zoom on mobile
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // ===== INITIALIZATION =====
+  
+  // Initialize security features
+  initKioskMode();
+  initTouchBlocker();
+  
+  // Initialize playlist
   fetchPlaylist();
 </script>
 
