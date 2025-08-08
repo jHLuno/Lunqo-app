@@ -3,7 +3,39 @@ const router = express.Router();
 const Campaign = require('../models/Campaign');
 const Screen = require('../models/Screen');
 const Stat = require('../models/Stat');
+const Brand = require('../models/Brand');
 const mongoose = require('mongoose');
+
+// Get brand info
+router.get('/:brandId/info', async (req, res) => {
+  try {
+    // Use brandId from authentication middleware instead of URL params for security
+    const brandId = req.brandId;
+    const { brandId: urlBrandId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(brandId)) {
+      return res.status(400).json({ error: 'Invalid brand ID format' });
+    }
+
+    // Security check: ensure URL brand ID matches authenticated brand ID
+    if (urlBrandId !== brandId) {
+      return res.status(403).json({ error: 'Access denied to this brand data' });
+    }
+
+    const brand = await Brand.findById(brandId).select('name email');
+    if (!brand) {
+      return res.status(404).json({ error: 'Brand not found' });
+    }
+
+    res.json({
+      name: brand.name,
+      email: brand.email
+    });
+  } catch (error) {
+    console.error('Error fetching brand info:', error);
+    res.status(500).json({ error: 'Failed to load brand information' });
+  }
+});
 
 // Get brand campaigns
 router.get('/:brandId/campaigns', async (req, res) => {
