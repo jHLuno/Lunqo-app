@@ -357,6 +357,17 @@
                            document.msFullscreenElement);
     if (isFullscreen) return;
 
+    // Debug fullscreen support
+    const element = document.documentElement;
+    console.log('🔍 Fullscreen API Support Check:');
+    console.log('  - requestFullscreen:', !!element.requestFullscreen);
+    console.log('  - webkitRequestFullscreen:', !!element.webkitRequestFullscreen);
+    console.log('  - webkitRequestFullScreen:', !!element.webkitRequestFullScreen);
+    console.log('  - mozRequestFullScreen:', !!element.mozRequestFullScreen);
+    console.log('  - msRequestFullscreen:', !!element.msRequestFullscreen);
+    console.log('  - document.fullscreenEnabled:', !!document.fullscreenEnabled);
+    console.log('  - document.webkitFullscreenEnabled:', !!document.webkitFullscreenEnabled);
+
     // Create fullscreen prompt overlay
     const fullscreenPrompt = document.createElement('div');
     fullscreenPrompt.id = 'fullscreenPrompt';
@@ -394,6 +405,30 @@
         <p style="font-size: 16px; opacity: 0.6;">
           <strong>Для администраторов:</strong> Выход из режима киоска заблокирован в целях безопасности
         </p>
+        <button id="manualFullscreenBtn" style="
+          background: linear-gradient(135deg, #18A0FB, #59FF70);
+          color: white;
+          border: none;
+          padding: 15px 30px;
+          border-radius: 10px;
+          font-size: 18px;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 20px;
+          box-shadow: 0 4px 20px rgba(24, 160, 251, 0.3);
+        ">🖱️ Нажмите здесь для полноэкранного режима</button>
+        <button id="manualFullscreenBtn" style="
+          background: linear-gradient(135deg, #18A0FB, #59FF70);
+          color: white;
+          border: none;
+          padding: 15px 30px;
+          border-radius: 10px;
+          font-size: 18px;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 20px;
+          box-shadow: 0 4px 20px rgba(24, 160, 251, 0.3);
+        ">🖱️ Нажмите здесь для полноэкранного режима</button>
       </div>
       <style>
         @keyframes pulse {
@@ -408,14 +443,54 @@
     `;
     
     // Add click handler to enter fullscreen
-    const enterFullscreenOnClick = () => {
-      enterFullscreen();
-      // Remove the prompt after a short delay to allow fullscreen to engage
+    const enterFullscreenOnClick = async (e) => {
+      if (!isProduction) console.log('🖱️ Click detected, attempting fullscreen...');
+      
+      // Prevent event propagation
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      try {
+        // Try multiple fullscreen methods synchronously for user-initiated requests
+        const element = document.documentElement;
+        let fullscreenPromise = null;
+        
+        if (element.requestFullscreen) {
+          fullscreenPromise = element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          fullscreenPromise = element.webkitRequestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+          fullscreenPromise = element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          fullscreenPromise = element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          fullscreenPromise = element.msRequestFullscreen();
+        }
+        
+        // Handle the promise if it exists
+        if (fullscreenPromise && typeof fullscreenPromise.then === 'function') {
+          await fullscreenPromise;
+          if (!isProduction) console.log('✅ Fullscreen entered successfully');
+        }
+        
+        // Also call the regular enterFullscreen as backup
+        enterFullscreen();
+        
+      } catch (error) {
+        if (!isProduction) console.error('❌ Fullscreen failed:', error);
+        // Try the backup method
+        enterFullscreen();
+      }
+      
+      // Remove the prompt after fullscreen attempt
       setTimeout(() => {
         if (fullscreenPrompt && fullscreenPrompt.parentNode) {
           fullscreenPrompt.remove();
+          if (!isProduction) console.log('🗑️ Fullscreen prompt removed');
         }
-      }, 100);
+      }, 300);
     };
     
     // Add multiple event listeners for better compatibility
@@ -428,18 +503,88 @@
       }
     });
     
+    // Add specific handler for the manual button
+    const manualBtn = fullscreenPrompt.querySelector('#manualFullscreenBtn');
+    if (manualBtn) {
+      manualBtn.addEventListener('click', async (e) => {
+        console.log('🔘 Manual button clicked - attempting fullscreen...'); // Always log this
+        e.preventDefault();
+        e.stopPropagation();
+        
+        try {
+          const element = document.documentElement;
+          
+          if (element.requestFullscreen) {
+            await element.requestFullscreen();
+            console.log('✅ Manual button - requestFullscreen succeeded');
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+            console.log('✅ Manual button - webkitRequestFullscreen called');
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+            console.log('✅ Manual button - mozRequestFullScreen called');
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+            console.log('✅ Manual button - msRequestFullscreen called');
+          } else {
+            console.log('❌ No fullscreen API available');
+          }
+        } catch (error) {
+          console.error('❌ Manual button fullscreen error:', error);
+        }
+        
+        setTimeout(() => {
+          if (fullscreenPrompt && fullscreenPrompt.parentNode) {
+            fullscreenPrompt.remove();
+          }
+        }, 500);
+      });
+    }
+    
     document.body.appendChild(fullscreenPrompt);
     
     // Also add document-level click handler as backup
-    const documentClickHandler = (e) => {
-      enterFullscreen();
+    const documentClickHandler = async (e) => {
+      if (!isProduction) console.log('📄 Document click detected, attempting fullscreen...');
+      
+      try {
+        // Try direct fullscreen API call for user-initiated event
+        const element = document.documentElement;
+        let fullscreenPromise = null;
+        
+        if (element.requestFullscreen) {
+          fullscreenPromise = element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          fullscreenPromise = element.webkitRequestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+          fullscreenPromise = element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          fullscreenPromise = element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          fullscreenPromise = element.msRequestFullscreen();
+        }
+        
+        if (fullscreenPromise && typeof fullscreenPromise.then === 'function') {
+          await fullscreenPromise;
+          if (!isProduction) console.log('✅ Document fullscreen entered successfully');
+        }
+        
+        // Backup call
+        enterFullscreen();
+        
+      } catch (error) {
+        if (!isProduction) console.error('❌ Document fullscreen failed:', error);
+        enterFullscreen();
+      }
+      
       setTimeout(() => {
         if (fullscreenPrompt && fullscreenPrompt.parentNode) {
           fullscreenPrompt.remove();
+          if (!isProduction) console.log('🗑️ Document handler removed prompt');
         }
         document.removeEventListener('click', documentClickHandler);
         document.removeEventListener('touchstart', documentClickHandler);
-      }, 100);
+      }, 300);
     };
     
     document.addEventListener('click', documentClickHandler, { once: true });
@@ -1265,9 +1410,70 @@
 
   // ===== INITIALIZATION =====
   
+  // Add global click-to-fullscreen handler for immediate response
+  function setupGlobalFullscreenTriggers() {
+    let globalHandlerUsed = false;
+    
+    const globalFullscreenHandler = async (e) => {
+      if (globalHandlerUsed) return; // Prevent multiple triggers
+      globalHandlerUsed = true;
+      
+      if (!isProduction) console.log('🌍 Global click handler triggered');
+      
+      try {
+        const element = document.documentElement;
+        let result = false;
+        
+        // Try all fullscreen methods
+        if (element.requestFullscreen) {
+          await element.requestFullscreen();
+          result = true;
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+          result = true;
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+          result = true;
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+          result = true;
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+          result = true;
+        }
+        
+        if (result && !isProduction) {
+          console.log('✅ Global handler successfully triggered fullscreen');
+        }
+        
+        // Remove any visible prompts
+        const prompt = document.getElementById('fullscreenPrompt');
+        if (prompt) {
+          prompt.remove();
+        }
+        
+      } catch (error) {
+        if (!isProduction) console.error('❌ Global fullscreen handler failed:', error);
+      }
+      
+      // Remove the global handlers after first use
+      document.removeEventListener('click', globalFullscreenHandler);
+      document.removeEventListener('touchstart', globalFullscreenHandler);
+    };
+    
+    // Add global handlers
+    document.addEventListener('click', globalFullscreenHandler, { once: true, capture: true });
+    document.addEventListener('touchstart', globalFullscreenHandler, { once: true, capture: true });
+    
+    if (!isProduction) console.log('🌍 Global fullscreen triggers setup');
+  }
+  
   // Wait for DOM to be fully ready, then initialize
   function initializeApp() {
-    // Initialize security features first
+    // Setup global fullscreen triggers first
+    setupGlobalFullscreenTriggers();
+    
+    // Initialize security features
     initKioskMode();
     initTouchBlocker();
     
