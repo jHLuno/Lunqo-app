@@ -486,36 +486,93 @@
 
   // ===== KIOSK MODE & SECURITY FUNCTIONS =====
   
-  // Force fullscreen mode
+  // Enhanced fullscreen mode enforcement
   function enterFullscreen() {
+    if (!isKioskMode) return;
+    
     const element = document.documentElement;
     
-    if (element.requestFullscreen) {
-      element.requestFullscreen().catch(err => {
-        if (!isProduction) console.log('Fullscreen request failed:', err);
-      });
-    } else if (element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if (element.msRequestFullscreen) {
-      element.msRequestFullscreen();
+    // Try multiple methods aggressively
+    const methods = [
+      () => element.requestFullscreen && element.requestFullscreen().catch(() => {}),
+      () => element.webkitRequestFullscreen && element.webkitRequestFullscreen(),
+      () => element.webkitRequestFullScreen && element.webkitRequestFullScreen(), // Alternative webkit
+      () => element.mozRequestFullScreen && element.mozRequestFullScreen(),
+      () => element.msRequestFullscreen && element.msRequestFullscreen()
+    ];
+    
+    // Try all methods
+    methods.forEach(method => {
+      try {
+        method();
+      } catch (e) {
+        // Ignore errors, try next method
+      }
+    });
+    
+    // Additional focus grabbing
+    try {
+      window.focus();
+      document.body.focus();
+      element.focus();
+    } catch (e) {
+      // Ignore focus errors
+    }
+    
+    // Force browser window to front (works in some browsers)
+    try {
+      if (window.screen && window.screen.width) {
+        // Try to make sure we're taking full screen space
+        window.moveTo(0, 0);
+        window.resizeTo(window.screen.width, window.screen.height);
+      }
+    } catch (e) {
+      // Ignore if not allowed
     }
   }
 
-  // Check if we're in fullscreen and force it if not
+  // Enhanced fullscreen checking with multiple methods
   function checkFullscreen() {
     const isFullscreen = !!(document.fullscreenElement || 
                            document.webkitFullscreenElement || 
                            document.mozFullScreenElement || 
                            document.msFullscreenElement);
     
+    // Additional checks for edge cases
+    const windowIsFullscreen = window.innerHeight === screen.height && 
+                              window.innerWidth === screen.width;
+    
+    const documentIsFullscreen = document.documentElement.clientHeight === screen.height &&
+                                document.documentElement.clientWidth === screen.width;
+    
+    // If any check indicates we're not in fullscreen, force it
     if (!isFullscreen && isKioskMode) {
-      if (!isProduction) console.log('🔒 Forcing fullscreen mode');
-      // Force fullscreen immediately multiple times for reliability
+      if (!isProduction) console.log('📺 Not in fullscreen, forcing aggressively...');
+      
+      // Multiple immediate attempts with increasing delays
       enterFullscreen();
+      setTimeout(enterFullscreen, 1);
+      setTimeout(enterFullscreen, 5);
       setTimeout(enterFullscreen, 10);
+      setTimeout(enterFullscreen, 25);
       setTimeout(enterFullscreen, 50);
+      setTimeout(enterFullscreen, 100);
+      
+      // Also try to grab focus back
+      try {
+        window.focus();
+        document.body.focus();
+        document.documentElement.focus();
+      } catch (e) {
+        // Ignore focus errors
+      }
+    }
+    
+    // Extra check for window size even if fullscreen API says we're fullscreen
+    if (isKioskMode && (!windowIsFullscreen || !documentIsFullscreen)) {
+      if (!isProduction) console.log('📺 Window size mismatch, re-entering fullscreen...');
+      setTimeout(enterFullscreen, 1);
+      setTimeout(enterFullscreen, 10);
     }
   }
 
@@ -528,65 +585,78 @@
     // Force fullscreen immediately
     enterFullscreen();
 
-    // Check fullscreen every 100ms for immediate response
-    fullscreenCheckInterval = setInterval(checkFullscreen, 100);
+    // Check fullscreen every 50ms for even faster response
+    fullscreenCheckInterval = setInterval(checkFullscreen, 50);
+    
+    // Additional aggressive monitoring
+    const aggressiveCheckInterval = setInterval(() => {
+      if (isKioskMode) {
+        const isFullscreen = !!(document.fullscreenElement || 
+                               document.webkitFullscreenElement || 
+                               document.mozFullScreenElement || 
+                               document.msFullscreenElement);
+        if (!isFullscreen) {
+          enterFullscreen();
+        }
+      }
+    }, 25);
 
-    // Block common keyboard shortcuts with immediate fullscreen enforcement
-    document.addEventListener('keydown', (e) => {
+    // Enhanced keyboard blocking with multiple capture methods
+    const handleKeyBlock = (e) => {
       const blockedKeys = [
-        'F11', 'F12', 'F1', 'F2', 'F3', 'F4', 'F5',
-        'Tab', 'Alt', 'Meta', 'Control'
+        'F11', 'F12', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10',
+        'Tab', 'Alt', 'Meta', 'Control', 'PrintScreen', 'Insert', 'Delete',
+        'Home', 'End', 'PageUp', 'PageDown', 'ContextMenu'
       ];
       
-      // Special handling for F11 - immediately re-enter fullscreen
-      if (e.key === 'F11' || e.keyCode === 122) {
+      // Block by key code as well for more comprehensive coverage
+      const blockedKeyCodes = [
+        122, 123, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, // F11, F12, F1-F10
+        9, 18, 91, 17, 44, 45, 46, 36, 35, 33, 34, 93, 27 // Tab, Alt, Meta, Ctrl, etc.
+      ];
+      
+      // Immediate blocking for any suspicious key
+      if (e.key === 'F11' || e.keyCode === 122 || 
+          e.key === 'F12' || e.keyCode === 123 || 
+          e.key === 'Escape' || e.keyCode === 27) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        // Force fullscreen immediately and repeatedly
-        enterFullscreen();
-        setTimeout(enterFullscreen, 1);
-        setTimeout(enterFullscreen, 10);
-        setTimeout(enterFullscreen, 50);
-        setTimeout(enterFullscreen, 100);
+        
+        // Aggressive fullscreen re-entry
+        for (let i = 0; i < 10; i++) {
+          setTimeout(() => enterFullscreen(), i * 5);
+        }
+        
+        if (!isProduction) console.log('🚫 Blocked fullscreen exit key:', e.key);
         return false;
       }
       
-      // Block Ctrl+key combinations
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        return false;
-      }
-      
-      // Block Alt+key combinations
-      if (e.altKey) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        return false;
-      }
-      
-      // Block specific keys
-      if (blockedKeys.includes(e.key) || blockedKeys.includes(e.code)) {
+      // Block all modifier key combinations
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
       }
       
-      // Block Escape key (exits fullscreen)
-      if (e.key === 'Escape') {
+      // Block specific keys by name and code
+      if (blockedKeys.includes(e.key) || blockedKeys.includes(e.code) || 
+          blockedKeyCodes.includes(e.keyCode) || blockedKeyCodes.includes(e.which)) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        // Force fullscreen back immediately
-        enterFullscreen();
-        setTimeout(enterFullscreen, 1);
         return false;
       }
-    }, true);
+    };
+    
+    // Add multiple event listeners for maximum coverage
+    document.addEventListener('keydown', handleKeyBlock, true);
+    document.addEventListener('keyup', handleKeyBlock, true);
+    document.addEventListener('keypress', handleKeyBlock, true);
+    window.addEventListener('keydown', handleKeyBlock, true);
+    window.addEventListener('keyup', handleKeyBlock, true);
+    window.addEventListener('keypress', handleKeyBlock, true);
 
     // Block right-click context menu
     document.addEventListener('contextmenu', (e) => {
@@ -605,6 +675,47 @@
       e.preventDefault();
       return false;
     });
+
+    // Monitor mouse movements near screen edges (detect attempts to access browser UI)
+    document.addEventListener('mousemove', (e) => {
+      if (!isKioskMode) return;
+      
+      const margin = 5; // pixels from edge
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      // Check if mouse is near top edge (where browser UI might be)
+      if (e.clientY <= margin || e.clientX <= margin || 
+          e.clientX >= windowWidth - margin || e.clientY >= windowHeight - margin) {
+        
+        // Force focus back and re-enter fullscreen
+        setTimeout(() => {
+          window.focus();
+          enterFullscreen();
+        }, 1);
+      }
+    });
+
+    // Additional protection against window object manipulation
+    const originalAlert = window.alert;
+    const originalConfirm = window.confirm;
+    const originalPrompt = window.prompt;
+    
+    // Override dialog functions in kiosk mode
+    if (isKioskMode) {
+      window.alert = function() { 
+        enterFullscreen(); 
+        return originalAlert.apply(this, arguments); 
+      };
+      window.confirm = function() { 
+        enterFullscreen(); 
+        return originalConfirm.apply(this, arguments); 
+      };
+      window.prompt = function() { 
+        enterFullscreen(); 
+        return originalPrompt.apply(this, arguments); 
+      };
+    }
   }
 
   // Initialize touch blocker
@@ -648,72 +759,103 @@
     }
   }
 
-  // Handle fullscreen change events with immediate re-enforcement
-  document.addEventListener('fullscreenchange', () => {
-    const isFullscreen = !!document.fullscreenElement;
-    if (!isProduction) {
-      console.log('📺 Fullscreen changed:', isFullscreen);
-    }
-    
-    // If fullscreen was exited and kiosk mode is on, immediately re-enter
-    if (!isFullscreen && isKioskMode) {
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
-      setTimeout(enterFullscreen, 10);
-    }
-  });
+  // Aggressive fullscreen change handlers with immediate re-enforcement
+  const handleFullscreenExit = (eventName) => {
+    return () => {
+      const isFullscreen = !!(document.fullscreenElement || 
+                             document.webkitFullscreenElement || 
+                             document.mozFullScreenElement || 
+                             document.msFullscreenElement);
+      
+      if (!isProduction) {
+        console.log(`📺 ${eventName} - Fullscreen:`, isFullscreen);
+      }
+      
+      // If fullscreen was exited and kiosk mode is on, immediately re-enter with maximum aggression
+      if (!isFullscreen && isKioskMode) {
+        if (!isProduction) console.log('🚨 Fullscreen exit detected, forcing re-entry!');
+        
+        // Immediate re-entry with multiple attempts
+        for (let i = 0; i < 15; i++) {
+          setTimeout(() => enterFullscreen(), i * 2);
+        }
+        
+        // Additional delayed attempts
+        setTimeout(enterFullscreen, 50);
+        setTimeout(enterFullscreen, 100);
+        setTimeout(enterFullscreen, 200);
+      }
+    };
+  };
 
-  document.addEventListener('webkitfullscreenchange', () => {
-    const isFullscreen = !!document.webkitFullscreenElement;
-    if (!isProduction) {
-      console.log('📺 Webkit fullscreen changed:', isFullscreen);
-    }
-    
-    // If fullscreen was exited and kiosk mode is on, immediately re-enter
-    if (!isFullscreen && isKioskMode) {
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
-      setTimeout(enterFullscreen, 10);
-    }
-  });
+  // Add handlers for all browser variants
+  document.addEventListener('fullscreenchange', handleFullscreenExit('fullscreenchange'));
+  document.addEventListener('webkitfullscreenchange', handleFullscreenExit('webkitfullscreenchange'));
+  document.addEventListener('mozfullscreenchange', handleFullscreenExit('mozfullscreenchange'));
+  document.addEventListener('msfullscreenchange', handleFullscreenExit('msfullscreenchange'));
+  
+  // Also add to window for extra coverage
+  window.addEventListener('fullscreenchange', handleFullscreenExit('window-fullscreenchange'));
+  window.addEventListener('webkitfullscreenchange', handleFullscreenExit('window-webkitfullscreenchange'));
+  window.addEventListener('mozfullscreenchange', handleFullscreenExit('window-mozfullscreenchange'));
+  window.addEventListener('msfullscreenchange', handleFullscreenExit('window-msfullscreenchange'));
 
-  // Add additional fullscreen change listeners for other browsers
-  document.addEventListener('mozfullscreenchange', () => {
-    const isFullscreen = !!document.mozFullScreenElement;
-    if (!isFullscreen && isKioskMode) {
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
-    }
-  });
-
-  document.addEventListener('msfullscreenchange', () => {
-    const isFullscreen = !!document.msFullscreenElement;
-    if (!isFullscreen && isKioskMode) {
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
-    }
-  });
-
-  // Handle visibility change (detect when user switches tabs/apps)
+  // Enhanced window focus and visibility monitoring
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && isKioskMode) {
-      if (!isProduction) console.log('🔒 Tab hidden, attempting to regain focus');
-      
-      // Try to bring back focus
+      if (!isProduction) console.log('🔒 Tab hidden, will regain focus when visible');
+    } else if (!document.hidden && isKioskMode) {
+      if (!isProduction) console.log('🔒 Tab visible, forcing fullscreen');
+      // Aggressively regain fullscreen when tab becomes visible
       setTimeout(() => {
         window.focus();
         enterFullscreen();
-      }, 100);
+        setTimeout(enterFullscreen, 10);
+        setTimeout(enterFullscreen, 50);
+      }, 10);
     }
   });
 
-  // Handle window focus events
+  // Window focus events
+  window.addEventListener('focus', () => {
+    if (isKioskMode) {
+      if (!isProduction) console.log('🔒 Window gained focus, ensuring fullscreen');
+      setTimeout(enterFullscreen, 10);
+    }
+  });
+
   window.addEventListener('blur', () => {
     if (isKioskMode) {
-      if (!isProduction) console.log('🔒 Window lost focus, regaining...');
+      if (!isProduction) console.log('🔒 Window lost focus, will regain');
+      // Try to regain focus quickly
       setTimeout(() => {
         window.focus();
-      }, 100);
+        enterFullscreen();
+      }, 50);
+    }
+  });
+
+  // Window resize events (catch window manipulation)
+  window.addEventListener('resize', () => {
+    if (isKioskMode) {
+      if (!isProduction) console.log('🔒 Window resized, ensuring fullscreen');
+      setTimeout(enterFullscreen, 10);
+    }
+  });
+
+  // Document focus events
+  document.addEventListener('focusin', () => {
+    if (isKioskMode) {
+      setTimeout(enterFullscreen, 1);
+    }
+  });
+
+  document.addEventListener('focusout', () => {
+    if (isKioskMode) {
+      setTimeout(() => {
+        document.body.focus();
+        enterFullscreen();
+      }, 10);
     }
   });
 
