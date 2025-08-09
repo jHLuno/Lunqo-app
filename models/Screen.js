@@ -16,6 +16,11 @@ const screenSchema = new mongoose.Schema({
   currentCampaignId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Campaign' 
+  },
+  isOnline: {
+    type: Boolean,
+    default: true,
+    required: true
   }
 }, {
   timestamps: true
@@ -24,5 +29,6 @@ const screenSchema = new mongoose.Schema({
 // Indexes for better performance
 screenSchema.index({ brandId: 1 });
 screenSchema.index({ currentCampaignId: 1 });
+screenSchema.index({ isOnline: 1 });
 
 module.exports = mongoose.model('Screen', screenSchema);

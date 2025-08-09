@@ -936,6 +936,7 @@ router.patch('/screens/:id', authAdmin, async (req, res) => {
   if (req.body.screenId !== undefined) update.screenId = req.body.screenId;
   if (req.body.brandId !== undefined) update.brandId = req.body.brandId;
   if (req.body.currentCampaignId !== undefined) update.currentCampaignId = req.body.currentCampaignId;
+  if (req.body.isOnline !== undefined) update.isOnline = req.body.isOnline;
 
   try {
     const updated = await Screen.findByIdAndUpdate(req.params.id, update, { new: true });
@@ -943,6 +944,74 @@ router.patch('/screens/:id', authAdmin, async (req, res) => {
   } catch (err) {
     console.error('Error updating screen:', err);
     res.status(500).json({ error: 'Ошибка при обновлении экрана' });
+  }
+});
+
+// PATCH /api/admin/screens/:id/toggle-online - Toggle screen online status
+router.patch('/screens/:id/toggle-online', authAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid screen ID format' });
+    }
+
+    const screen = await Screen.findById(id);
+    if (!screen) {
+      return res.status(404).json({ error: 'Экран не найден' });
+    }
+
+    // Toggle the online status
+    screen.isOnline = !screen.isOnline;
+    await screen.save();
+
+    res.json({ 
+      message: `Экран ${screen.isOnline ? 'включен' : 'выключен'}`,
+      screen: {
+        _id: screen._id,
+        screenId: screen.screenId,
+        isOnline: screen.isOnline,
+        brandId: screen.brandId,
+        currentCampaignId: screen.currentCampaignId
+      }
+    });
+  } catch (err) {
+    console.error('Error toggling screen online status:', err);
+    res.status(500).json({ error: 'Ошибка при изменении статуса экрана' });
+  }
+});
+
+// PATCH /api/admin/screens/bulk-toggle - Toggle multiple screens online status
+router.patch('/screens/bulk-toggle', authAdmin, async (req, res) => {
+  try {
+    const { screenIds, isOnline } = req.body;
+    
+    if (!Array.isArray(screenIds) || screenIds.length === 0) {
+      return res.status(400).json({ error: 'Screen IDs array is required' });
+    }
+
+    if (typeof isOnline !== 'boolean') {
+      return res.status(400).json({ error: 'isOnline must be a boolean value' });
+    }
+
+    // Validate all screen IDs are valid ObjectIds
+    const invalidIds = screenIds.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    if (invalidIds.length > 0) {
+      return res.status(400).json({ error: `Invalid screen ID format: ${invalidIds.join(', ')}` });
+    }
+
+    const result = await Screen.updateMany(
+      { _id: { $in: screenIds } },
+      { $set: { isOnline: isOnline } }
+    );
+
+    res.json({ 
+      message: `${result.modifiedCount} экранов ${isOnline ? 'включено' : 'выключено'}`,
+      modifiedCount: result.modifiedCount
+    });
+  } catch (err) {
+    console.error('Error bulk toggling screen status:', err);
+    res.status(500).json({ error: 'Ошибка при массовом изменении статуса экранов' });
   }
 });
 

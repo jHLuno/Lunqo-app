@@ -606,12 +606,22 @@
   <button onclick="createScreen()" class="btn-main">Создать экран</button>
 </div>
 
+<div style="margin: 20px 0; padding: 15px; background: rgba(33, 37, 41, 0.5); border-radius: 12px;">
+  <h3 style="margin-top: 0; color: #18A0FB;">Массовое управление</h3>
+  <button onclick="bulkToggleScreens(true)" class="btn-success">🟢 Включить все экраны</button>
+  <button onclick="bulkToggleScreens(false)" class="btn-danger">🔴 Выключить все экраны</button>
+  <p style="font-size: 0.9rem; color: #a084ff; margin-top: 10px;">
+    Управляйте всеми экранами одновременно. Включенные экраны отображают контент, выключенные - нет.
+  </p>
+</div>
+
 <table id="screensTable">
   <thead>
     <tr>
       <th>ID экрана</th>
       <th>Бренд</th>
       <th>Кампания</th>
+      <th>Статус</th>
       <th>Действия</th>
     </tr>
   </thead>
@@ -625,6 +635,12 @@
     <input type="hidden" id="editScreenId">
     <input type="text" id="editScreenScreenId" placeholder="ID экрана" class="modal-input"><br>
     <input type="text" id="editScreenBrandId" placeholder="ID бренда" class="modal-input"><br>
+    <div style="margin: 10px 0;">
+      <label style="color: #c9b5ff; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="editScreenIsOnline" class="checkbox" checked>
+        Экран онлайн (включен)
+      </label>
+    </div>
     <div class="btn-right">
       <button onclick="saveScreenEdit()" class="btn btn-success">Сохранить</button>
       <button onclick="closeScreenEditModal()" class="btn btn-danger">Отмена</button>
@@ -961,6 +977,22 @@ async function loadScreens() {
       const campaignIdCell = document.createElement('td');
       campaignIdCell.textContent = screen.currentCampaignId || '-';
       
+      const statusCell = document.createElement('td');
+      const isOnline = screen.isOnline !== false; // Default to true if not set
+      const statusBadge = document.createElement('span');
+      statusBadge.style.cssText = `
+        padding: 4px 12px; 
+        border-radius: 12px; 
+        font-size: 0.85rem; 
+        font-weight: 500; 
+        ${isOnline ? 
+          'background: linear-gradient(135deg, #59FF70, #38f9d7); color: #ffffff;' : 
+          'background: linear-gradient(135deg, #FF7A45, #a83279); color: #ffffff;'
+        }
+      `;
+      statusBadge.textContent = isOnline ? '🟢 Онлайн' : '🔴 Оффлайн';
+      statusCell.appendChild(statusBadge);
+      
       const actionsCell = document.createElement('td');
       
       const editBtn = createSafeElement('button', {
@@ -968,17 +1000,24 @@ async function loadScreens() {
         onclick: `editScreen('${escapeHtml(screen._id)}')`
       }, '✏️ Изменить');
       
+      const toggleBtn = createSafeElement('button', {
+        class: isOnline ? 'btn-danger' : 'btn-success',
+        onclick: `toggleScreenOnline('${escapeHtml(screen._id)}')`
+      }, isOnline ? '🔴 Выключить' : '🟢 Включить');
+      
       const deleteBtn = createSafeElement('button', {
         class: 'btn-danger',
         onclick: `deleteScreen('${escapeHtml(screen._id)}')`
       }, '🗑 Удалить');
       
       actionsCell.appendChild(editBtn);
+      actionsCell.appendChild(toggleBtn);
       actionsCell.appendChild(deleteBtn);
       
       row.appendChild(screenIdCell);
       row.appendChild(brandIdCell);
       row.appendChild(campaignIdCell);
+      row.appendChild(statusCell);
       row.appendChild(actionsCell);
       
       table.appendChild(row);
@@ -1023,6 +1062,7 @@ async function editScreen(id) {
     document.getElementById('editScreenId').value = screen._id;
     document.getElementById('editScreenScreenId').value = screen.screenId || '';
     document.getElementById('editScreenBrandId').value = screen.brandId || '';
+    document.getElementById('editScreenIsOnline').checked = screen.isOnline !== false; // Default to true
     document.getElementById('editScreenModal').style.display = 'block';
   } catch (error) {
     alert('Ошибка загрузки данных экрана: ' + error.message);
@@ -1034,12 +1074,13 @@ async function saveScreenEdit() {
     const id = document.getElementById('editScreenId').value;
     const screenId = document.getElementById('editScreenScreenId').value;
     const brandId = document.getElementById('editScreenBrandId').value;
+    const isOnline = document.getElementById('editScreenIsOnline').checked;
     if (!screenId || !brandId) return alert('Заполните все поля');
     
     const res = await authorizedFetch(`/api/admin/screens/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ screenId, brandId })
+      body: JSON.stringify({ screenId, brandId, isOnline })
     });
     if (!res.ok) throw new Error(`HTTP status ${res.status}`);
     
@@ -1057,6 +1098,7 @@ function closeScreenEditModal() {
   document.getElementById('editScreenId').value = '';
   document.getElementById('editScreenScreenId').value = '';
   document.getElementById('editScreenBrandId').value = '';
+  document.getElementById('editScreenIsOnline').checked = true;
 }
 
 async function deleteScreen(id) {
@@ -1069,6 +1111,57 @@ async function deleteScreen(id) {
     populateScreens();
   } catch (error) {
     alert('Ошибка удаления экрана: ' + error.message);
+  }
+}
+
+// Toggle individual screen online status
+async function toggleScreenOnline(id) {
+  try {
+    const res = await authorizedFetch(`${API}/screens/${id}/toggle-online`, {
+      method: 'PATCH'
+    });
+    
+    if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+    
+    const data = await res.json();
+    alert('✅ ' + data.message);
+    loadScreens();
+  } catch (error) {
+    alert('Ошибка изменения статуса экрана: ' + error.message);
+  }
+}
+
+// Bulk toggle all screens
+async function bulkToggleScreens(isOnline) {
+  const action = isOnline ? 'включить' : 'выключить';
+  if (!confirm(`Вы уверены, что хотите ${action} все экраны?`)) return;
+  
+  try {
+    // First get all screens
+    const screensRes = await authorizedFetch(`${API}/screens`);
+    if (!screensRes.ok) throw new Error('Failed to fetch screens');
+    
+    const screens = await screensRes.json();
+    if (!Array.isArray(screens) || screens.length === 0) {
+      alert('Нет экранов для управления');
+      return;
+    }
+    
+    const screenIds = screens.map(screen => screen._id);
+    
+    const res = await authorizedFetch(`${API}/screens/bulk-toggle`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ screenIds, isOnline })
+    });
+    
+    if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+    
+    const data = await res.json();
+    alert('✅ ' + data.message);
+    loadScreens();
+  } catch (error) {
+    alert('Ошибка массового изменения статуса: ' + error.message);
   }
 }
 

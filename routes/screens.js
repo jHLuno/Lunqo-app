@@ -21,6 +21,15 @@ router.get('/:id/playlist', async (req, res) => {
       return res.status(404).json({ error: 'Screen not found' });
     }
 
+    // Check if screen is online
+    if (screen.isOnline === false) {
+      return res.status(503).json({ 
+        error: 'Screen is offline', 
+        isOnline: false,
+        message: 'This screen is currently disabled by administrator'
+      });
+    }
+
     if (!screen.currentCampaignId) {
       return res.status(404).json({ error: 'No campaign assigned to this screen' });
     }
@@ -34,7 +43,8 @@ router.get('/:id/playlist', async (req, res) => {
       campaignName: campaign.name,
       videos: campaign.videos,
       campaignId: campaign._id,
-      brandId: campaign.brandId
+      brandId: campaign.brandId,
+      isOnline: screen.isOnline !== false // Ensure this is always returned
     });
   } catch (error) {
     console.error('Error fetching playlist:', error);
