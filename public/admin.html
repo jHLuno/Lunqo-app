@@ -1607,22 +1607,31 @@ async function generateQRCode(campaignId) {
     if (!campaignRes.ok) throw new Error('Failed to get campaign');
     const campaign = await campaignRes.json();
     
-    // Get all screens for this brand
+    // Get all screens assigned to this specific campaign
     const screensRes = await authorizedFetch(`${API}/screens`);
     if (!screensRes.ok) throw new Error('Failed to get screens');
     const screens = await screensRes.json();
     
-    const brandScreens = screens.filter(s => s.brandId === campaign.brandId);
+    // Filter screens that are specifically assigned to this campaign
+    const campaignScreens = screens.filter(s => s.currentCampaignId === campaignId);
     
-    if (brandScreens.length === 0) {
-      alert('Нет экранов для этого бренда. Сначала создайте экран.');
+    if (campaignScreens.length === 0) {
+      alert(`Нет экранов, назначенных на кампанию "${campaign.name}".\n\nДля создания QR кода:\n1. Создайте экран для бренда\n2. Назначьте экран на эту кампанию в разделе "Привязка кампании к экрану"`);
+      return;
+    }
+    
+    // Check if there are any online screens
+    const onlineScreens = campaignScreens.filter(s => s.isOnline !== false);
+    if (onlineScreens.length === 0) {
+      alert(`Все экраны кампании "${campaign.name}" сейчас выключены.\n\nВключите хотя бы один экран для создания QR кода.`);
       return;
     }
     
     // Create screen selection modal for multiple screens
-    let selectedScreen = brandScreens[0];
+    // Prioritize online screens for single selection
+    let selectedScreen = onlineScreens.length > 0 ? onlineScreens[0] : campaignScreens[0];
     
-    if (brandScreens.length > 1) {
+    if (campaignScreens.length > 1) {
       // Create screen selection modal
       const modal = document.createElement('div');
       modal.style.cssText = `
@@ -1647,17 +1656,33 @@ async function generateQRCode(campaignId) {
       const title = document.createElement('h3');
       title.textContent = 'Выберите экран для QR кода';
       
+      const onlineScreens = campaignScreens.filter(s => s.isOnline !== false);
       const description = document.createElement('p');
       description.style.cssText = 'color: #666; margin-bottom: 20px;';
-      description.textContent = 'Выберите экран, для которого нужно создать QR код:';
+      description.innerHTML = `Выберите экран из назначенных на кампанию "<strong>${escapeHtml(campaign.name)}</strong>":<br>
+        <small>Доступно экранов: ${onlineScreens.length} из ${campaignScreens.length}</small>`;
       
       const screensContainer = document.createElement('div');
       screensContainer.style.cssText = 'margin-bottom: 20px;';
       
-      brandScreens.forEach(screen => {
+      campaignScreens.forEach(screen => {
+        const isOnline = screen.isOnline !== false;
         const screenDiv = document.createElement('div');
-        screenDiv.style.cssText = 'margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;';
-        screenDiv.onclick = () => selectScreenForQR(escapeHtml(screen.screenId), escapeHtml(campaignId), modal);
+        screenDiv.style.cssText = `
+          margin: 10px 0; 
+          padding: 10px; 
+          border: 1px solid ${isOnline ? '#ddd' : '#dc3545'}; 
+          border-radius: 5px; 
+          cursor: ${isOnline ? 'pointer' : 'not-allowed'};
+          background: ${isOnline ? '#ffffff' : '#f8f9fa'};
+          opacity: ${isOnline ? '1' : '0.6'};
+        `;
+        
+        if (isOnline) {
+          screenDiv.onclick = () => selectScreenForQR(escapeHtml(screen.screenId), escapeHtml(campaignId), modal);
+        } else {
+          screenDiv.onclick = () => alert('Нельзя создать QR код для выключенного экрана. Сначала включите экран.');
+        }
         
         const screenText = document.createElement('strong');
         screenText.textContent = 'Экран: ';
@@ -1668,13 +1693,21 @@ async function generateQRCode(campaignId) {
         screenDiv.appendChild(screenText);
         screenDiv.appendChild(screenIdSpan);
         
-        if (screen.currentCampaignId) {
-          const campaignInfo = document.createElement('br');
-          const campaignSmall = document.createElement('small');
-          campaignSmall.textContent = `Текущая кампания: ${screen.currentCampaignId}`;
-          screenDiv.appendChild(campaignInfo);
-          screenDiv.appendChild(campaignSmall);
-        }
+        // Add campaign assignment info
+        const campaignInfo = document.createElement('br');
+        const campaignSmall = document.createElement('small');
+        campaignSmall.style.cssText = 'color: #28a745; font-weight: 500;';
+        campaignSmall.textContent = `✅ Назначен на эту кампанию`;
+        screenDiv.appendChild(campaignInfo);
+        screenDiv.appendChild(campaignSmall);
+        
+        // Add online status indicator
+        const onlineStatus = document.createElement('br');
+        const statusSmall = document.createElement('small');
+        statusSmall.style.cssText = screen.isOnline !== false ? 'color: #28a745;' : 'color: #dc3545;';
+        statusSmall.textContent = screen.isOnline !== false ? '🟢 Онлайн' : '🔴 Оффлайн';
+        screenDiv.appendChild(onlineStatus);
+        screenDiv.appendChild(statusSmall);
         
         screensContainer.appendChild(screenDiv);
       });
@@ -1693,6 +1726,12 @@ async function generateQRCode(campaignId) {
       
       document.body.appendChild(modal);
       return; // Exit here, let the modal handle the selection
+    }
+    
+    // Check if the single screen is online
+    if (selectedScreen.isOnline === false) {
+      alert('Нельзя создать QR код для выключенного экрана. Сначала включите экран в панели управления.');
+      return;
     }
     
     if (!isProduction) {
