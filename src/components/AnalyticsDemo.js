@@ -21,10 +21,10 @@ const AnalyticsDemo = () => {
   /* ----------------- Demo data ----------------- */
   const metrics = useMemo(
     () => [
-      { label: "Total Impressions", value: "2.5M", change: "+12%", icon: Eye },
-      { label: "Active Riders", value: "45K", change: "+8%", icon: Users },
-      { label: "QR Scans", value: "18K", change: "+15%", icon: MousePointer },
-      { label: "Revenue", value: "$125K", change: "+23%", icon: TrendingUp },
+      { label: "Total Impressions", value: "200k", change: "+12%", icon: Eye },
+      { label: "Active Riders", value: "20k", change: "+8%", icon: Users },
+      { label: "QR Scans", value: "6K", change: "+15%", icon: MousePointer },
+      { label: "Revenue", value: "$100K", change: "+23%", icon: TrendingUp },
     ],
     []
   );
@@ -143,11 +143,11 @@ const AnalyticsDemo = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-dark-300">Bounce Rate</span>
-                    <span className="text-white font-semibold">23%</span>
+                    <span className="text-white font-semibold">18%</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-dark-300">ROI</span>
-                    <span className="text-primary-lime font-semibold">+156%</span>
+                    <span className="text-primary-lime font-semibold">+176%</span>
                   </div>
                 </div>
               </div>
