@@ -15,7 +15,7 @@ const ScrollNavbar = () => {
 
   // Trust badges with actual logo
   const trustBadges = [
-    { name: 'Yandex Taxi', logo: '/images/Yandex_Go_icon.png' },
+    { name: 'SmartSeat', logo: '/images/SmartSeat.png' },
   ];
 
   // Optimized scroll handler with proper throttling
@@ -197,7 +197,7 @@ const ScrollNavbar = () => {
                           className="w-4 h-4 md:w-6 md:h-6 object-contain flex-shrink-0"
                         />
                         <span className="hidden md:inline">{badge.name}</span>
-                        <span className="md:hidden">Yandex</span>
+                        <span className="md:hidden">SmartSeat</span>
                       </div>
                     ))}
                   </div>
