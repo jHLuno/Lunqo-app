@@ -7,10 +7,10 @@ const Hero = () => {
   const { t } = useLanguage();
 
   const stats = [
-    { label: t('hero.stats.fleetsServed'), value: '500+' },
-    { label: t('hero.stats.dailyImpressions'), value: '2.5M+' },
+    { label: t('hero.stats.fleetsServed'), value: '50+' },
+    { label: t('hero.stats.dailyImpressions'), value: '21k+' },
     { label: t('hero.stats.citiesCovered'), value: '25+' },
-    { label: t('hero.stats.uptime'), value: '99.9%' }
+    { label: t('hero.stats.uptime'), value: '100%' }
   ];
 
   const handleDemoClick = () => {
