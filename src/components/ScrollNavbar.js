@@ -21,11 +21,14 @@ const ScrollNavbar = () => {
   // Optimized scroll handler with proper throttling
   const handleScroll = useCallback(() => {
           const currentScrollY = window.scrollY;
+          const windowHeight = window.innerHeight;
+          // Dynamic threshold based on screen size (minimum 200px, but scale with viewport)
+          const scrollThreshold = Math.max(200, windowHeight * 0.3);
           
-          // Show bottom rail when scrolling up
-          if (currentScrollY < lastScrollY && currentScrollY > 200) {
+          // Show bottom rail when scrolling up and past threshold
+          if (currentScrollY < lastScrollY && currentScrollY > scrollThreshold) {
             setIsVisible(true);
-          } else if (currentScrollY > lastScrollY || currentScrollY < 200) {
+          } else if (currentScrollY > lastScrollY || currentScrollY < scrollThreshold) {
             setIsVisible(false);
           }
           
@@ -137,9 +140,13 @@ const ScrollNavbar = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-6 left-0 right-0 z-50 flex justify-center"
+            className="fixed bottom-4 sm:bottom-6 left-0 right-0 z-50 flex justify-center px-2 sm:px-0"
+            style={{
+              // Ensure proper positioning on mobile browsers with dynamic viewport
+              bottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))'
+            }}
           >
-            <div className="bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-2xl w-11/12 sm:w-10/12 md:w-auto md:max-w-5xl px-4 py-3 md:py-4 mx-auto md:mx-4">
+                          <div className="bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-2xl w-full sm:w-11/12 md:w-10/12 lg:w-auto lg:max-w-5xl px-3 sm:px-4 py-2 sm:py-3 md:py-4 mx-auto md:mx-4">
               <div className="relative flex items-center justify-between w-full">
                 {/* Left: Live Reach Counter */}
                 <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">
@@ -163,10 +170,10 @@ const ScrollNavbar = () => {
                   "
                 >
                   <motion.button
-                    className="relative py-2 px-4 md:px-6 text-xs md:text-base font-semibold
+                    className="relative py-2 px-3 sm:px-4 md:px-6 text-xs sm:text-sm md:text-base font-semibold
                                transition-transform duration-300 hover:scale-105
                                focus:outline-none focus:ring-2 focus:ring-primary-blue/50
-                               rounded-xl"
+                               rounded-xl min-h-[40px] sm:min-h-[44px]"
                     style={{
                       border: '2px solid transparent',
                       borderRadius: '12px',
