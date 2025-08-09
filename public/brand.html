@@ -477,6 +477,18 @@
     }
   </style>
   <script>
+  // ===== PRELOADER FUNCTIONS =====
+  function hidePreloader() {
+    const preloader = document.getElementById('lunqoPreloader');
+    if (preloader) {
+      preloader.classList.add('hidden');
+      // Remove from DOM after animation
+      setTimeout(() => {
+        preloader.remove();
+      }, 800);
+    }
+  }
+
   window.onload = function () {
     const token = localStorage.getItem('token');
     const brandId = localStorage.getItem('brandId');
@@ -487,10 +499,16 @@
       location.href = '/brand-login.html';
       return;
     } else{ 
-      loadCampaigns(); 
-      loadScreens();
-      loadBrandStats(); // Add statistics loading
-      loadBrandInfo(); // Load brand name for welcome message
+      // Hide preloader after content loads
+      Promise.all([
+        loadCampaigns(), 
+        loadScreens(),
+        loadBrandStats(),
+        loadBrandInfo()
+      ]).finally(() => {
+        // Small delay to show the preloader animation
+        setTimeout(hidePreloader, 1500);
+      });
     }
 
   };
@@ -498,11 +516,55 @@
   
 </head>
 <body>
-<!-- Floating Elements -->
-<div class="floating-element"></div>
-<div class="floating-element"></div>
+  <!-- Lunqo Preloader -->
+  <div class="lunqo-preloader" id="lunqoPreloader">
+    <!-- Background effects -->
+    <div class="grid-bg"></div>
+    
+    <!-- Floating background particles -->
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    
+    <!-- Data stream effect -->
+    <div class="data-stream">
+      <div class="data-line"></div>
+      <div class="data-line"></div>
+      <div class="data-line"></div>
+      <div class="data-line"></div>
+    </div>
+    
+    <!-- Main preloader container -->
+    <div class="preloader-container">
+      <!-- Energy rings -->
+      <div class="energy-ring energy-ring-1"></div>
+      <div class="energy-ring energy-ring-2"></div>
+      <div class="energy-ring energy-ring-3"></div>
+      
+      <!-- Orbiting particles -->
+      <div class="orbit-container">
+        <div class="orbit-particle"></div>
+        <div class="orbit-particle"></div>
+        <div class="orbit-particle"></div>
+        <div class="orbit-particle"></div>
+      </div>
+      
+      <!-- Main logo -->
+      <img src="/images/Lunqo-white.59026c78beb9c7f20c86.png" alt="Lunqo" class="logo-main">
+      
+      <!-- Loading text -->
+      <div class="loading-text">
+        Loading<span class="loading-dots"></span>
+      </div>
+    </div>
+  </div>
 
-<div class="main-wrapper">
+  <!-- Floating Elements -->
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+
+  <div class="main-wrapper">
 
 <button onclick="logout()" class="btn-logout">Выйти из системы</button>
 <script>
