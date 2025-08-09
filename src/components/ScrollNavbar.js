@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { X, Users, TrendingUp } from 'lucide-react';
@@ -11,6 +11,7 @@ const ScrollNavbar = () => {
   const [formData, setFormData] = useState({ name: '', phone: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
+  const scrollPositionRef = useRef(0);
 
   // Trust badges with actual logo
   const trustBadges = [
@@ -60,28 +61,28 @@ const ScrollNavbar = () => {
   // Prevent background scrolling when popup is open
   useEffect(() => {
     if (showForm) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
+      // Store current scroll position in ref
+      scrollPositionRef.current = window.scrollY;
       
       // Add styles to prevent scrolling
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
+      document.body.style.top = `-${scrollPositionRef.current}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
     } else {
-      // Get the stored scroll position from the top style
-      const topValue = document.body.style.top;
-      
-      // Restore scrolling styles first
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      
-      // Restore scroll position if we have one
-      if (topValue) {
-        const savedScrollY = Math.abs(parseInt(topValue.replace('px', ''), 10));
-        window.scrollTo(0, savedScrollY);
+      // Only restore if we have a stored position and popup was actually open
+      if (scrollPositionRef.current > 0) {
+        // Restore scrolling styles first
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        
+        // Restore scroll position using requestAnimationFrame for better timing
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollPositionRef.current);
+          scrollPositionRef.current = 0; // Reset after use
+        });
       }
     }
 
