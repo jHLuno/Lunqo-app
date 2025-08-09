@@ -146,14 +146,14 @@ const ScrollNavbar = () => {
               bottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))'
             }}
           >
-                          <div className="bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-2xl w-full sm:w-11/12 md:w-10/12 lg:w-auto lg:max-w-5xl px-3 sm:px-4 py-2 sm:py-3 md:py-4 mx-auto md:mx-4">
+                          <div className="bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-2xl w-full sm:w-11/12 md:w-10/12 lg:w-auto lg:max-w-5xl px-4 sm:px-4 py-4 sm:py-3 md:py-4 mx-auto md:mx-4 min-h-[64px] sm:min-h-[56px]">
               <div className="relative flex items-center justify-between w-full">
                 {/* Left: Live Reach Counter */}
-                <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-base flex-shrink-0">
-                  <TrendingUp className="w-3 h-3 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
+                <div className="flex items-center space-x-2 md:space-x-2 text-sm md:text-base flex-shrink-0">
+                  <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary-blue flex-shrink-0" />
                   <div className="flex items-center space-x-1">
                     <span className="text-dark-300 text-xs md:text-sm hidden md:inline">Views:</span>
-                    <span className="font-bold text-white text-xs md:text-base">
+                    <span className="font-bold text-white text-sm md:text-base">
                       {formatNumber(reachCount)}
                     </span>
                     {/*<span className="text-dark-300 text-xs md:text-sm">views</span>*/}
@@ -197,11 +197,11 @@ const ScrollNavbar = () => {
                 <div className="flex items-center space-x-2 md:space-x-4 overflow-hidden flex-shrink-0">
                   <div className="flex items-center space-x-2 md:space-x-3">
                     {trustBadges.map((badge, index) => (
-                      <div key={index} className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-dark-300 whitespace-nowrap">
+                      <div key={index} className="flex items-center space-x-1 md:space-x-2 text-sm md:text-sm text-dark-300 whitespace-nowrap">
                         <img
                           src={badge.logo}
                           alt={badge.name}
-                          className="w-4 h-4 md:w-6 md:h-6 object-contain flex-shrink-0"
+                          className="w-5 h-5 md:w-6 md:h-6 object-contain flex-shrink-0"
                         />
                         <span className="hidden md:inline">{badge.name}</span>
                         <span className="md:hidden">Yandex</span>
