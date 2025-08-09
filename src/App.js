@@ -1,6 +1,20 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect, useState, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+
+// Import the EarlyAccessPopup component
+import EarlyAccessPopup from './components/EarlyAccessPopup';
+
+// Create Popup Context
+const PopupContext = createContext();
+
+export const usePopup = () => {
+  const context = useContext(PopupContext);
+  if (!context) {
+    throw new Error('usePopup must be used within a PopupProvider');
+  }
+  return context;
+};
 
 // Lazy load only heavy components for better performance
 const Navbar = lazy(() => import('./components/Navbar'));
@@ -29,42 +43,83 @@ const LoadingFallback = () => (
 
 // Main App Content Component
 const AppContent = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // Auto-open popup after a delay (optional)
+  useEffect(() => {
+    // Check if user has already seen the popup
+    const hasSeenPopup = localStorage.getItem('lunqo_early_access_seen');
+    
+    if (!hasSeenPopup) {
+      // Open popup after 3 seconds
+      const timer = setTimeout(() => {
+        setIsPopupOpen(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    // Mark as seen so it doesn't show again
+    localStorage.setItem('lunqo_early_access_seen', 'true');
+  };
+
+  const popupValue = {
+    isOpen: isPopupOpen,
+    openPopup,
+    closePopup
+  };
+
   return (
-    <div className="min-h-screen">
-      <Suspense fallback={<LoadingFallback />}>
-        <Navbar />
-      </Suspense>
-      
-      <Suspense fallback={<div />}>
-        <ScrollNavbar />
-      </Suspense>
-      
-      <main>
+    <PopupContext.Provider value={popupValue}>
+      <div className="min-h-screen">
         <Suspense fallback={<LoadingFallback />}>
-          <Hero />
+          <Navbar />
         </Suspense>
         
-          <AudienceStrip />
-        
-          <FeatureTriad />
-        
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <AnalyticsDemo />
+        <Suspense fallback={<div />}>
+          <ScrollNavbar />
         </Suspense>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <WhyLunqo />
-        </Suspense>
+        <main>
+          <Suspense fallback={<LoadingFallback />}>
+            <Hero />
+          </Suspense>
+          
+            <AudienceStrip />
+          
+            <FeatureTriad />
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+            <AnalyticsDemo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+            <WhyLunqo />
+          </Suspense>
+          
+          <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
+            <Testimonials />
+          </Suspense>
+          
+            <CTABanner />
+        </main>
         
-        <Suspense fallback={<div className="h-32 bg-dark-800/8" />}>
-          <Testimonials />
-        </Suspense>
-        
-          <CTABanner />
-      </main>
-      
-        <Footer />
-    </div>
+          <Footer />
+
+        {/* Early Access Popup */}
+        <EarlyAccessPopup 
+          isOpen={isPopupOpen} 
+          onClose={closePopup}
+        />
+      </div>
+    </PopupContext.Provider>
   );
 };
 
