@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+  <!-- Security headers should be set by server, not meta tags -->
   <title>Реклама в такси</title>
   <!-- Font Preloading for Performance -->
   <link rel="preload" href="/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin>
@@ -827,15 +826,8 @@
 
     document.body.classList.add('kiosk-mode');
     
-    // Try to enter fullscreen immediately (works in some browsers)
-    enterFullscreen();
-    
-    // Try multiple times with different delays for better browser compatibility
-    setTimeout(enterFullscreen, 100);
-    setTimeout(enterFullscreen, 250);
-    setTimeout(enterFullscreen, 500);
-    
-    // If that doesn't work, show prompt and wait for user interaction
+    // Show fullscreen prompt immediately for user interaction
+    // (Automatic fullscreen is blocked by browser security policies)
     setTimeout(() => {
       const isFullscreen = !!(document.fullscreenElement || 
                              document.webkitFullscreenElement || 
@@ -845,23 +837,24 @@
       if (!isFullscreen && !document.getElementById('fullscreenPrompt')) {
         showFullscreenPrompt();
       }
-    }, 1000);
+    }, 300); // Faster display since we're not waiting for auto-attempts
 
     // Check fullscreen every 50ms for even faster response
     fullscreenCheckInterval = setInterval(checkFullscreen, 50);
     
-    // Additional aggressive monitoring
+    // Additional monitoring to show prompt if fullscreen is lost
     const aggressiveCheckInterval = setInterval(() => {
       if (isKioskMode) {
         const isFullscreen = !!(document.fullscreenElement || 
                                document.webkitFullscreenElement || 
                                document.mozFullScreenElement || 
                                document.msFullscreenElement);
-        if (!isFullscreen) {
-          enterFullscreen();
+        if (!isFullscreen && !document.getElementById('fullscreenPrompt')) {
+          // Show prompt for user to re-enter fullscreen instead of forcing it
+          showFullscreenPrompt();
         }
       }
-    }, 25);
+    }, 2000); // Reduced frequency since we're only checking, not forcing
 
     // Enhanced keyboard blocking with multiple capture methods
     const handleKeyBlock = (e) => {
@@ -885,9 +878,9 @@
         e.stopPropagation();
         e.stopImmediatePropagation();
         
-        // Aggressive fullscreen re-entry
-        for (let i = 0; i < 10; i++) {
-          setTimeout(() => enterFullscreen(), i * 5);
+        // Show fullscreen prompt instead of forcing re-entry
+        if (!document.getElementById('fullscreenPrompt')) {
+          showFullscreenPrompt();
         }
         
         if (!isProduction) console.log('🚫 Blocked fullscreen exit key:', e.key);
@@ -1033,19 +1026,14 @@
         console.log(`📺 ${eventName} - Fullscreen:`, isFullscreen);
       }
       
-      // If fullscreen was exited and kiosk mode is on, immediately re-enter with maximum aggression
+      // If fullscreen was exited and kiosk mode is on, show prompt for user to re-enter
       if (!isFullscreen && isKioskMode) {
-        if (!isProduction) console.log('🚨 Fullscreen exit detected, forcing re-entry!');
+        if (!isProduction) console.log('🚨 Fullscreen exit detected, showing prompt for re-entry');
         
-        // Immediate re-entry with multiple attempts
-        for (let i = 0; i < 15; i++) {
-          setTimeout(() => enterFullscreen(), i * 2);
+        // Show prompt instead of forcing re-entry (which violates browser security)
+        if (!document.getElementById('fullscreenPrompt')) {
+          showFullscreenPrompt();
         }
-        
-        // Additional delayed attempts
-        setTimeout(enterFullscreen, 50);
-        setTimeout(enterFullscreen, 100);
-        setTimeout(enterFullscreen, 200);
       }
     };
   };
