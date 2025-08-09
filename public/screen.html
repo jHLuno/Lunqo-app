@@ -356,6 +356,11 @@
                            document.msFullscreenElement);
     if (isFullscreen) return;
 
+    // Don't show multiple prompts
+    if (document.getElementById('fullscreenPrompt')) {
+      return;
+    }
+
     // Debug fullscreen support
     const element = document.documentElement;
     console.log('🔍 Fullscreen API Support Check:');
@@ -775,34 +780,23 @@
     }
   }
 
-  // Enhanced fullscreen checking with multiple methods
+  // Enhanced fullscreen checking - shows prompt instead of forcing
   function checkFullscreen() {
     const isFullscreen = !!(document.fullscreenElement || 
                            document.webkitFullscreenElement || 
                            document.mozFullScreenElement || 
                            document.msFullscreenElement);
     
-    // Additional checks for edge cases
-    const windowIsFullscreen = window.innerHeight === screen.height && 
-                              window.innerWidth === screen.width;
-    
-    const documentIsFullscreen = document.documentElement.clientHeight === screen.height &&
-                                document.documentElement.clientWidth === screen.width;
-    
-    // If any check indicates we're not in fullscreen, force it
+    // If not in fullscreen and kiosk mode is on, show prompt for user interaction
     if (!isFullscreen && isKioskMode) {
-      if (!isProduction) console.log('📺 Not in fullscreen, forcing aggressively...');
+      if (!isProduction) console.log('📺 Not in fullscreen, showing prompt for user interaction...');
       
-      // Multiple immediate attempts with increasing delays
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
-      setTimeout(enterFullscreen, 5);
-      setTimeout(enterFullscreen, 10);
-      setTimeout(enterFullscreen, 25);
-      setTimeout(enterFullscreen, 50);
-      setTimeout(enterFullscreen, 100);
+      // Show prompt instead of forcing (which violates browser security)
+      if (!document.getElementById('fullscreenPrompt')) {
+        showFullscreenPrompt();
+      }
       
-      // Also try to grab focus back
+      // Still try to grab focus back (this doesn't violate security)
       try {
         window.focus();
         document.body.focus();
@@ -810,13 +804,6 @@
       } catch (e) {
         // Ignore focus errors
       }
-    }
-    
-    // Extra check for window size even if fullscreen API says we're fullscreen
-    if (isKioskMode && (!windowIsFullscreen || !documentIsFullscreen)) {
-      if (!isProduction) console.log('📺 Window size mismatch, re-entering fullscreen...');
-      setTimeout(enterFullscreen, 1);
-      setTimeout(enterFullscreen, 10);
     }
   }
 
@@ -1055,13 +1042,13 @@
     if (document.hidden && isKioskMode) {
       if (!isProduction) console.log('🔒 Tab hidden, will regain focus when visible');
     } else if (!document.hidden && isKioskMode) {
-      if (!isProduction) console.log('🔒 Tab visible, forcing fullscreen');
-      // Aggressively regain fullscreen when tab becomes visible
+      if (!isProduction) console.log('🔒 Tab visible, showing fullscreen prompt');
+      // Show prompt for user to re-enter fullscreen
       setTimeout(() => {
         window.focus();
-        enterFullscreen();
-        setTimeout(enterFullscreen, 10);
-        setTimeout(enterFullscreen, 50);
+        if (!document.getElementById('fullscreenPrompt')) {
+          showFullscreenPrompt();
+        }
       }, 10);
     }
   });
@@ -1069,18 +1056,17 @@
   // Window focus events
   window.addEventListener('focus', () => {
     if (isKioskMode) {
-      if (!isProduction) console.log('🔒 Window gained focus, ensuring fullscreen');
-      setTimeout(enterFullscreen, 10);
+      if (!isProduction) console.log('🔒 Window gained focus, checking fullscreen');
+      // Just check if we need to show prompt, don't force fullscreen
     }
   });
 
   window.addEventListener('blur', () => {
     if (isKioskMode) {
       if (!isProduction) console.log('🔒 Window lost focus, will regain');
-      // Try to regain focus quickly
+      // Try to regain focus only (no forced fullscreen)
       setTimeout(() => {
         window.focus();
-        enterFullscreen();
       }, 50);
     }
   });
@@ -1088,15 +1074,15 @@
   // Window resize events (catch window manipulation)
   window.addEventListener('resize', () => {
     if (isKioskMode) {
-      if (!isProduction) console.log('🔒 Window resized, ensuring fullscreen');
-      setTimeout(enterFullscreen, 10);
+      if (!isProduction) console.log('🔒 Window resized, checking fullscreen');
+      // Window resize doesn't require forced fullscreen
     }
   });
 
   // Document focus events
   document.addEventListener('focusin', () => {
     if (isKioskMode) {
-      setTimeout(enterFullscreen, 1);
+      // Focus events don't require forced fullscreen
     }
   });
 
@@ -1104,7 +1090,7 @@
     if (isKioskMode) {
       setTimeout(() => {
         document.body.focus();
-        enterFullscreen();
+        // Don't force fullscreen on focus changes
       }, 10);
     }
   });
@@ -1328,8 +1314,10 @@
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      enterFullscreen();
-      setTimeout(enterFullscreen, 1);
+      // Show prompt instead of forcing fullscreen (user gesture required)
+      if (!document.getElementById('fullscreenPrompt')) {
+        showFullscreenPrompt();
+      }
       return false;
     }
   }, true);
