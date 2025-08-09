@@ -157,9 +157,9 @@ const WhyLunqo = () => {
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {[
-            { label: 'Fleets Trust Us', value: '500+' },
+            { label: 'Fleets Trust Us', value: '50+' },
             { label: 'Cities Covered', value: '25+' },
-            { label: 'Daily Impressions', value: '2.5M+' }
+            { label: 'Daily Impressions', value: '21k+' }
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
