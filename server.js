@@ -67,6 +67,7 @@ app.use(sanitizeInput);
 // Import models for public endpoints
 const Stat = require('./models/Stat');
 const Campaign = require('./models/Campaign');
+const Screen = require('./models/Screen');
 
 // Import routes
 const screenRoutes = require('./routes/screens');
@@ -140,6 +141,84 @@ app.post('/api/tracking/click', trackingLimiter, async (req, res) => {
     res.status(500).json({ error: 'Internal server error during tracking' });
   }
 });
+
+// Store SSE connections for screen status updates
+const screenStatusConnections = new Map();
+
+// SSE endpoint for real-time screen status updates
+app.get('/api/screens/:screenId/status-stream', async (req, res) => {
+  const { screenId } = req.params;
+  
+  // Set headers for SSE
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Cache-Control'
+  });
+
+  // Store connection
+  if (!screenStatusConnections.has(screenId)) {
+    screenStatusConnections.set(screenId, new Set());
+  }
+  screenStatusConnections.get(screenId).add(res);
+
+  // Send initial screen status
+  try {
+    const screen = await Screen.findOne({ screenId });
+    if (screen) {
+      const data = JSON.stringify({
+        screenId,
+        isOnline: screen.isOnline !== false,
+        timestamp: new Date().toISOString()
+      });
+      res.write(`data: ${data}\n\n`);
+    }
+  } catch (error) {
+    console.error('Error sending initial screen status:', error);
+  }
+
+  // Send keepalive every 30 seconds
+  const keepAlive = setInterval(() => {
+    res.write(`: keepalive\n\n`);
+  }, 30000);
+
+  // Clean up on disconnect
+  req.on('close', () => {
+    clearInterval(keepAlive);
+    if (screenStatusConnections.has(screenId)) {
+      screenStatusConnections.get(screenId).delete(res);
+      if (screenStatusConnections.get(screenId).size === 0) {
+        screenStatusConnections.delete(screenId);
+      }
+    }
+  });
+});
+
+// Function to broadcast screen status changes
+function broadcastScreenStatus(screenId, isOnline) {
+  if (screenStatusConnections.has(screenId)) {
+    const data = JSON.stringify({
+      screenId,
+      isOnline,
+      timestamp: new Date().toISOString()
+    });
+    
+    const connections = screenStatusConnections.get(screenId);
+    connections.forEach(res => {
+      try {
+        res.write(`data: ${data}\n\n`);
+      } catch (error) {
+        // Remove dead connections
+        connections.delete(res);
+      }
+    });
+  }
+}
+
+// Make broadcast function globally available
+global.broadcastScreenStatus = broadcastScreenStatus;
 
 // Global error handler
 app.use((error, req, res, next) => {

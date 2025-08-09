@@ -344,6 +344,145 @@
   let brandId = '';
   let isKioskMode = true; // Enable kiosk mode by default
   let fullscreenCheckInterval;
+  let statusEventSource = null;
+  let isScreenOnline = true;
+  let offlineMessageDisplayed = false;
+
+  // ===== SCREEN STATUS MONITORING =====
+  
+  // Connect to real-time status updates
+  function connectToStatusStream() {
+    if (statusEventSource) {
+      statusEventSource.close();
+    }
+    
+    const statusUrl = `/api/screens/${screenId}/status-stream`;
+    statusEventSource = new EventSource(statusUrl);
+    
+    statusEventSource.onmessage = function(event) {
+      try {
+        const data = JSON.parse(event.data);
+        handleStatusUpdate(data);
+      } catch (error) {
+        if (!isProduction) console.error('Error parsing status update:', error);
+      }
+    };
+    
+    statusEventSource.onerror = function(error) {
+      if (!isProduction) console.error('Status stream error:', error);
+      // Attempt to reconnect after 5 seconds
+      setTimeout(() => {
+        if (statusEventSource.readyState === EventSource.CLOSED) {
+          connectToStatusStream();
+        }
+      }, 5000);
+    };
+    
+    if (!isProduction) console.log('Connected to status stream');
+  }
+  
+  // Handle status updates
+  function handleStatusUpdate(data) {
+    const wasOnline = isScreenOnline;
+    isScreenOnline = data.isOnline;
+    
+    if (!isProduction) {
+      console.log(`📡 Status update: ${data.screenId} is ${isScreenOnline ? 'ONLINE' : 'OFFLINE'}`);
+    }
+    
+    if (wasOnline && !isScreenOnline) {
+      // Screen was turned off
+      showOfflineMessage();
+      pausePlayback();
+    } else if (!wasOnline && isScreenOnline) {
+      // Screen was turned back on
+      hideOfflineMessage();
+      resumePlayback();
+    }
+  }
+  
+  // Show offline message
+  function showOfflineMessage() {
+    if (offlineMessageDisplayed) return;
+    
+    // Pause video
+    if (videoEl) {
+      videoEl.pause();
+    }
+    
+    // Create offline overlay
+    const offlineOverlay = document.createElement('div');
+    offlineOverlay.id = 'offlineOverlay';
+    offlineOverlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      color: #ffffff;
+      font-family: 'SF Pro Display', sans-serif;
+    `;
+    
+    offlineOverlay.innerHTML = `
+      <div style="text-align: center; max-width: 600px; padding: 40px;">
+        <div style="font-size: 120px; margin-bottom: 30px; opacity: 0.7;">📺</div>
+        <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 20px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          Экран отключен
+        </h1>
+        <p style="font-size: 24px; opacity: 0.8; margin-bottom: 40px; line-height: 1.5;">
+          Администратор временно отключил этот экран.<br>
+          Ожидайте восстановления...
+        </p>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+          <div style="width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%; animation: pulse 2s infinite;"></div>
+          <div style="width: 12px; height: 12px; background: #ffa726; border-radius: 50%; animation: pulse 2s infinite 0.5s;"></div>
+          <div style="width: 12px; height: 12px; background: #42a5f5; border-radius: 50%; animation: pulse 2s infinite 1s;"></div>
+        </div>
+      </div>
+      <style>
+        @keyframes pulse {
+          0%, 100% { opacity: 0.3; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+      </style>
+    `;
+    
+    document.body.appendChild(offlineOverlay);
+    offlineMessageDisplayed = true;
+    updateStatus('🔴 Экран отключен администратором');
+  }
+  
+  // Hide offline message
+  function hideOfflineMessage() {
+    const offlineOverlay = document.getElementById('offlineOverlay');
+    if (offlineOverlay) {
+      offlineOverlay.remove();
+    }
+    offlineMessageDisplayed = false;
+    updateStatus('🟢 Экран подключен');
+  }
+  
+  // Pause playback
+  function pausePlayback() {
+    if (videoEl) {
+      videoEl.pause();
+    }
+  }
+  
+  // Resume playback
+  function resumePlayback() {
+    if (videoEl && playlist.length > 0) {
+      videoEl.play().catch(err => {
+        if (!isProduction) console.log('Error resuming video:', err);
+      });
+    }
+  }
 
   // ===== KIOSK MODE & SECURITY FUNCTIONS =====
   
@@ -606,13 +745,26 @@
       const res = await fetch(`/api/screens/${screenId}/playlist`);
       const data = await res.json();
 
+      // Check if screen is offline (503 status)
+      if (res.status === 503) {
+        isScreenOnline = false;
+        showOfflineMessage();
+        return;
+      }
+
       if (data && data.videos && data.videos.length > 0) {
         playlist = data.videos;
         campaignId = data.campaignId || '';
         brandId = data.brandId || '';
+        isScreenOnline = data.isOnline !== false;
         index = 0;
         updateStatus('Плейлист загружен');
-        playVideo();
+        
+        if (isScreenOnline) {
+          playVideo();
+        } else {
+          showOfflineMessage();
+        }
       } else {
         if (!isProduction) {
           console.log("Нет видео в плейлисте");
@@ -628,6 +780,12 @@
   // Воспроизводим видео
   function playVideo() {
     if (playlist.length === 0) return;
+    
+    // Don't play if screen is offline
+    if (!isScreenOnline) {
+      showOfflineMessage();
+      return;
+    }
 
     videoEl.src = playlist[index];
     videoEl.load();
@@ -851,6 +1009,16 @@
   // Initialize security features
   initKioskMode();
   initTouchBlocker();
+  
+  // Connect to real-time status updates
+  connectToStatusStream();
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (statusEventSource) {
+      statusEventSource.close();
+    }
+  });
   
   // Initialize playlist
   fetchPlaylist();

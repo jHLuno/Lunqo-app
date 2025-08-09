@@ -940,6 +940,12 @@ router.patch('/screens/:id', authAdmin, async (req, res) => {
 
   try {
     const updated = await Screen.findByIdAndUpdate(req.params.id, update, { new: true });
+    
+    // Broadcast status change if isOnline was updated
+    if (req.body.isOnline !== undefined && global.broadcastScreenStatus) {
+      global.broadcastScreenStatus(updated.screenId, updated.isOnline);
+    }
+    
     res.json(updated);
   } catch (err) {
     console.error('Error updating screen:', err);
@@ -964,6 +970,11 @@ router.patch('/screens/:id/toggle-online', authAdmin, async (req, res) => {
     // Toggle the online status
     screen.isOnline = !screen.isOnline;
     await screen.save();
+
+    // Broadcast status change to connected screens
+    if (global.broadcastScreenStatus) {
+      global.broadcastScreenStatus(screen.screenId, screen.isOnline);
+    }
 
     res.json({ 
       message: `Экран ${screen.isOnline ? 'включен' : 'выключен'}`,
@@ -1000,10 +1011,20 @@ router.patch('/screens/bulk-toggle', authAdmin, async (req, res) => {
       return res.status(400).json({ error: `Invalid screen ID format: ${invalidIds.join(', ')}` });
     }
 
+    // Get screens before update to broadcast changes
+    const screensToUpdate = await Screen.find({ _id: { $in: screenIds } });
+
     const result = await Screen.updateMany(
       { _id: { $in: screenIds } },
       { $set: { isOnline: isOnline } }
     );
+
+    // Broadcast status changes for all affected screens
+    if (global.broadcastScreenStatus) {
+      screensToUpdate.forEach(screen => {
+        global.broadcastScreenStatus(screen.screenId, isOnline);
+      });
+    }
 
     res.json({ 
       message: `${result.modifiedCount} экранов ${isOnline ? 'включено' : 'выключено'}`,
