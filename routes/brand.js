@@ -77,8 +77,23 @@ router.get('/:brandId/screens', async (req, res) => {
       return res.status(403).json({ error: 'Access denied to this brand data' });
     }
 
-    const screens = await Screen.find({ brandId }).sort({ createdAt: -1 });
-    res.json({ screens });
+    const screens = await Screen.find({ brandId })
+      .populate('currentCampaignId', 'name')
+      .sort({ createdAt: -1 });
+    
+    // Format the response to include campaign name
+    const formattedScreens = screens.map(screen => ({
+      _id: screen._id,
+      screenId: screen.screenId,
+      brandId: screen.brandId,
+      currentCampaignId: screen.currentCampaignId?._id,
+      campaignName: screen.currentCampaignId?.name || null,
+      isOnline: screen.isOnline,
+      createdAt: screen.createdAt,
+      updatedAt: screen.updatedAt
+    }));
+    
+    res.json({ screens: formattedScreens });
   } catch (error) {
     console.error('Error fetching screens:', error);
     res.status(500).json({ error: 'Failed to load screens' });

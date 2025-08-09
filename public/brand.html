@@ -528,7 +528,7 @@
   <h2>Ваши экраны</h2>
   <table id="screensTable">
     <thead>
-      <tr><th>ID экрана</th><th>Текущая кампания</th></tr>
+      <tr><th>ID экрана</th><th>Статус экрана</th><th>Кампания</th></tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -630,24 +630,46 @@ async function loadScreens() {
   screens.forEach(s => {
     const row = document.createElement('tr');
     
+    // Screen ID column
     const screenIdCell = document.createElement('td');
     const screenIdStrong = document.createElement('strong');
     screenIdStrong.textContent = s.screenId;
     screenIdCell.appendChild(screenIdStrong);
     
-    const statusCell = document.createElement('td');
-    const statusSpan = document.createElement('span');
-    if (s.currentCampaignId) {
-      statusSpan.className = 'status-active';
-      statusSpan.textContent = 'Активна';
+    // Screen Status column (Online/Offline)
+    const screenStatusCell = document.createElement('td');
+    const statusBadge = document.createElement('span');
+    const isOnline = s.isOnline !== false; // Default to true if not set
+    statusBadge.style.cssText = `
+      padding: 4px 12px; 
+      border-radius: 12px; 
+      font-size: 0.85rem; 
+      font-weight: 500; 
+      ${isOnline ? 
+        'background: linear-gradient(135deg, #59FF70, #38f9d7); color: #ffffff;' : 
+        'background: linear-gradient(135deg, #FF7A45, #a83279); color: #ffffff;'
+      }
+    `;
+    statusBadge.textContent = isOnline ? '🟢 Включен' : '🔴 Выключен';
+    screenStatusCell.appendChild(statusBadge);
+    
+    // Campaign column
+    const campaignCell = document.createElement('td');
+    if (s.currentCampaignId && s.campaignName) {
+      const campaignSpan = document.createElement('span');
+      campaignSpan.className = 'status-active';
+      campaignSpan.textContent = s.campaignName;
+      campaignCell.appendChild(campaignSpan);
     } else {
-      statusSpan.className = 'status-inactive';
-      statusSpan.textContent = 'Не активна';
+      const noAssignmentSpan = document.createElement('span');
+      noAssignmentSpan.className = 'status-inactive';
+      noAssignmentSpan.textContent = 'Не назначена';
+      campaignCell.appendChild(noAssignmentSpan);
     }
-    statusCell.appendChild(statusSpan);
     
     row.appendChild(screenIdCell);
-    row.appendChild(statusCell);
+    row.appendChild(screenStatusCell);
+    row.appendChild(campaignCell);
     
     table.appendChild(row);
   });
